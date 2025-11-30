@@ -168,11 +168,33 @@ void reg() // The user will be registered
 
         if (reg_succesful == 1)
         {
-            printf("User registered succcessfully\n");
-            CheckOption(1);
+            printf("\nUser registered succcessfully\n");
+
+            
+            // Give the user option to return to main menu
+            
+            int choice;
+            printf("\nDo you want to go back to the introduction menu?\n");
+            printf("1:--> Yes\n2:--> No (Exit Program)\n---> ");
+            scanf("%d", &choice);
+
+            if (choice == 1)
+            {
+                // Return to main introduction menu
+                printf("\n");
+                int option = introduction();
+                CheckOption(option);
+            }
+            else
+            {
+                printf("Thank you for using our service!\n");
+                exit(0); // closes the program
+            }
+            // ---------------------------------------------------------
         }
     }
 }
+
 
 // Menu for specifik user
 void usermenu(user *u)
@@ -356,7 +378,6 @@ void check_user_prefdays(user *u)
 
     fclose(prefdays);
 }
-
 
 
 
