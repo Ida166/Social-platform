@@ -1,26 +1,25 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <time.h>
+
 #define MAX_USERS 100
+#define DAYS 7
+#define MIN_WORKERS 3
 
-
-// User Data
-struct user
-{
+// ---------------- USER STRUCT ----------------
+struct user {
     char username[20];
     char password[20];
     char pref_days[3][20];
-    char assigned_shifts[20][20];
 };
 typedef struct user user;
 
-// user array:
+// ---------------- GLOBAL DATA ----------------
 user all_users[MAX_USERS];
 int total_users = 0;
 
-
-
-// PROTOTYPES
+// ---------------- PROTOTYPES ----------------
 int introduction();
 void CheckOption(int option);
 void login(user *u);
@@ -29,29 +28,29 @@ void usermenu(user *u);
 void work_pref(user *u);
 void check_user_prefdays(user *u);
 int valid_day(char day[]);
+int day_to_index(char day[]);
 int load_all_preferences(user users[], int max_users);
+void compare_users_pref_days(user users[], int numb_of_users);
 
-// MAIN
+// ---------------- MAIN ----------------
 int main(void)
 {
     total_users = load_all_preferences(all_users, MAX_USERS);
+
     int option = introduction();
     CheckOption(option);
     return 0;
 }
 
-// INTRO
+// ---------------- INTRO ----------------
 int introduction()
 {
     int answer;
+    printf("---- Welcome to SmartPlan ----\n");
+    printf("1: Login\n2: Register\n--->");
 
-    printf("----Welcome to SmartPlan alpha version----\n");
-    printf("1: Login\n2: Register\n---> ");
-
-    while (1)
-    {
+    while (1) {
         scanf("%d", &answer);
-
         if (answer == 1 || answer == 2 || answer == 19014)
             return answer;
         else
@@ -59,57 +58,44 @@ int introduction()
     }
 }
 
-// MENU SWITCH
+// ---------------- OPTION SWITCH ----------------
 void CheckOption(int option)
 {
-    if (option == 1)
-    {
+    if (option == 1) {
         user logged_in_user;
         login(&logged_in_user);
-    }
-    else if (option == 2)
-    {
+    } 
+    else if (option == 2) {
         reg();
     }
+    else if (option == 19014) {
+        printf("\n--- ADMIN MODE ---\n");
 
-    if (option == 19014)
-    {
-
-        int answer_admin;
-        printf("----You are now logged in as admin----\n\nYou now have the following options:\n1:---> (Print every users information)\n--->");
-        scanf("%d", &answer_admin);
-
-        if (answer_admin == 1)
-        {
-
-            for (int i = 0; i < total_users; i++)
-            {
-                printf("User: %s | %s %s %s\n",
-                       all_users[i].username,
-                       all_users[i].pref_days[0],
-                       all_users[i].pref_days[1],
-                       all_users[i].pref_days[2]);
-            }
+        printf("\nRegistered Preferences:\n");
+        for (int i = 0; i < total_users; i++) {
+            printf("User: %s | %s %s %s\n",
+                   all_users[i].username,
+                   all_users[i].pref_days[0],
+                   all_users[i].pref_days[1],
+                   all_users[i].pref_days[2]);
         }
+
+        compare_users_pref_days(all_users, total_users);
     }
 }
 
-// LOGIN (FIXED: max attempts)
+// ---------------- LOGIN ----------------
 void login(user *u)
 {
     char username[20], password[20], file_username[20], file_password[20];
 
     FILE *f = fopen("Users.txt", "r");
-    if (!f)
-    {
-        printf("No users exist yet. Please register first.\n");
+    if (!f) {
+        printf("No users exist yet.\n");
         return;
     }
 
-    int attempts = 0;
-
-    while (attempts < 3)
-    {
+    while (1) {
         printf("Enter username: ");
         scanf("%19s", username);
         printf("Enter password: ");
@@ -118,38 +104,28 @@ void login(user *u)
         int match = 0;
         rewind(f);
 
-        while (fscanf(f, " %[^:]:%s", file_username, file_password) == 2)
-        {
+        while (fscanf(f, " %[^:]:%s", file_username, file_password) == 2) {
             if (strcmp(username, file_username) == 0 &&
-                strcmp(password, file_password) == 0)
-            {
+                strcmp(password, file_password) == 0) {
                 match = 1;
                 break;
             }
         }
 
-        if (match)
-        {
+        if (match) {
             strcpy(u->username, username);
             strcpy(u->password, password);
-
-            printf("\nLogin successful! Welcome %s\n\n", u->username);
+            printf("\nLogin successful!\n");
             usermenu(u);
             fclose(f);
             return;
-        }
-        else
-        {
+        } else {
             printf("Wrong username or password.\n");
-            attempts++;
         }
     }
-
-    printf("Too many failed attempts.\n");
-    fclose(f);
 }
 
-// REGISTER
+// ---------------- REGISTER ----------------
 void reg()
 {
     char username[20], password[20];
@@ -160,210 +136,172 @@ void reg()
     scanf("%19s", password);
 
     FILE *f = fopen("Users.txt", "a");
-
-    if (!f)
-    {
-        printf("File error.\n");
-        return;
-    }
-
     fprintf(f, "%s:%s\n", username, password);
     fclose(f);
 
     printf("User registered successfully!\n");
-
-    int choice;
-    printf("Return to menu? (1=yes / 2=no): ");
-    scanf("%d", &choice);
-
-    if (choice == 1)
-    {
-        int option = introduction();
-        CheckOption(option);
-    }
 }
 
-// USER MENU (FIXED: LOOP ADDED)
+// ---------------- USER MENU ----------------
 void usermenu(user *u)
 {
-    int option_answer;
-
-    while (1)
-    {
+    int option;
+    while (1) {
         printf("\n--- USER MENU (%s) ---\n", u->username);
-        printf("1: See workschedule\n");
-        printf("2: Edit workpreference\n");
-        printf("3: See workpreference\n");
-        printf("4: Logout\n---> ");
+        printf("1: Edit work preference\n");
+        printf("2: See work preference\n");
+        printf("3: Logout\n---> ");
+        scanf("%d", &option);
 
-        scanf("%d", &option_answer);
-
-        if (option_answer == 4)
-        {
-            printf("Logged out successfully.\n");
-            break;
-        }
-        else if (option_answer == 3)
-        {
-            check_user_prefdays(u);
-        }
-        else if (option_answer == 2)
-        {
+        if (option == 3)
+            return;
+        else if (option == 1)
             work_pref(u);
-        }
-        else
-        {
-            printf("Invalid option!\n");
-        }
+        else if (option == 2)
+            check_user_prefdays(u);
     }
 }
 
-// VALID DAY CHECK
-int valid_day(char day[])
-{
-    char *valid[] = {"Monday", "Tuesday", "Wednesday", "Thursday",
-                     "Friday", "Saturday", "Sunday"};
-
+// ---------------- DAY FUNCTIONS ----------------
+int day_to_index(char day[]) {
+    char *valid[] = {"Monday","Tuesday","Wednesday","Thursday",
+                     "Friday","Saturday","Sunday"};
     for (int i = 0; i < 7; i++)
         if (strcmp(day, valid[i]) == 0)
-            return 1;
-
-    return 0;
+            return i;
+    return -1;
 }
 
-// SAVE PREFERENCES
+int valid_day(char day[]) {
+    return day_to_index(day) != -1;
+}
+
+// ---------------- SAVE PREFERENCES ----------------
 void work_pref(user *u)
 {
-    char pref1[20], pref2[20], pref3[20];
-    int answer_save_prefdays;
-
+    char p1[20], p2[20], p3[20];
     printf("Enter 3 preferred days: ");
-    scanf("%19s %19s %19s", pref1, pref2, pref3);
+    scanf("%19s %19s %19s", p1, p2, p3);
 
-    if (!valid_day(pref1) || !valid_day(pref2) || !valid_day(pref3))
-    {
-        printf("Invalid day entered.\n");
+    if (!valid_day(p1) || !valid_day(p2) || !valid_day(p3)) {
+        printf("Invalid day entered!\n");
         return;
     }
 
-    strcpy(u->pref_days[0], pref1);
-    strcpy(u->pref_days[1], pref2);
-    strcpy(u->pref_days[2], pref3);
+    FILE *temp = fopen("temp.txt", "w");
+    FILE *old = fopen("pref_days.txt", "r");
 
-    printf("Save preferences? (1=yes / 2=no): ");
-    scanf("%d", &answer_save_prefdays);
-    if (answer_save_prefdays != 1)
-        return;
-
-    FILE *oldFile = fopen("pref_days.txt", "r");
-    FILE *tempFile = fopen("temp.txt", "w");
-
-    if (!tempFile)
-    {
-        printf("Error opening temp file.\n");
-        return;
-    }
-
-    char file_username[20], fp1[20], fp2[20], fp3[20];
+    char name[20], d1[20], d2[20], d3[20];
     int updated = 0;
 
-    if (oldFile)
-    {
-        while (fscanf(oldFile, " %[^:]:%[^|]|%[^|]|%s",
-                      file_username, fp1, fp2, fp3) == 4)
-        {
-            if (strcmp(file_username, u->username) == 0)
-            {
-                fprintf(tempFile, "%s:%s|%s|%s\n", u->username,
-                        pref1, pref2, pref3);
-                updated = 1;
-            }
-            else
-            {
-                fprintf(tempFile, "%s:%s|%s|%s\n",
-                        file_username, fp1, fp2, fp3);
+    if (old) {
+        while (fscanf(old," %[^:]:%[^|]|%[^|]|%s",name,d1,d2,d3)==4) {
+            if (strcmp(name,u->username)==0) {
+                fprintf(temp,"%s:%s|%s|%s\n",u->username,p1,p2,p3);
+                updated=1;
+            } else {
+                fprintf(temp,"%s:%s|%s|%s\n",name,d1,d2,d3);
             }
         }
-        fclose(oldFile);
+        fclose(old);
     }
 
     if (!updated)
-    {
-        fprintf(tempFile, "%s:%s|%s|%s\n",
-                u->username, pref1, pref2, pref3);
-    }
+        fprintf(temp,"%s:%s|%s|%s\n",u->username,p1,p2,p3);
 
-    fclose(tempFile);
+    fclose(temp);
     remove("pref_days.txt");
-    rename("temp.txt", "pref_days.txt");
+    rename("temp.txt","pref_days.txt");
 
-    printf("Preferences saved successfully!\n\n");
+    printf("Preferences saved.\n");
 
     total_users = load_all_preferences(all_users, MAX_USERS);
-    printf("Preferences reloaded for %d users.\n", total_users);
 }
 
-// VIEW PREFERENCES
+// ---------------- VIEW PREFERENCES ----------------
 void check_user_prefdays(user *u)
 {
-    char file_username[20], pref1[20], pref2[20], pref3[20];
-    FILE *prefdays = fopen("pref_days.txt", "r");
+    FILE *f = fopen("pref_days.txt", "r");
+    char name[20], p1[20], p2[20], p3[20];
 
-    if (!prefdays)
-    {
-        printf("No preferences saved yet.\n");
-        return;
-    }
-
-    int found = 0;
-
-    while (fscanf(prefdays, " %[^:]:%[^|]|%[^|]|%s",
-                  file_username, pref1, pref2, pref3) == 4)
-    {
-        if (strcmp(u->username, file_username) == 0)
-        {
-            printf("Your preferred days: %s, %s, %s\n",
-                   pref1, pref2, pref3);
-            found = 1;
-            break;
+    while (fscanf(f," %[^:]:%[^|]|%[^|]|%s",name,p1,p2,p3)==4) {
+        if (strcmp(name,u->username)==0) {
+            printf("Your preferred days: %s %s %s\n",p1,p2,p3);
+            fclose(f);
+            return;
         }
     }
-
-    fclose(prefdays);
-
-    if (!found)
-        printf("No preferences found.\n");
+    fclose(f);
+    printf("No preferences saved.\n");
 }
 
-// function that reads every user and their corrasponding days:
+// ---------------- LOAD ALL USERS ----------------
 int load_all_preferences(user users[], int max_users)
 {
     FILE *f = fopen("pref_days.txt", "r");
     if (!f)
-    {
-        printf("No preference file found.\n");
         return 0;
-    }
 
-    int count = 0;
-    char username[20], d1[20], d2[20], d3[20];
+    int count=0;
+    char name[20], d1[20], d2[20], d3[20];
 
-    while (fscanf(f, " %[^:]:%[^|]|%[^|]|%s",
-                  username, d1, d2, d3) == 4)
-    {
-        if (count >= max_users)
-            break;
-
-        strcpy(users[count].username, username);
-        strcpy(users[count].pref_days[0], d1);
-        strcpy(users[count].pref_days[1], d2);
-        strcpy(users[count].pref_days[2], d3);
-
+    while (fscanf(f," %[^:]:%[^|]|%[^|]|%s",name,d1,d2,d3)==4 && count<max_users) {
+        strcpy(users[count].username,name);
+        strcpy(users[count].pref_days[0],d1);
+        strcpy(users[count].pref_days[1],d2);
+        strcpy(users[count].pref_days[2],d3);
         count++;
     }
-
     fclose(f);
     return count;
+}
+
+// ---------------- SCHEDULE GENERATOR ----------------
+void compare_users_pref_days(user users[], int numb_of_users)
+{
+    int schedule[DAYS][MAX_USERS];
+    int workers_count[DAYS] = {0};
+
+    // Assign preferred days
+    for (int i = 0; i < numb_of_users; i++) {
+        for (int j = 0; j < 3; j++) {
+            int day = day_to_index(users[i].pref_days[j]);
+            if (day != -1) {
+                schedule[day][workers_count[day]] = i;
+                workers_count[day]++;
+            }
+        }
+    }
+
+    srand(time(NULL));
+
+    // Fill missing workers
+    for (int d = 0; d < DAYS; d++) {
+        while (workers_count[d] < MIN_WORKERS) {
+            int r = rand() % numb_of_users;
+            int exists = 0;
+
+            for (int k=0;k<workers_count[d];k++)
+                if (schedule[d][k]==r)
+                    exists=1;
+
+            if (!exists) {
+                schedule[d][workers_count[d]]=r;
+                workers_count[d]++;
+            }
+        }
+    }
+
+    char *day_names[]={"Monday","Tuesday","Wednesday",
+                        "Thursday","Friday","Saturday","Sunday"};
+
+    printf("\n----- FINAL WORK SCHEDULE -----\n");
+    for (int d = 0; d < DAYS; d++) {
+        printf("\n%s (%d workers): ", day_names[d], workers_count[d]);
+        for (int i = 0; i < workers_count[d]; i++)
+            printf("%s ", users[schedule[d][i]].username);
+    }
+    printf("\n--------------------------------\n");
 }
 
 
