@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <time.h>
 
-#define MAX_USERS 100
+#define MAX_USERS 10
 #define DAYS 7
 #define MIN_WORKERS 3
 
@@ -47,11 +47,11 @@ int introduction()
 {
     int answer;
     printf("---- Welcome to SmartPlan ----\n");
-    printf("1: Login\n2: Register\n--->");
+    printf("0: Exit Program\n1: Login\n2: Register\n--->");
 
     while (1) {
         scanf("%d", &answer);
-        if (answer == 1 || answer == 2 || answer == 19014)
+        if (answer == 0 || answer == 1 || answer == 2 || answer == 19014)
             return answer;
         else
             printf("Invalid input try again!\n");
@@ -61,12 +61,25 @@ int introduction()
 // ---------------- OPTION SWITCH ----------------
 void CheckOption(int option)
 {
-    if (option == 1) {
+    if (option == 0)
+    {
+        printf("Thanks for using Smartplan\n");
+    }
+    else if (option == 1) {
         user logged_in_user;
         login(&logged_in_user);
     } 
     else if (option == 2) {
-        reg();
+
+        if(total_users >= MAX_USERS){
+            printf("There is currently too many users registered on this platform!");
+
+
+        }else{
+            reg();
+        }
+        
+
     }
     else if (option == 19014) {
         printf("\n--- ADMIN MODE ---\n");
@@ -129,6 +142,7 @@ void login(user *u)
 void reg()
 {
     char username[20], password[20];
+    int choice;
 
     printf("Create Username: ");
     scanf("%19s", username);
@@ -140,6 +154,12 @@ void reg()
     fclose(f);
 
     printf("User registered successfully!\n");
+
+    printf("Do you wish to loggin in? press 1 \n else press 0\n");
+
+    scanf("%d", &choice);
+
+    CheckOption(choice);
 }
 
 // ---------------- USER MENU ----------------
@@ -262,38 +282,94 @@ void compare_users_pref_days(user users[], int numb_of_users)
     int schedule[DAYS][MAX_USERS];
     int workers_count[DAYS] = {0};
 
-    // Assign preferred days
+    // 1) Assign preferred days first
     for (int i = 0; i < numb_of_users; i++) {
         for (int j = 0; j < 3; j++) {
             int day = day_to_index(users[i].pref_days[j]);
-            if (day != -1) {
+            if (day != -1) 
+            {
                 schedule[day][workers_count[day]] = i;
                 workers_count[day]++;
             }
         }
     }
 
+    // 2) Randomly fill missing workers fairly
+    int forced_assigned[MAX_USERS] = {0};   // keeps track of who has already been forced
     srand(time(NULL));
 
-    // Fill missing workers
     for (int d = 0; d < DAYS; d++) {
         while (workers_count[d] < MIN_WORKERS) {
-            int r = rand() % numb_of_users;
-            int exists = 0;
 
-            for (int k=0;k<workers_count[d];k++)
-                if (schedule[d][k]==r)
-                    exists=1;
+            int candidates_pref[MAX_USERS];
+            int pref_count = 0;
 
-            if (!exists) {
-                schedule[d][workers_count[d]]=r;
-                workers_count[d]++;
+            // Find users who:
+            // - are NOT already working this day
+            // - and have NOT been forced yet
+            for (int u = 0; u < numb_of_users; u++) {
+                int already = 0;
+
+                for (int k = 0; k < workers_count[d]; k++) {
+                    if (schedule[d][k] == u) {
+                        already = 1;
+                        break;
+                    }
+                }
+
+                if (!already && forced_assigned[u] == 0) {
+                    candidates_pref[pref_count++] = u;
+                }
             }
+
+            int pick = -1;
+
+            if (pref_count > 0) {
+                // Pick randomly among users who haven't been forced yet
+                int idx = rand() % pref_count;
+                pick = candidates_pref[idx];
+            } 
+            else {
+                // Fallback: pick any user not already in this day
+                int candidates_any[MAX_USERS];
+                int any_count = 0;
+
+                for (int u = 0; u < numb_of_users; u++) {
+                    int already = 0;
+
+                    for (int k = 0; k < workers_count[d]; k++) {
+                        if (schedule[d][k] == u) {
+                            already = 1;
+                            break;
+                        }
+                    }
+
+                    if (!already) {
+                        candidates_any[any_count++] = u;
+                    }
+                }
+
+                if (any_count == 0)
+                    break;  // safety against infinite loop
+
+                int idx = rand() % any_count;
+                pick = candidates_any[idx];
+            }
+
+            // Assign the chosen user to this day
+            schedule[d][workers_count[d]] = pick;
+            workers_count[d]++;
+
+            // Mark user as forced so they won't be preferred again
+            forced_assigned[pick] = 1;
         }
     }
 
-    char *day_names[]={"Monday","Tuesday","Wednesday",
-                        "Thursday","Friday","Saturday","Sunday"};
+    // 3) Print final schedule
+    char *day_names[] = {
+        "Monday","Tuesday","Wednesday",
+        "Thursday","Friday","Saturday","Sunday"
+    };
 
     printf("\n----- FINAL WORK SCHEDULE -----\n");
     for (int d = 0; d < DAYS; d++) {
