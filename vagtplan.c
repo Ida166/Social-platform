@@ -8,7 +8,8 @@
 #define MIN_WORKERS 3
 
 // ---------------- USER STRUCT ----------------
-struct user {
+struct user
+{
     char username[20];
     char password[20];
     char pref_days[3][20];
@@ -31,6 +32,7 @@ int valid_day(char day[]);
 int day_to_index(char day[]);
 int load_all_preferences(user users[], int max_users);
 void compare_users_pref_days(user users[], int numb_of_users);
+void admin_menu();
 
 // ---------------- MAIN ----------------
 int main(void)
@@ -49,7 +51,8 @@ int introduction()
     printf("---- Welcome to SmartPlan ----\n");
     printf("0: Exit Program\n1: Login\n2: Register\n--->");
 
-    while (1) {
+    while (1)
+    {
         scanf("%d", &answer);
         if (answer == 0 || answer == 1 || answer == 2 || answer == 19014)
             return answer;
@@ -63,37 +66,29 @@ void CheckOption(int option)
 {
     if (option == 0)
     {
-        printf("Thanks for using Smartplan\n");
+        printf("Thank you for using Smartplan\n");
+        return;
     }
-    else if (option == 1) {
+    else if (option == 1)
+    {
         user logged_in_user;
         login(&logged_in_user);
-    } 
-    else if (option == 2) {
+    }
+    else if (option == 2)
+    {
 
-        if(total_users >= MAX_USERS){
+        if (total_users >= MAX_USERS)
+        {
             printf("There is currently too many users registered on this platform!");
-
-
-        }else{
+        }
+        else
+        {
             reg();
         }
-        
-
     }
-    else if (option == 19014) {
-        printf("\n--- ADMIN MODE ---\n");
-
-        printf("\nRegistered Preferences:\n");
-        for (int i = 0; i < total_users; i++) {
-            printf("User: %s | %s %s %s\n",
-                   all_users[i].username,
-                   all_users[i].pref_days[0],
-                   all_users[i].pref_days[1],
-                   all_users[i].pref_days[2]);
-        }
-
-        compare_users_pref_days(all_users, total_users);
+    else if (option == 19014)
+    {
+        admin_menu();
     }
 }
 
@@ -103,12 +98,14 @@ void login(user *u)
     char username[20], password[20], file_username[20], file_password[20];
 
     FILE *f = fopen("Users.txt", "r");
-    if (!f) {
+    if (!f)
+    {
         printf("No users exist yet.\n");
         return;
     }
 
-    while (1) {
+    while (1)
+    {
         printf("Enter username: ");
         scanf("%19s", username);
         printf("Enter password: ");
@@ -117,22 +114,27 @@ void login(user *u)
         int match = 0;
         rewind(f);
 
-        while (fscanf(f, " %[^:]:%s", file_username, file_password) == 2) {
+        while (fscanf(f, " %[^:]:%s", file_username, file_password) == 2)
+        {
             if (strcmp(username, file_username) == 0 &&
-                strcmp(password, file_password) == 0) {
+                strcmp(password, file_password) == 0)
+            {
                 match = 1;
                 break;
             }
         }
 
-        if (match) {
+        if (match)
+        {
             strcpy(u->username, username);
             strcpy(u->password, password);
             printf("\nLogin successful!\n");
             usermenu(u);
             fclose(f);
             return;
-        } else {
+        }
+        else
+        {
             printf("Wrong username or password.\n");
         }
     }
@@ -166,7 +168,8 @@ void reg()
 void usermenu(user *u)
 {
     int option;
-    while (1) {
+    while (1)
+    {
         printf("\n--- USER MENU (%s) ---\n", u->username);
         printf("1: Edit work preference\n");
         printf("2: See work preference\n");
@@ -174,7 +177,10 @@ void usermenu(user *u)
         scanf("%d", &option);
 
         if (option == 3)
-            return;
+        {
+            CheckOption(0);
+            break;
+        }
         else if (option == 1)
             work_pref(u);
         else if (option == 2)
@@ -183,16 +189,18 @@ void usermenu(user *u)
 }
 
 // ---------------- DAY FUNCTIONS ----------------
-int day_to_index(char day[]) {
-    char *valid[] = {"Monday","Tuesday","Wednesday","Thursday",
-                     "Friday","Saturday","Sunday"};
+int day_to_index(char day[])
+{
+    char *valid[] = {"Monday", "Tuesday", "Wednesday", "Thursday",
+                     "Friday", "Saturday", "Sunday"};
     for (int i = 0; i < 7; i++)
         if (strcmp(day, valid[i]) == 0)
             return i;
     return -1;
 }
 
-int valid_day(char day[]) {
+int valid_day(char day[])
+{
     return day_to_index(day) != -1;
 }
 
@@ -203,7 +211,8 @@ void work_pref(user *u)
     printf("Enter 3 preferred days: ");
     scanf("%19s %19s %19s", p1, p2, p3);
 
-    if (!valid_day(p1) || !valid_day(p2) || !valid_day(p3)) {
+    if (!valid_day(p1) || !valid_day(p2) || !valid_day(p3))
+    {
         printf("Invalid day entered!\n");
         return;
     }
@@ -214,24 +223,29 @@ void work_pref(user *u)
     char name[20], d1[20], d2[20], d3[20];
     int updated = 0;
 
-    if (old) {
-        while (fscanf(old," %[^:]:%[^|]|%[^|]|%s",name,d1,d2,d3)==4) {
-            if (strcmp(name,u->username)==0) {
-                fprintf(temp,"%s:%s|%s|%s\n",u->username,p1,p2,p3);
-                updated=1;
-            } else {
-                fprintf(temp,"%s:%s|%s|%s\n",name,d1,d2,d3);
+    if (old)
+    {
+        while (fscanf(old, " %[^:]:%[^|]|%[^|]|%s", name, d1, d2, d3) == 4)
+        {
+            if (strcmp(name, u->username) == 0)
+            {
+                fprintf(temp, "%s:%s|%s|%s\n", u->username, p1, p2, p3);
+                updated = 1;
+            }
+            else
+            {
+                fprintf(temp, "%s:%s|%s|%s\n", name, d1, d2, d3);
             }
         }
         fclose(old);
     }
 
     if (!updated)
-        fprintf(temp,"%s:%s|%s|%s\n",u->username,p1,p2,p3);
+        fprintf(temp, "%s:%s|%s|%s\n", u->username, p1, p2, p3);
 
     fclose(temp);
     remove("pref_days.txt");
-    rename("temp.txt","pref_days.txt");
+    rename("temp.txt", "pref_days.txt");
 
     printf("Preferences saved.\n");
 
@@ -244,9 +258,11 @@ void check_user_prefdays(user *u)
     FILE *f = fopen("pref_days.txt", "r");
     char name[20], p1[20], p2[20], p3[20];
 
-    while (fscanf(f," %[^:]:%[^|]|%[^|]|%s",name,p1,p2,p3)==4) {
-        if (strcmp(name,u->username)==0) {
-            printf("Your preferred days: %s %s %s\n",p1,p2,p3);
+    while (fscanf(f, " %[^:]:%[^|]|%[^|]|%s", name, p1, p2, p3) == 4)
+    {
+        if (strcmp(name, u->username) == 0)
+        {
+            printf("Your preferred days: %s %s %s\n", p1, p2, p3);
             fclose(f);
             return;
         }
@@ -262,14 +278,15 @@ int load_all_preferences(user users[], int max_users)
     if (!f)
         return 0;
 
-    int count=0;
+    int count = 0;
     char name[20], d1[20], d2[20], d3[20];
 
-    while (fscanf(f," %[^:]:%[^|]|%[^|]|%s",name,d1,d2,d3)==4 && count<max_users) {
-        strcpy(users[count].username,name);
-        strcpy(users[count].pref_days[0],d1);
-        strcpy(users[count].pref_days[1],d2);
-        strcpy(users[count].pref_days[2],d3);
+    while (fscanf(f, " %[^:]:%[^|]|%[^|]|%s", name, d1, d2, d3) == 4 && count < max_users)
+    {
+        strcpy(users[count].username, name);
+        strcpy(users[count].pref_days[0], d1);
+        strcpy(users[count].pref_days[1], d2);
+        strcpy(users[count].pref_days[2], d3);
         count++;
     }
     fclose(f);
@@ -283,10 +300,12 @@ void compare_users_pref_days(user users[], int numb_of_users)
     int workers_count[DAYS] = {0};
 
     // 1) Assign preferred days first
-    for (int i = 0; i < numb_of_users; i++) {
-        for (int j = 0; j < 3; j++) {
+    for (int i = 0; i < numb_of_users; i++)
+    {
+        for (int j = 0; j < 3; j++)
+        {
             int day = day_to_index(users[i].pref_days[j]);
-            if (day != -1) 
+            if (day != -1)
             {
                 schedule[day][workers_count[day]] = i;
                 workers_count[day]++;
@@ -295,11 +314,13 @@ void compare_users_pref_days(user users[], int numb_of_users)
     }
 
     // 2) Randomly fill missing workers fairly
-    int forced_assigned[MAX_USERS] = {0};   // keeps track of who has already been forced
+    int forced_assigned[MAX_USERS] = {0}; // keeps track of who has already been forced
     srand(time(NULL));
 
-    for (int d = 0; d < DAYS; d++) {
-        while (workers_count[d] < MIN_WORKERS) {
+    for (int d = 0; d < DAYS; d++)
+    {
+        while (workers_count[d] < MIN_WORKERS)
+        {
 
             int candidates_pref[MAX_USERS];
             int pref_count = 0;
@@ -307,50 +328,60 @@ void compare_users_pref_days(user users[], int numb_of_users)
             // Find users who:
             // - are NOT already working this day
             // - and have NOT been forced yet
-            for (int u = 0; u < numb_of_users; u++) {
+            for (int u = 0; u < numb_of_users; u++)
+            {
                 int already = 0;
 
-                for (int k = 0; k < workers_count[d]; k++) {
-                    if (schedule[d][k] == u) {
+                for (int k = 0; k < workers_count[d]; k++)
+                {
+                    if (schedule[d][k] == u)
+                    {
                         already = 1;
                         break;
                     }
                 }
 
-                if (!already && forced_assigned[u] == 0) {
+                if (!already && forced_assigned[u] == 0)
+                {
                     candidates_pref[pref_count++] = u;
                 }
             }
 
             int pick = -1;
 
-            if (pref_count > 0) {
+            if (pref_count > 0)
+            {
                 // Pick randomly among users who haven't been forced yet
                 int idx = rand() % pref_count;
                 pick = candidates_pref[idx];
-            } 
-            else {
+            }
+            else
+            {
                 // Fallback: pick any user not already in this day
                 int candidates_any[MAX_USERS];
                 int any_count = 0;
 
-                for (int u = 0; u < numb_of_users; u++) {
+                for (int u = 0; u < numb_of_users; u++)
+                {
                     int already = 0;
 
-                    for (int k = 0; k < workers_count[d]; k++) {
-                        if (schedule[d][k] == u) {
+                    for (int k = 0; k < workers_count[d]; k++)
+                    {
+                        if (schedule[d][k] == u)
+                        {
                             already = 1;
                             break;
                         }
                     }
 
-                    if (!already) {
+                    if (!already)
+                    {
                         candidates_any[any_count++] = u;
                     }
                 }
 
                 if (any_count == 0)
-                    break;  // safety against infinite loop
+                    break; // safety against infinite loop
 
                 int idx = rand() % any_count;
                 pick = candidates_any[idx];
@@ -367,18 +398,84 @@ void compare_users_pref_days(user users[], int numb_of_users)
 
     // 3) Print final schedule
     char *day_names[] = {
-        "Monday","Tuesday","Wednesday",
-        "Thursday","Friday","Saturday","Sunday"
-    };
+        "Monday", "Tuesday", "Wednesday",
+        "Thursday", "Friday", "Saturday", "Sunday"};
 
     printf("\n----- FINAL WORK SCHEDULE -----\n");
-    for (int d = 0; d < DAYS; d++) {
+    for (int d = 0; d < DAYS; d++)
+    {
         printf("\n%s (%d workers): ", day_names[d], workers_count[d]);
         for (int i = 0; i < workers_count[d]; i++)
             printf("%s ", users[schedule[d][i]].username);
     }
     printf("\n--------------------------------\n");
 }
+
+// menu for admin
+void admin_menu()
+{
+    int option;
+
+    while (1)
+    {
+        printf("\n    ---- ADMIN MODE ----    \n\n");
+        printf("You have the following options:\n\n");
+        printf("1:--> See users preferences\n");
+        printf("2:--> Print work schedule for users\n");
+        printf("3:--> Exit admin mode\n\n---> ");
+
+        scanf("%d", &option);
+
+        // 1) See user preferences
+        if (option == 1)
+        {
+            printf("\nRegistered Preferences:\n");
+
+            if (total_users == 0)
+            {
+                printf("No users have saved preferences yet.\n");
+            }
+            else
+            {
+                for (int i = 0; i < total_users; i++)
+                {
+                    printf("User: %s | %s %s %s\n",
+                           all_users[i].username,
+                           all_users[i].pref_days[0],
+                           all_users[i].pref_days[1],
+                           all_users[i].pref_days[2]);
+                }
+            }
+        }
+
+        // 2) Print work schedule
+        else if (option == 2)
+        {
+            if (total_users == 0)
+            {
+                printf("No users available to create a schedule.\n");
+            }
+            else
+            {
+                compare_users_pref_days(all_users, total_users);
+            }
+        }
+
+        // 3) Exit admin mode 
+        else if (option == 3)
+        {
+            printf("Exiting admin mode...\n");
+            return;   
+        }
+
+        else
+        {
+            printf("Invalid input!\n");
+        }
+    }
+}
+
+
 
 
 
