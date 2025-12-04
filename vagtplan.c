@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <time.h>
+#include <windows.h> //Bruges Til Sleep Functionen
 
 #define MAX_USERS 10
 #define DAYS 7
@@ -48,8 +49,9 @@ int main(void)
 int introduction()
 {
     int answer;
+    boolean IntroOpen = 1;
     printf("---- Welcome to SmartPlan ----\n");
-    printf("0: Exit Program\n1: Login\n2: Register\n--->");
+    printf("0: Exit Program\n1: Register\n2: Login\n--->");
 
     while (1)
     {
@@ -67,24 +69,27 @@ void CheckOption(int option)
     if (option == 0)
     {
         printf("Thank you for using Smartplan\n");
+        printf("Program Closed");
         return;
     }
     else if (option == 1)
     {
-        user logged_in_user;
-        login(&logged_in_user);
-    }
-    else if (option == 2)
-    {
 
         if (total_users >= MAX_USERS)
         {
-            printf("There is currently too many users registered on this platform!");
+            printf("There is currently too many users registered on this platform!\n\n");
+            introduction();
+            //Selecting Login/ register doesnt work ************************************************************** SAME ON LINE: 495
         }
         else
         {
             reg();
         }
+    }
+    else if (option == 2)
+    {
+        user logged_in_user;
+        login(&logged_in_user);
     }
     else if (option == 19014)
     {
@@ -157,7 +162,7 @@ void reg()
 
     printf("User registered successfully!\n");
 
-    printf("Do you wish to loggin in? press 1 \n else press 0\n");
+    printf("0: Exit Program\n1: Register\n2: Login\n--->");
 
     scanf("%d", &choice);
 
@@ -171,20 +176,39 @@ void usermenu(user *u)
     while (1)
     {
         printf("\n--- USER MENU (%s) ---\n", u->username);
-        printf("1: Edit work preference\n");
-        printf("2: See work preference\n");
-        printf("3: Logout\n---> ");
+        printf("0: Close Program\n");
+        printf("1: Logout\n");
+        printf("2: Edit work preference\n");
+        printf("3: See work preference\n---> ");
+        //printf("4: See your work Schedule\n---> ");
         scanf("%d", &option);
 
-        if (option == 3)
+        if (option == 0) //Close Program
         {
-            CheckOption(0);
+            CheckOption(0); 
             break;
         }
-        else if (option == 1)
+        else if (option == 1) //LogOut
+        {
+        printf("You have successfully Logged Out\n");
+            introduction();
+            break;
+        }
+        else if (option == 2) //Edit Preferences
+        {
             work_pref(u);
-        else if (option == 2)
+            Sleep(1000); // This makes the program wait 1 seconds Before Loading Everything after this
+        }
+
+        else if (option == 3) //see preferences
+        {
             check_user_prefdays(u);
+            Sleep(4000); // This makes the program wait 4 seconds Before Loading Everything after this
+        }
+        /*Else if (option == 4)
+        {
+            Function that Show ONLY your Work Schedule
+        }*/
     }
 }
 
@@ -412,7 +436,7 @@ void compare_users_pref_days(user users[], int numb_of_users)
 }
 
 // menu for admin
-void admin_menu()
+void admin_menu() //Login = 19014
 {
     int option;
 
@@ -420,9 +444,9 @@ void admin_menu()
     {
         printf("\n    ---- ADMIN MODE ----    \n\n");
         printf("You have the following options:\n\n");
+        printf("0:--> Exit admin mode\n");
         printf("1:--> See users preferences\n");
-        printf("2:--> Print work schedule for users\n");
-        printf("3:--> Exit admin mode\n\n---> ");
+        printf("2:--> Print work schedule for users\n\n---> ");
 
         scanf("%d", &option);
 
@@ -439,12 +463,13 @@ void admin_menu()
             {
                 for (int i = 0; i < total_users; i++)
                 {
-                    printf("User: %s | %s %s %s\n",
+                    printf("User: %s | %s %s %s\n\n",
                            all_users[i].username,
                            all_users[i].pref_days[0],
                            all_users[i].pref_days[1],
                            all_users[i].pref_days[2]);
                 }
+                Sleep(4000);
             }
         }
 
@@ -458,14 +483,17 @@ void admin_menu()
             else
             {
                 compare_users_pref_days(all_users, total_users);
+                Sleep(4000);
             }
         }
 
         // 3) Exit admin mode 
-        else if (option == 3)
+        else if (option == 0)
         {
-            printf("Exiting admin mode...\n");
-            return;   
+            printf("Leaving admin mode...\n\n");
+            introduction();
+            //Selecting Login/ register doesnt work ************************************************************** SAME ON LINE: 82
+            break;
         }
 
         else
