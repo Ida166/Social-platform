@@ -1,0 +1,45 @@
+[
+  {
+    "id": 1,
+    "clubId": 101,
+    "title": "Friday Bar – Building B, Ground Floor (Stuen)",
+    "date": "2026-04-20",
+    "time": "15:00-00:00",
+    "location": "Building B, Ground Floor (Stuen)",
+    "description": "Join us for a relaxed Friday afternoon at the student bar. There will be music, cheap drinks, and a chance to hang out with other students. It’s a good way to unwind after a busy week and meet people from different study programs.",
+    "practicalInfo": [
+      "Valid student ID required for entry",
+      "Drinks available for purchase (cash and card accepted)",
+      "Music playlist open to requests"
+    ],
+    "isPublished": true
+  },
+  {
+    "id": 2,
+    "clubId": 102,
+    "title": "AAU Basketball Training",
+    "date": "2026-04-05",
+    "time": "18:00-20:00",
+    "location": "AAU Sports Hall",
+    "description": "Weekly basketball training session for all skill levels. Come improve your game and meet new teammates.",
+    "practicalInfo": [
+      "Bring indoor shoes",
+      "Water bottle recommended"
+    ],
+    "isPublished": true
+  },
+  {
+    "id": 3,
+    "clubId": 103,
+    "title": "Book Club Meetup",
+    "date": "2026-04-10",
+    "time": "16:00-18:00",
+    "location": "Library Room 2",
+    "description": "Monthly book club meeting where we discuss this month’s selected book and share thoughts.",
+    "practicalInfo": [
+      "Read the assigned book beforehand",
+      "Snacks will be provided"
+    ],
+    "isPublished": false
+  }
+]
