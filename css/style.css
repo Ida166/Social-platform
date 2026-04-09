@@ -1,343 +1,391 @@
 /*general styling*/
 @media (max-width: 600px) {
-    .text {
-        font-size: 16px;
-    }
+  .text {
+    font-size: 16px;
+  }
 
-    .role-button {
-        padding: 8px 16px;
-    }
-    .login-box {
-        padding: 20px;
-        width: 70%;
-    }
-
+  .role-button {
+    padding: 8px 16px;
+  }
+  .login-box {
+    padding: 20px;
+    width: 70%;
+  }
 }
 
 /* Base button container*/
 .button-container {
-    display: flex;
-    gap: 15px;
-    margin-top: 20px;
+  display: flex;
+  gap: 15px;
+  margin-top: 20px;
 }
 /* for horizontal buttors*/
 .button-container-horizontal {
-    flex-direction: row;
-    justify-content: center;
+  flex-direction: row;
+  justify-content: center;
 }
 /*for vertical buttors*/
 .button-container-vertical {
-    flex-direction: column;
-    align-items: center;
+  flex-direction: column;
+  align-items: center;
 }
 
 .role-button {
-    background-color: #ebeaea;  /* grå farve */
-    color: rgb(10, 10, 10);               /* Tekstfarve */
-    border: none; /* 2px solid rgb(244, 217, 13); */
-    padding: 10px 20px;
-    border-radius: 5px;   /* Dette runder hjørnerne */
+  background-color: #ebeaea; /* grå farve */
+  color: rgb(10, 10, 10); /* Tekstfarve */
+  border: none; /* 2px solid rgb(244, 217, 13); */
+  padding: 10px 20px;
+  border-radius: 5px; /* Dette runder hjørnerne */
 }
 .role-button:hover {
-    background-color: #cac8c8;  /* Mørkere når man holder musen over */
-    color: rgb(0, 2, 108);
+  background-color: #cac8c8; /* Mørkere når man holder musen over */
+  color: rgb(0, 2, 108);
 }
 
 /*skjul som standard*/
 .club-btn-create-event,
-.admin-btn-delete-event{
-    display: none;
-    margin: 10px;
-    padding: 10px 20px;
-    font-size: 16px;
-    border-radius: 5px;
-    border: none;
+.admin-btn-delete-event {
+  display: none;
+  margin: 10px;
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 5px;
+  border: none;
 }
 
 /*AAlborg University image login page*/
 .AAU-image {
-    width: 50%;
-    max-width: 400px;
-    display: block;      /*makes it behave like a block*/
-    margin: 40px auto;   /*centers it horizontally, 20px adds space above and below*/
+  width: 50%;
+  max-width: 400px;
+  display: block; /*makes it behave like a block*/
+  margin: 40px auto; /*centers it horizontally, 20px adds space above and below*/
 }
 
 /*text, Styles the “Choose a user type” text*/
 .text {
-    text-align: center;
-    font-size: 20px;
-    font-family: Arial, sans-serif;
-    margin: 40px;
-    color: rgb(15, 15, 39);
+  text-align: center;
+  font-size: 20px;
+  font-family: Arial, sans-serif;
+  margin: 40px;
+  color: rgb(15, 15, 39);
 }
 /*Creates the white card/box*/
 .login-box {
-    background-color: white;
-    padding: 40px;
-    border-radius: 10px; /*Rounds corners*/
-    max-width: 450px;
-    text-align: center;
-    box-shadow: 0 10px 30px rgba(21, 7, 71, 0.2); /*gives the fade on the boarder of the box*/
+  background-color: white;
+  padding: 40px;
+  border-radius: 10px; /*Rounds corners*/
+  max-width: 450px;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(21, 7, 71, 0.2); /*gives the fade on the boarder of the box*/
 }
 
 /*Centers the .login-box vertically and horizontally on the page*/
 .login-page {
-    margin: 0;
-    height: 100vh;
-    display: flex;
-    justify-content: center; /* horizontal centering */
-    align-items: center;     /* vertical centering */
-    padding: 40px;
+  margin: 0;
+  height: 100vh;
+  display: flex;
+  justify-content: center; /* horizontal centering */
+  align-items: center; /* vertical centering */
+  padding: 40px;
 
-    background-image: url("../assets/images/YOUR-BACKGROUND.jpg");
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
+  background-image: url("../assets/images/YOUR-BACKGROUND.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 /* Dashboard kalender */
+.page-title {
+}
+
+.page-title h1 {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 600;
+  font-family: Arial, sans-serif;
+  line-height: 1;
+}
+
+.club-list-link {
+  cursor: pointer;
+}
+
+.club-list-link:hover {
+  color: rgb(13, 13, 53);
+}
+
+#club-list-box {
+  position: absolute; /* Position relative to .topbar */
+  top: 0; /* Appear directly under the topbar */
+  left: 0;
+  right: 0; /* Fill the width of topbar */
+  height: 100%;
+  inset: 0;
+  z-index: 20;
+
+  background-color: rgba(255, 255, 255, 1); /* Gray overlay feel */
+}
+
+#club-list-inner {
+  background-color: #ebe5e5;
+  margin: 0 auto;
+
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 20px;
+
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
 
 li {
-    list-style: none; /*lister for normalt bullets, som vi her fjerner*/
+  list-style: none; /*lister for normalt bullets, som vi her fjerner*/
 }
 
 ul {
-    margin: 0; /*fjerner afstand udenomlisten*/
-    padding: 0; /*fjerne indrykning inden i listen*/
+  margin: 0; /*fjerner afstand udenomlisten*/
+  padding: 0; /*fjerne indrykning inden i listen*/
 }
 
 .side {
-    display: grid;
-    grid-template-columns: 220px 1fr;
-    font-family: Arial, Helvetica, sans-serif;
+  position: relative;
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 .sidebar {
-    padding: 16px;
-    display: flex;
-    flex-direction: column;
-    gap: 50px; /*mellemrum mellem de to sidebarer*/
-    border-right: 1px solid;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 50px; /*mellemrum mellem de to sidebarer*/
+  border-right: 1px solid;
 }
 
-.sidebartop, sidebarbottom {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
+.sidebartop,
+sidebarbottom {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
 }
 
 .menu-item {
-    padding: 20px;
-    border-radius: 5px;
-    background: white;
-    border: 1px solid;
+  padding: 20px;
+  border-radius: 5px;
+  background: white;
+  border: 1px solid;
 }
 
 .main {
- display: flex;
- flex-direction: column;
- gap: 10px;
- padding: 20px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  /* padding: 20px; */
 }
 
 .main h1 {
-    margin-top: 30px;
+  /* margin-top: 30px; */
 }
 
 .topbar {
-    height: 25px;
-    background: lightgray;
-    border-radius: 5px;
-
+  position: relative;
+  height: 25px;
+  background: lightgray;
+  border-radius: 5px;
 }
-.datofilter, .filter {
-    height: 50px;
-    background: lightgray;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    padding-left: 16px; /*brug padding i boksen og ikke i teksten for at justere tekst i en boks*/
+.datofilter,
+.filter {
+  height: 50px;
+  background: lightgray;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  padding-left: 16px; /*brug padding i boksen og ikke i teksten for at justere tekst i en boks*/
 }
 
-.datofilter{
-    margin-left: 200px;
-    width: 60%;
+.datofilter {
+  margin-left: 200px;
 }
 
 #dato {
-
 }
 
-.calendarcontainer { /*ydreramme*/
-    display: grid;
-    grid-template-columns: 50px auto; /*to kolonner - første 50px bred, og anden er auto, som er resten af pladsen*/
-    grid-template-rows: auto; /*her er der sådan set ikke defineret flere rækker hmm*/
-    gap: 1px 1px; /*1px mellem hver linje i griddet*/
-    grid-template-areas: /*navngiver områder i griddet*/
+.calendarcontainer {
+  /*ydreramme*/
+  display: grid;
+  grid-template-columns: 50px auto; /*to kolonner - første 50px bred, og anden er auto, som er resten af pladsen*/
+  grid-template-rows: auto; /*her er der sådan set ikke defineret flere rækker hmm*/
+  gap: 1px 1px; /*1px mellem hver linje i griddet*/
+  grid-template-areas: /*navngiver områder i griddet*/
     ". header" /*øverst til venstre laves der et tom felt og øverst til højre er der header*/
     "timeslotscontainer main"; /*nederest til venstre er der timeslot og nederst til højre har vi main*/
 }
 
-    .weekdays,
-    .daynumbers { /*begge lister bliver lavet som grids med 7 colummns, hver kolonne med lige meget plads 1 fraction af 7*/
-        display: grid;
-        grid-template-columns: repeat(7, 1fr);
-    }
+.weekdays,
+.daynumbers {
+  /*begge lister bliver lavet som grids med 7 colummns, hver kolonne med lige meget plads 1 fraction af 7*/
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+}
 
-    .weekdays {
-        background-color: lightblue;
-        border-radius: 5px;
-    }
+.weekdays {
+  background-color: lightblue;
+  border-radius: 5px;
+}
 
-    .daynumbers {
-        min-height: 2em; /* giver lidt ldoret plads, nogrte med ca. 2 gange teksten størrelse*/
-    }
+.daynumbers {
+  min-height: 2em; /* giver lidt ldoret plads, nogrte med ca. 2 gange teksten størrelse*/
+}
 
-    .header {
-        background: gray;
-        grid-area: header;
-    }
+.header {
+  background: gray;
+  grid-area: header;
+}
 
-    .timeslotscontainer {
-        background-color: lightgray;
-        grid-area: timeslotscontainer;
-        border-radius: 10px ;
-    }
+.timeslotscontainer {
+  background-color: lightgray;
+  grid-area: timeslotscontainer;
+  border-radius: 10px;
+}
 
-    .timeslots {
-        display: flex; /*flex er en måde at arrangere elementer på*/
-        flex-direction: column; /*lodret under hinanden*/
-        align-items: center;
-    }
+.timeslots {
+  display: flex; /*flex er en måde at arrangere elementer på*/
+  flex-direction: column; /*lodret under hinanden*/
+  align-items: center;
+}
 
-    .timeslots li{
-        min-height: 40px;
-        position: relative;
-    }
+.timeslots li {
+  min-height: 40px;
+  position: relative;
+}
 
-    .timeslots li::after { /*betyder lav noget efter indholdet*/
-        content: ""; /*ekstra pseudo element visuelt*/
-        position: absolute;
-        left: 0px;
-        width: 77vw;
-        height: 1px;
-        background: gray;
-        z-index: 1;
+.timeslots li::after {
+  /*betyder lav noget efter indholdet*/
+  content: ""; /*ekstra pseudo element visuelt*/
+  position: absolute;
+  left: 0px;
+  width: 77vw;
+  height: 1px;
+  background: gray;
+  z-index: 1;
+}
 
-    }
-
-    .eventcontainer { /*hele boksen med event - som har 2 classes slot og slot1 (styling og placering)*/
-        display: grid;
-        grid-template-columns: repeat(7, 1fr);
-        grid-template-rows: repeat(96, 10px); /** 4 kvarter på en time, 96 kvarter på 24 timer,
+.eventcontainer {
+  /*hele boksen med event - som har 2 classes slot og slot1 (styling og placering)*/
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  grid-template-rows: repeat(
+    96,
+    10px
+  ); /** 4 kvarter på en time, 96 kvarter på 24 timer,
         hvert kvarter er 10px.*/
-        grid-area: main;
-        position: relative;
-    }
+  grid-area: main;
+  position: relative;
+}
 
-    .slot { /*"indeni" eventcontainer - generelt om slot placering og sån*/
-        position: relative;
-        background: green;
-        border-radius: 5px ;
-        z-index: 5; /*lag*/
-        color: white;
-        font-size: 15px;
+.slot {
+  /*"indeni" eventcontainer - generelt om slot placering og sån*/
+  position: relative;
+  background: green;
+  border-radius: 5px;
+  z-index: 5; /*lag*/
+  color: white;
+  font-size: 15px;
+}
 
-    }
-
-    .slot1 { /*"indeni" eventcontainer - specifikt eksempel*/
-        top: 240px;     /* 00:00-6:00 <=> 6*60 = 360 min, 360 / 15 = 24  */
-        height: 40px;   /* hvert kvarter er 10px, dvs, 30 minutter er 20px*/
-        width: 100%;    /*den vil udfylde 1/7-del af eventcontainer*/
-        grid-column: 3  /*inddelt i 7 collumns så dette beskrive hvilken dag*/
-        
-    }
-
+.slot1 {
+  /*"indeni" eventcontainer - specifikt eksempel*/
+  top: 240px; /* 00:00-6:00 <=> 6*60 = 360 min, 360 / 15 = 24  */
+  height: 40px; /* hvert kvarter er 10px, dvs, 30 minutter er 20px*/
+  width: 100%; /*den vil udfylde 1/7-del af eventcontainer*/
+  grid-column: 3; /*inddelt i 7 collumns så dette beskrive hvilken dag*/
+}
 
 /* Application to create club or event*/
 /* Form overlay */
 #create-club-or-event_box {
-    position: absolute;  /* overlay on top of content */
-    top: 120px;          /* below the big heading ("Events & Clubs") and top bar */
-    left: 250px;         /* width of your sidebar */
-    right: 20px;         /* small gap on right */
-    height: calc(100vh - 140px); /* full viewport height minus top margin */   
-    background-color: #f9f9f9;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    padding: 30px;
-    overflow-y: auto;    /* allow scrolling if content is tall */
-    z-index: 100;        /* on top of everything */
+  position: absolute; /* overlay on top of content */
+  top: 120px; /* below the big heading ("Events & Clubs") and top bar */
+  left: 250px; /* width of your sidebar */
+  right: 20px; /* small gap on right */
+  height: calc(100vh - 140px); /* full viewport height minus top margin */
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 30px;
+  overflow-y: auto; /* allow scrolling if content is tall */
+  z-index: 100; /* on top of everything */
 }
 /* Inner content can still scroll*/
 #create-club-or-event_box_content {
-    max-width: 100%;
-    height: 100%;
+  max-width: 100%;
+  height: 100%;
 }
 /* Container */
-#create-club-or-event_box { /*use # because it is uniqe and can not be reused*/
-    max-width: 700px;
-    margin: 50px auto;
-    background-color: #f9f9f9;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-    padding: 30px;
-    font-family: Arial, sans-serif;
-    color: #333;
+#create-club-or-event_box {
+  /*use # because it is uniqe and can not be reused*/
+  max-width: 700px;
+  margin: 50px auto;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  padding: 30px;
+  font-family: Arial, sans-serif;
+  color: #333;
 }
 
 /* Heading */
 #create-club-or-event_box h2 {
-    font-size: 24px;
-    margin-bottom: 20px;
-    font-weight: 600;
+  font-size: 24px;
+  margin-bottom: 20px;
+  font-weight: 600;
 }
 
 /* Form sections */
 #application_for_club_or_event_form p {
-    font-weight: 600;
-    margin-top: 20px;
-    margin-bottom: 10px;
-    border-bottom: 1px solid #ddd;
-    padding-bottom: 5px;
+  font-weight: 600;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 5px;
 }
 
 /* Inputs & Textareas */
 #application_for_club_or_event_form input,
 #application_for_club_or_event_form textarea {
-    width: 100%;
-    padding: 10px 12px;
-    margin: 8px 0;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 14px;
-    box-sizing: border-box;
+  width: 100%;
+  padding: 10px 12px;
+  margin: 8px 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px;
+  box-sizing: border-box;
 }
 
 /*Makes the areas bigger*/
 #application_for_club_or_event_form textarea {
-    min-height: 100px;
-    resize: vertical;
+  min-height: 100px;
+  resize: vertical;
 }
 /* Form rows, so they are not on to of each other  */
 .form-row {
-    display: flex;
-    gap: 20px;
-    margin-top: 10px;
+  display: flex;
+  gap: 20px;
+  margin-top: 10px;
 }
 
 .checkbox-group {
-    margin: 10px 0;
+  margin: 10px 0;
 }
 
 /* they are beside each other and text under check box*/
 #application_for_club_or_event_form label {
-    display: inline-block;
-    margin-right: 20px;
-    font-size: 14px;
-    cursor: pointer;
+  display: inline-block;
+  margin-right: 20px;
+  font-size: 14px;
+  cursor: pointer;
 }
 
 .hidden {

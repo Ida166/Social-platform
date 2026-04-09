@@ -1,165 +1,142 @@
-<!--Fælles dashboard efter login */-->
+<!--Fælles dashboard efter login -->
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>MapOut - Dashboard</title>
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/roles/user.css">
-    <link rel="stylesheet" href="css/roles/club_owner.css">
-    <link rel="stylesheet" href="css/roles/admin.css">
-    
-</head>
-<body>
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/roles/user.css" />
+    <link rel="stylesheet" href="css/roles/club_owner.css" />
+    <link rel="stylesheet" href="css/roles/admin.css" />
+  </head>
+  <body>
     <p id="roleText"></p>
-    
+
     <!--Test for visning af rollespecifikke elementer-->
-    <button class="club-btn-create-event" data-permission="create_event">Create Event</button>
-    <button class="admin-btn-delete-event" data-permission="delete_event">Delete Event</button>
-    <button class="role-button" id="logOut">Log Out</button>
-    
-    <!-- Apply to create club or event -->
-    <button class="role-button"
-            id="createClubOrEvent"
-            data-permission="create-club-or-event">
-        Apply to create club
-    </button>
-    <div id="create-club-or-event_box" class="club_or_event_application hidden">
-        <div class="create-club-or-event_box_content">
-            <h2>Application to create a Club or Event</h2>
+    <div>
+        <button class="club-btn-create-event" data-permission="create_event">Create Event</button>
+        <button class="admin-btn-delete-event" data-permission="delete_event">Delete Event</button>
+        <button class="role-button" id="logOut">Log Out</button>
 
-            <form id="application_for_club_or_event_form">
-            <p>Your Details</p>
-                <input type="text" placeholder="Your Name" required />
-                <input type="email" placeholder="Email" required />
-                <input type="text" placeholder="Education" required />
-                <input type="text" placeholder="Phone Number" required />
-
-            <p>Your Project</p>
-                <div class="checkbox-group">
-                    <label>
-                        <input type="checkbox" id="checkBoxClub">
-                        Create Club
-                    </label>
-                    <label>
-                        <input type="checkbox" id="checkBoxEvent">
-                        Create Event
-                    </label>
-                </div>
-
-                <div class="form-row">
-                    <input type="text" placeholder="Club/Event Name" required />
-                    <input type="text" placeholder="Category" required />
-                </div>
-
-                <div class="form-row">
-                    <textarea placeholder="Tell us about your idea"></textarea>
-                    <textarea placeholder="What motivates you?"></textarea>
-                </div>
-                
-                <div class="button-container button-container-horizontal">
-                    <button class="role-button" type="submit">Send application</button>
-                    <button class="role-button" type="button" id="close-page">Go Back</button>
-                </div>
-                
-            </form>
-        </div>
     </div>
     
+    <!-- Apply to create club or event box -->
+    <button
+      class="role-button"
+      id="createClubOrEvent"
+      data-permission="create-club-or-event">
+      Apply to create club
+    </button>
 
+    <div
+      id="create-club-or-event_box"
+      class="club_or_event_application hidden"
+    ></div>
     
-    <script type="module" src="js/pages/dashboardPage.js"></script>
 
-     <div class="side">
-            <aside class="sidebar">
-
-                <div class="sidebartop">
-                    <div class="menu-item">Dashboard</div>
-                    <div class="menu-item">Calendar</div>
-                    <div class="menu-item">CalMoodle</div>
-                    <div class="menu-item">Events & clubs</div>
-                </div>
-                <div class="sidebarbottom">
-                    <div class="menu-item">Courses shortcut</div>
-                    <div class="menu-item">Search</div>
-                    <div class="menu-item">Courses xx</div>
-                </div>
-            </aside>
-
-        <div class="main">
-            <div class="topbar">
-            <h1>Events & clubs</h1>
-            <div class="filter">
-                <h3>Filter</h3>
-            </div>
-            <h2> Dato fx 20/02/2026</h2>
-            <div class="datofilter">
-
+    <div class="side">
+      <aside class="sidebar">
+        <div class="sidebartop">
+          <div class="menu-item">Dashboard</div>
+          <div class="menu-item">Calendar</div>
+          <div class="menu-item">CalMoodle</div>
+          <div class="menu-item">Events & clubs</div>
         </div>
-           
-          
+        <div class="sidebarbottom">
+          <div class="menu-item">Courses shortcut</div>
+          <div class="menu-item">Search</div>
+          <div class="menu-item">Courses xx</div>
+        </div>
+      </aside>
 
-            <div class="calendarcontainer">
-                <div class="header">
-                    <ul class="weekdays">
-                        <li>Mandag</li> 
-                        <li>Tirsdag</li>
-                        <li>Onsdag</li>
-                        <li>Torsdag</li>
-                        <li>Fredag</li>
-                        <li>Lørdag</li>
-                        <li>Søndag</li>
-                    </ul>
-                    <ul class="daynumbers">
-                        <li>1</li>
-                        <li>2</li>
-                        <li>3</li>
-                        <li>4</li>
-                        <li>5</li>
-                        <li>6</li>
-                        <li>7</li>
-                    </ul>
-                </div>
+      <div class="main">
+        <div style="margin-top:6px"></div>
+
+        <!--Club list container -->
+        <div id="club-list-box" class="hidden">
+        </div>
+
+        <div class="topbar">
+        </div>
+        <div class="page-title">
+          <h1>
+            Events & clubs |
+            <span class="club-list-link" id="clubListLink"> Club List</span>
+          </h1>
+        </div>
+
+          <div class="filter">
+            <h3>Filter</h3>
+          </div>
+          <div style="display:flex; justify-content: start; align-items: center;">
+              <h2>Dato fx 20/02/2026</h2>
+              <div style="width: 300px;" class="datofilter"></div>
+          </div>
+
+          <div class="calendarcontainer">
+            <div class="header">
+              <ul class="weekdays">
+                <li>Mandag</li>
+                <li>Tirsdag</li>
+                <li>Onsdag</li>
+                <li>Torsdag</li>
+                <li>Fredag</li>
+                <li>Lørdag</li>
+                <li>Søndag</li>
+              </ul>
+              <ul class="daynumbers">
+                <li>1</li>
+                <li>2</li>
+                <li>3</li>
+                <li>4</li>
+                <li>5</li>
+                <li>6</li>
+                <li>7</li>
+              </ul>
+            </div>
 
             <div class="timeslotscontainer">
-                <ul class="timeslots">
-                    <li>00:00</li>
-                    <li>1:00</li>
-                    <li>2:00</li>
-                    <li>3:00</li>
-                    <li>4:00</li>
-                    <li>5:00</li>
-                    <li>6:00</li>
-                    <li>7:00</li>
-                    <li>8:00</li>
-                    <li>9:00</li>
-                    <li>10:00</li>
-                    <li>11:00</li>
-                    <li>12:00</li>
-                    <li>13:00</li>
-                    <li>14:00</li>
-                    <li>15:00</li>
-                    <li>16:00</li>
-                    <li>18:00</li>
-                    <li>19:00</li>
-                    <li>20:00</li>
-                    <li>21:00</li>
-                    <li>22:00</li>
-                    <li>23:00</li>
-                    <li>00:00</li>
-                </ul>
+              <ul class="timeslots">
+                <li>00:00</li>
+                <li>1:00</li>
+                <li>2:00</li>
+                <li>3:00</li>
+                <li>4:00</li>
+                <li>5:00</li>
+                <li>6:00</li>
+                <li>7:00</li>
+                <li>8:00</li>
+                <li>9:00</li>
+                <li>10:00</li>
+                <li>11:00</li>
+                <li>12:00</li>
+                <li>13:00</li>
+                <li>14:00</li>
+                <li>15:00</li>
+                <li>16:00</li>
+                <li>18:00</li>
+                <li>19:00</li>
+                <li>20:00</li>
+                <li>21:00</li>
+                <li>22:00</li>
+                <li>23:00</li>
+                <li>00:00</li>
+              </ul>
             </div>
 
             <div class="eventcontainer">
-                <div class="slot slot1">
-                    <div class="eventstatus"></div>
-                    <span>Event A</span>
-                </div>
+              <div class="slot slot1">
+                <div class="eventstatus"></div>
+                <span>Event A</span>
+              </div>
             </div>
+          </div>
         </div>
+      </div>
     </div>
 
-</body>
+    <script type="module" src="js/pages/dashboardPage.js"></script>
+  </body>
 </html>

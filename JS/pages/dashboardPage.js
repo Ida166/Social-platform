@@ -43,19 +43,64 @@ function initDashboard() {
             window.location.href = "index.html";
         });
 
+   
+    /*oppening and closing of the application for club or events box */
     const apply_create_club_or_event = document.getElementById("createClubOrEvent");
     const apply_create_club_or_event_box = document.getElementById("create-club-or-event_box");
-    const close_apply_create_club_or_event = document.getElementById("close-page");
 
-    // Åbn application box
-    apply_create_club_or_event.addEventListener("click", () => {
-        apply_create_club_or_event_box.classList.remove("hidden");
-    });
+    if (apply_create_club_or_event) {
+        apply_create_club_or_event.addEventListener("click", async () => {
 
-    // Luk application box
-    close_apply_create_club_or_event.addEventListener("click", () => {
-        apply_create_club_or_event_box.classList.add("hidden");
-    });
+            // Hent HTML fra separat fil
+            const response = await fetch("components/application_club-event_form.html");
+            const html = await response.text();
+
+            // Indsæt HTML i container
+            apply_create_club_or_event_box.innerHTML = html;
+
+            // Vis popup
+            apply_create_club_or_event_box.classList.remove("hidden");
+
+            // Luk-knap (skal bindes EFTER HTML er indsat)
+            const closeBtn = document.getElementById("close-page");
+            if (closeBtn) {
+                closeBtn.addEventListener("click", () => {
+                    apply_create_club_or_event_box.classList.add("hidden");
+                    apply_create_club_or_event_box.innerHTML = "";
+                });
+            }
+        });
+    }
+
+    /*opening and closing of the club list */
+    
+    const clubListLink = document.getElementById("clubListLink");
+    
+    if(clubListLink){
+        clubListLink.addEventListener("click", async () => {
+        
+        const clubListBox = document.getElementById("club-list-box");
+
+            // Hent HTML fra seperat fil
+            const response = await fetch("components/club_list.html");
+            const html = await response.text();
+            console.log(clubListBox);
+            //Indsæt HTML i container
+            clubListBox.innerHTML = html;
+
+            //Vis box
+            clubListBox.classList.remove("hidden");
+
+            /*Close box when span is clicked */
+            const closeClubList = document.getElementById("close-club-list");
+            if(closeClubList){
+                closeClubList.addEventListener("click", () => {
+                    clubListBox.classList.add("hidden");
+                    clubListBox.innerHTML = "";
+                });
+            }
+        });
+    }
     
 }
 
