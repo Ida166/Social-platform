@@ -145,6 +145,8 @@ function initDashboard() {
                                         <h4>${event.title}</h4>
                                         <p>${event.date} | ${event.time}</p>
                                         <p>${event.location}</p>
+                                        <p>${event.description}</p>
+                                        <p>${event.practicalInfo}</p>
                                     </div>
                                 `).join("")
                                 : "<p>No events yet</p>"
