@@ -7,6 +7,7 @@ import { getRole } from "../core/auth.js";
 
 /*Import the club list */
     import { getClubs } from "./clubServices.js";
+    import { getEvent } from "./clubServices.js";
 
  
 // Styling baseret på role
@@ -80,20 +81,95 @@ function initDashboard() {
     /*Import the club list */
     let clubsLoaded = false; //makes sure we do not load double
 
-    async function loadClubs(){
+    window.loadClubs = async function loadClubs(){
         if(clubsLoaded) return;
 
         const clubs = await getClubs();
         const container = document.getElementById("club-list");
 
         container.innerHTML = clubs.map(club => `
-            <div class="club-card">
+            <div class="club-card" data-id="${club.clubid}">
                 <h3>${club.name}</h3>
                 <img src="${club.image}" alt="${club.name}" class="club-img"/>
             </div>
         `).join("");
+
+        /*Opens club page when user clicks on a club */
+        container.addEventListener("click", async (e) => {
+            const card = e.target.closest(".club-card");
+            if (!card) return;
+
+            const clubId = Number(card.dataset.id);
+
+            openClubPage(clubId);
+        });
     }
 
+    /*Import the event data*/
+    async function openClubPage(clubId){
+        const clubs = await getClubs();
+        const events = await getEvent();
+
+        const club = clubs.find(c => c.clubid === clubId);
+
+        const container = document.getElementById("club-list-box");
+
+        if (!club) {
+            container.innerHTML = "<p>Club not found</p>";
+            return;
+        }
+
+        const clubEvents = events.filter(
+            e => e.clubId === clubId && e.isPublished
+        );
+
+        container.innerHTML = `
+            <div id="event-page">
+                <div class="club-detail">
+
+                    <div>
+                        <h2>${club.name}</h2>
+                        <p>${club.description}</p>
+                    </div>
+                    
+                    <img src="${club.image}" alt="${club.name}" />
+
+                </div>
+                <div>
+                    <h3>Events</h3>
+                    <div id="event-list">
+                        ${
+                            clubEvents.length > 0
+                                ? clubEvents.map(event => `
+                                    <div class="event-card">
+                                        <h4>${event.title}</h4>
+                                        <p>${event.date} | ${event.time}</p>
+                                        <p>${event.location}</p>
+                                    </div>
+                                `).join("")
+                                : "<p>No events yet</p>"
+                        }
+                    </div>
+                </div>
+
+                <button id="close-event-page">Close</button>
+            </div>
+        `;
+
+        // close the club page
+        const closeClubPage = container.querySelector("#close-event-page");
+
+        if (closeClubPage) {
+            closeClubPage.addEventListener("click", async () => {
+                const response = await fetch("components/club_list.html");
+                const html = await response.text();
+
+                container.innerHTML = html;
+                await loadClubs();
+            });
+        }
+    }
+}
 
     /*opening and closing of the club list */
     
@@ -111,13 +187,14 @@ function initDashboard() {
             //Indsæt HTML i container
             clubListBox.innerHTML = html;
             
+            //Function from clubServucSes.js that loads the clubs in 
             await loadClubs();
 
             //Vis box
             clubListBox.classList.remove("hidden");
 
             /*Close box when span is clicked */
-            const closeClubList = document.getElementById("close-club-list");
+            const closeClubList = clubListBox.querySelector("#close-club-list");
             if(closeClubList){
                 closeClubList.addEventListener("click", () => {
                     clubListBox.classList.add("hidden");
@@ -126,8 +203,7 @@ function initDashboard() {
                 });
             }
         });
+
     }
-    
-}
 
 document.addEventListener("DOMContentLoaded", initDashboard); //DOMContentLoaded betyder: “Kør først, når hele HTML’en er indlæst.”

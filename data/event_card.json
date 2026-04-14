@@ -1,6 +1,6 @@
 [
   {
-    "id": 1,
+    "eventid": 1,
     "clubId": 101,
     "title": "Friday Bar – Building B, Ground Floor (Stuen)",
     "date": "2026-04-20",
@@ -15,7 +15,7 @@
     "isPublished": true
   },
   {
-    "id": 2,
+    "eventid": 2,
     "clubId": 102,
     "title": "AAU Basketball Training",
     "date": "2026-04-05",
@@ -29,7 +29,7 @@
     "isPublished": true
   },
   {
-    "id": 3,
+    "eventid": 3,
     "clubId": 103,
     "title": "Book Club Meetup",
     "date": "2026-04-10",
@@ -41,5 +41,19 @@
       "Snacks will be provided"
     ],
     "isPublished": false
+  },
+  {
+    "eventid": 5,
+    "clubId": 105,
+    "title": "Bouldering Crew",
+    "date": "2026-04-10",
+    "time": "16:00-18:00",
+    "location": "Boulders Sydhavn",
+    "description": "We meet up every Monday and Friday to climb together in Boulders Sydhavn",
+    "practicalInfo": [
+      "Remember to bring you practise clothes",
+      "We will go to the friday bar afterwerds"
+    ],
+    "isPublished": true
   }
 ]
