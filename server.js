@@ -24,9 +24,13 @@ app.get('/events', (req, res) => {
 app.get('/clubs', (req, res) => {
   db.query('SELECT * FROM clubs', (err, result) => {
     if (err) {
-      console.log(err);
-      return res.status(500).json({ error: 'something went wrong' });
+      console.log("Clubs error:", err);
+      return res.status(500).json({
+        error: err.message
+      });
     }
+
+    console.log("CLUBS RESULT:", result);
     res.json(result);
   });
 });
