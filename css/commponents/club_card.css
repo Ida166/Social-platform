@@ -1,9 +1,9 @@
 
 
-
+/*
 /*Club list*/
 /* Club card */
-.club-card {
+/*.club-card {
   display: flex;
   align-items: center;
   gap: 16px;
@@ -16,19 +16,19 @@
   border: 1px solid #e0e0e0;
 
   /* subtle Moodle-like shadow */
-  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+ /* box-shadow: 0 2px 6px rgba(0,0,0,0.05);
 
   transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
 /* Hover effect like dashboard cards */
-.club-card:hover {
+/*.club-card:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0,0,0,0.08);
 }
 
 /* Title styling */
-#club-list-inner h2 {
+/*#club-list-inner h2 {
   font-size: 24px;
   font-weight: 600;
   margin-bottom: 20px;
@@ -36,7 +36,7 @@
 }
 
 /* Image styling */
-.club-card img.club-img {
+/*.club-card img.club-img {
   width: 80px;
   height: 80px;
   object-fit: cover;
@@ -46,7 +46,7 @@
 }
 
 /* Button styling */
-#close-club-list {
+/*#close-club-list {
   margin-top: 20px;
   padding: 10px 16px;
 
@@ -54,12 +54,13 @@
   border-radius: 6px;
 
   background-color: #0f6cbf; /* Moodle-like blue */
-  color: white;
-  font-weight: 500;
+  /*color: white;
+ /* font-weight: 500;
 
-  cursor: pointer;
+/*  cursor: pointer;
 }
 
 #close-club-list:hover {
   background-color: #0c5aa6;
 }
+*/

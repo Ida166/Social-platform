@@ -148,6 +148,7 @@
   z-index: 20;
   background-color: #ffffff; /* Gray overlay feel (the background is white)*/
   left: 230px; /* 👈 starts AFTER idebar */
+  font-family: Arial, sans-serif;
 }
 
 #create-club-or-event-inner {
@@ -408,7 +409,7 @@ ul {
 
 /* Heading */
 #create-club-or-event_box h2 {
-  font-size: 24px;
+  font-size: 20px;
   margin-bottom: 20px;
   font-weight: 600;
 }
