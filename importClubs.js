@@ -2,26 +2,43 @@ const fs = require('fs');
 const path = require('path');
 const db = require('./db');
 
-// path to our JSON file 
 const filePath = path.join(__dirname, '../data/club_card.json');
 
-// read JSON file
-const clubs = JSON.parse(
-  fs.readFileSync(filePath, 'utf8')
-);
+let clubs;
 
-// insert each club into SQL
-clubs.forEach(club => {
-  db.query(
-    `INSERT INTO clubs (id, name, category, description, owner_id)
-     VALUES (?, ?, ?, ?, ?)`,
-    [
-      club.id,
-      club.name,
-      club.category,
-      club.description,
-      club.ownerId
-    ]
-  );
+try {
+  clubs = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+} catch (err) {
+  console.error("Failed to read JSON:", err);
+  process.exit(1);
+}
+
+console.log(`Importing ${clubs.length} clubs...`);
+
+const query = `
+  INSERT INTO clubs (id, name, category, description, owner_id)
+  VALUES (?, ?, ?, ?, ?)
+`;
+
+let completed = 0;
+
+clubs.forEach((club) => {
+  db.query(query, [
+    club.clubid,
+    club.name,
+    club.category,
+    club.description,
+    club.ownerId
+  ], (err) => {
+    completed++;
+
+    if (err) {
+      console.error("Club insert error:", err.message);
+    }
+
+    if (completed === clubs.length) {
+      console.log("All clubs imported");
+      process.exit(0);
+    }
+  });
 });
-
