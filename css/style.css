@@ -254,80 +254,112 @@ ul {
   margin-left: 200px;
 }
 
-#dato {
-}
 
 .calendarcontainer {
   /*ydreramme*/
   display: grid;
-  grid-template-columns: 50px auto; /*to kolonner - første 50px bred, og anden er auto, som er resten af pladsen*/
-  grid-template-rows: auto; /*her er der sådan set ikke defineret flere rækker hmm*/
-  gap: 1px 1px; /*1px mellem hver linje i griddet*/
+  grid-template-columns: 70px 1fr; /*to kolonner - første 50px bred, og anden er auto, som er resten af pladsen*/
   grid-template-areas: /*navngiver områder i griddet*/
     ". header" /*øverst til venstre laves der et tom felt og øverst til højre er der header*/
     "timeslotscontainer main"; /*nederest til venstre er der timeslot og nederst til højre har vi main*/
+  margin-top: 20px;
 }
 
-.weekdays,
-.daynumbers {
-  /*begge lister bliver lavet som grids med 7 colummns, hver kolonne med lige meget plads 1 fraction af 7*/
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
+
+.weekdays { /* kunne vruge en opdatering */
+  display: grid; 
+  grid-template-columns: repeat(7,1fr); /*7 lige store kolonner*/
+  padding: 0px;
+  font-weight: 500;
+  background-color: white;
+  border: 1px solid #d9d9d9;
+  border-radius: 10px 10px 0 0;
+  overflow: hidden;
 }
 
-.weekdays {
-  background-color: lightblue;
-  border-radius: 5px;
+.weekdays li{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 10px;
+  background-color: white;
 }
 
-.daynumbers {
-  min-height: 2em; /* giver lidt ldoret plads, nogrte med ca. 2 gange teksten størrelse*/
+.weekdays li:last-child{
+  border-right: none;
 }
 
 .header {
-  background: gray;
   grid-area: header;
 }
 
+/* hvis vi sletter .header, bliver det sært*/
+
 .timeslotscontainer {
-  background-color: lightgray;
+  background-color: white;
+  border-left: 1px solid #d9d9d9;
+  border-bottom: 1px solid #d9d9d9;
+  border-right: 1px solid #d9d9d9;
   grid-area: timeslotscontainer;
-  border-radius: 10px;
 }
 
 .timeslots {
   display: flex; /*flex er en måde at arrangere elementer på*/
   flex-direction: column; /*lodret under hinanden*/
-  align-items: center;
+  align-items: stretch;
 }
 
 .timeslots li {
-  min-height: 40px;
-  position: relative;
-}
-
-.timeslots li::after {
-  /*betyder lav noget efter indholdet*/
-  content: ""; /*ekstra pseudo element visuelt*/
-  position: absolute;
-  left: 0px;
-  width: 77vw;
-  height: 1px;
-  background: gray;
-  z-index: 1;
+  height: 40px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  font-size: 14px;
+  color: #333;
+  border-top: 1px solid #ececec;
+  box-sizing: border-box;
+  padding: 0;
 }
 
 .eventcontainer {
-  /*hele boksen med event - som har 2 classes slot og slot1 (styling og placering)*/
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  grid-template-rows: repeat(
-    96,
-    10px
-  ); /** 4 kvarter på en time, 96 kvarter på 24 timer,
-        hvert kvarter er 10px.*/
+  grid-template-rows: repeat(96, 10px);
   grid-area: main;
   position: relative;
+  border-right: 1px solid #d9d9d9;
+  border-bottom: 1px solid #d9d9d9;
+  background-color: white;
+  box-sizing: border-box;
+}
+
+.eventcontainer::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    to right,
+    transparent 0,
+    transparent calc(100% / 7 - 1px),
+    #e5e5e5 calc(100% / 7 - 1px),
+    #e5e5e5 calc(100% / 7)
+  );
+  pointer-events: none;
+}
+.eventcontainer::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent 39px,
+    #ececec 39px,
+    #ececec 40px
+  );
+  pointer-events: none;
 }
 
 .slot {

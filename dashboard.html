@@ -68,30 +68,30 @@
             <h3>Filters</h3>
           </div>
           <div style="display:flex; justify-content: start; align-items: center;">
-              <h2>Dato fx 20/02/2026</h2>
+              <h2 id="currentDate"></h2>
               <div style="width: 300px;" class="datofilter"></div>
           </div>
+
+          <!--selve kalenderen-->
           <div class="calendarcontainer">
             <div class="header">
               <ul class="weekdays">
-                <li>Mandag</li>
-                <li>Tirsdag</li>
-                <li>Onsdag</li>
-                <li>Torsdag</li>
-                <li>Fredag</li>
-                <li>Lørdag</li>
-                <li>Søndag</li>
+                <li>Mon <span id="day1"></span></li> 
+                <li>Tue <span id="day2"></span></li>
+                <li>Wed <span id="day3"></span></li>
+                <li>Thu <span id="day4"></span></li>
+                <li>Fri <span id="day5"></span></li>
+                <li>Sat <span id="day6"></span></li>
+                <li>Sun <span id="day7"></span></li>
               </ul>
-              <ul class="daynumbers">
-                <li>1</li>
-                <li>2</li>
-                <li>3</li>
-                <li>4</li>
-                <li>5</li>
-                <li>6</li>
-                <li>7</li>
-              </ul>
+
+              <div class="calendarNavigation">
+                <button id="previousWeek">←</button>
+                <button id="nextWeek">→</button>
+              </div>
             </div>
+
+          <script src="JS/core/calendar.js"></script>
 
             <div class="timeslotscontainer">
               <ul class="timeslots">

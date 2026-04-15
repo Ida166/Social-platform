@@ -1,0 +1,77 @@
+// dato som objekt - 
+
+        /*  DATO METHODS:
+
+        new Date() -> dagsdato og tid
+        new Date(monday) -> kopier mandag
+        setDate(15) -> sæt dag til 15
+
+        getFullYear -> 2026
+        getMonth() -> 0-11; jan, feb osv.
+        getDate() -> dage i måneden 1-31; 
+        getDay() -> dag i ugen 0-7; man, tir, osv.
+
+        */
+
+
+
+/* Dags dato over kalenderen*/ 
+
+    function updateDate(){
+
+        const date = new Date();
+
+        const today = {
+            year: date.getFullYear(), // Indeværende år 
+            month: date.getMonth()+1, // Indeværende måned 0 = januar, 11 = december 
+            day: date.getDate() // indeværende dag; 14., 15. 
+        }
+
+    document.getElementById("currentDate").textContent = today.day + "." + today.month + "." + today.year;
+    }
+
+    setInterval(updateDate, 100);
+
+/* Dynamiske datoer i selve kalenderen */
+
+    let weekOffset = 0;
+
+    function renderWeek(){
+        const today = new Date(); //
+
+
+        let currentDay = today.getDay(); //Finder ud af hvilken dag nuværende dag er
+            if (currentDay === 0){ 
+                currentDay = 7 //hvis dagen er søndag, sættes søndag til 7
+            }
+
+        const monday = new Date(today); //vi laver mandag ud fra dagsdato
+        monday.setDate(today.getDate() - (currentDay - 1) + weekOffset * 7);
+        //tager dagsdato og trækker differencen fra dagsdato til mandag fra
+        //hvis bruger vil frem i kalenderen, tælles weekOffset op, og der lægges 7 dage til alt efter hvor mange uger frem, user vil
+
+        for(let i=0; i < 7; i++){
+            const dayInWeek = new Date (monday); //kopierer mandag, og tagerudgangspunkt i den til at genere resten af ugens dage.
+            dayInWeek.setDate(monday.getDate() + i); //henter mandags dato, og lægger dage til, som vi er fra mandag, for at få den specifikke ugedags dato
+            //så hvis mandag er d. 14. og vi laver tirsdag, så lægges 1 til datoen, som vi tog udgangspunkt i.
+
+            document.getElementById("day" + (i+1)).textContent = dayInWeek.getDate() + "/" + (dayInWeek.getMonth() + 1);
+            //Her lægges værdierne/datoeren over til tilsvarende id'er; day1, day2, osv.
+        }
+
+    }
+
+function nextWeek() {
+    weekOffset++;
+    renderWeek();
+}
+
+function previousWeek() {
+    weekOffset--;
+    renderWeek();
+}
+
+renderWeek();
+
+document.getElementById("previousWeek").addEventListener("click", previousWeek);
+document.getElementById("nextWeek").addEventListener("click", nextWeek);
