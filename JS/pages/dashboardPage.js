@@ -124,37 +124,39 @@ function initDashboard() {
         );
 
         container.innerHTML = `
-            <div id="event-page">
-                <div class="club-detail">
+            <div class="content-area">
+                <h1>Events & clubs - Informationssite - ${club.name}</h1>
 
-                    <div>
-                        <h2>${club.name}</h2>
-                        <p>${club.description}</p>
+                <div class="white-box">
+                    <div class="hero">
+                        <img src="${club.image}" alt="${club.name}">
                     </div>
-                    
-                    <img src="${club.image}" alt="${club.name}" />
 
-                </div>
-                <div>
-                    <h3>Events</h3>
-                    <div id="event-list">
-                        ${
-                            clubEvents.length > 0
-                                ? clubEvents.map(event => `
-                                    <div class="event-card">
-                                        <h4>${event.title}</h4>
-                                        <p>${event.date} | ${event.time}</p>
-                                        <p>${event.location}</p>
-                                        <p>${event.description}</p>
-                                        <p>${event.practicalInfo}</p>
-                                    </div>
-                                `).join("")
-                                : "<p>No events yet</p>"
-                        }
+                    <div class="description">
+                        <p><strong>Join us!</strong><br>
+                        ${club.description}</p>
                     </div>
-                </div>
 
-                <button id="close-event-page">Close</button>
+                    <div class="info-section">
+                        <div class="info-card">
+                            <h3>Date:</h3>
+                            <p>${clubEvents.length > 0 ? clubEvents[0].date : 'TBA'}</p>
+                            <h3>Time:</h3>
+                            <p>${clubEvents.length > 0 ? clubEvents[0].time : 'TBA'}</p>
+                        </div>
+
+                        <div class="info-card">
+                            <h3>Current members:</h3>
+                            <p>25</p>
+                            <h3>Contact info:</h3>
+                            <p>Kontakt@aau.dk</p>
+                        </div>
+
+                        <button class="join-btn">Join us</button>
+                    </div>
+
+                    <button id="close-event-page" class="back-btn">Go Back</button>
+                </div>
             </div>
         `;
 
