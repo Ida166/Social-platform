@@ -207,7 +207,7 @@ function initDashboard() {
             if(closeClubList){
                 closeClubList.addEventListener("click", () => {
                     clubListBox.classList.add("hidden");
-                    clubListBox.innerHTML = "";
+                    clubListBox.innerHTML = ""; //reset content of the page 
                     clubsLoaded = false; //only loads clubs when modal is opened.
                 });
             }
