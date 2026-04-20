@@ -123,7 +123,7 @@ function initDashboard() {
             e => e.clubId === clubId && e.isPublished
         );
 
-        container.innerHTML = `
+      container.innerHTML = `
             <div class="content-area">
                 <h1>Events & clubs - Informationssite - ${club.name}</h1>
 
@@ -159,7 +159,7 @@ function initDashboard() {
                 </div>
             </div>
         `;
-
+       
         // close the club page
         const closeClubPage = container.querySelector("#close-event-page");
 
