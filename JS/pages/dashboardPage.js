@@ -5,6 +5,9 @@
 import { hasPermission } from "../core/rbac.js"; //Henter funktionen hasPermission fra rbac.js
 import { getRole } from "../core/auth.js";
 
+/*Importer data fra database */
+import { supabase } from '../../Supabase.js'
+
 /*Import the club list */
     import { getClubs } from "./clubServices.js";
     import { getEvent } from "./clubServices.js";
@@ -88,7 +91,7 @@ function initDashboard() {
         const container = document.getElementById("club-list");
 
         container.innerHTML = clubs.map(club => `
-            <div class="club-card" data-id="${club.clubid}">
+            <div class="club-card" data-id="${club.id}">
                 <h3>${club.name}</h3>
                 <img src="${club.image}" alt="${club.name}" class="club-img"/>
             </div>
@@ -99,8 +102,7 @@ function initDashboard() {
             const card = e.target.closest(".club-card");
             if (!card) return;
 
-            const clubId = Number(card.dataset.id);
-
+            const clubId = card.dataset.id;
             openClubPage(clubId);
         });
     }
@@ -110,7 +112,7 @@ function initDashboard() {
         const clubs = await getClubs();
         const events = await getEvent();
 
-        const club = clubs.find(c => c.clubid === clubId);
+        const club = clubs.find(c => String(c.id) === clubId);
 
         const container = document.getElementById("club-list-box");
 
@@ -120,7 +122,7 @@ function initDashboard() {
         }
 
         const clubEvents = events.filter(
-            e => e.clubId === clubId && e.isPublished
+            e =>  String(e.clubId) === clubId && e.isPublished
         );
 
       container.innerHTML = `
