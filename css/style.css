@@ -96,6 +96,9 @@
 
 /* Dashboard kalender */
 .page-title {
+  display: flex;
+  align-items: center;      /* keeps them vertically aligned */
+  justify-content: space-between; /* pushes items apart */  
 }
 
 .page-title h1 {
@@ -104,6 +107,11 @@
   font-weight: 600;
   font-family: Arial, sans-serif;
   line-height: 1;
+}
+
+.button-group {
+  display: flex;
+  gap: 10px; 
 }
 
 .club-list-link {
@@ -137,17 +145,19 @@
 
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
+html, body {
+  height: 100%;
+}
 
 /* Form overlay */
 #create-club-or-event_box {
   position: absolute; /* Position relative to .topbar */
   top: 100px; /* Appear directly under the topbar */
-  left: 0;
   right: 0; /* Fill the width of topbar */
   bottom: 0;
   z-index: 20;
   background-color: #ffffff; /* Gray overlay feel (the background is white)*/
-  left: 230px; /* 👈 starts AFTER idebar */
+  left: 0px; 
   font-family: Arial, sans-serif;
 }
 
@@ -381,27 +391,7 @@ ul {
   grid-column: 3; /*inddelt i 7 collumns så dette beskrive hvilken dag*/
 }
 
-/* Application to create club or event*/
-/* Form overlay */
-/*#create-club-or-event_box {
-  height: calc(100vh - 140px);
-  background-color: #f9f9f9;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  padding: 30px;
-  overflow-y: auto;
-}
-#create-club-or-event-overlay {
-  position: absolute;
-  inset: 0;               /* covers full page */
-/*z-index: 100;
-  background-color: #ffffff; /* full white background */
-/*padding-left: 250px;    /* keeps sidebar space like your club list */
-/*padding-top: 120px;     /* keeps topbar spacing */
-/* overflow: hidden;
-}*/
-/* Inner content can still scroll*/
+
 #create-club-or-event_box_content {
   max-width: 100%;
   height: 100%;

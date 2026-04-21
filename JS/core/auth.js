@@ -5,7 +5,7 @@ export function logout() {
 }
 
 export function getRole() {
-    return sessionStorage.getItem("role"); // brug sessionStorage, ikke localStorage
+    return sessionStorage.getItem("role") || "student"; // brug sessionStorage, ikke localStorage
 }
 
 export function setRole(role) {

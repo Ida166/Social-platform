@@ -8,32 +8,27 @@
     <title>MapOut - Dashboard</title>
     <link rel="stylesheet" href="css/style.css" />
     <link rel="stylesheet" href="css/roles/user.css" />
-    <link rel="stylesheet" href="css/roles/club_owner.css" />
     <link rel="stylesheet" href="css/roles/admin.css" />
-    <link rel="stylesheet" href="css/commponents/club_card.css" />
+    <link rel="stylesheet" href="css/commponents/club_card.css" /> 
+    <link rel="stylesheet" href="css/roles/club_owner.css" />
     <link rel="stylesheet" href="css/commponents/event_card.css" />
+<<<<<<< HEAD
     <link rel="stylesheet" href="css/commponents/eventSlots.css">
 
+=======
+   
+    
+>>>>>>> 6681531db15e373d4b3f8d62a6ad1150b64dff05
   </head>
   <body>
-    <p id="roleText"></p>
 
     <!--Test for visning af rollespecifikke elementer-->
-    <div>
+    <!-- <div>
         <button class="club-btn-create-event" data-permission="create_event">Create Event</button>
         <button class="admin-btn-delete-event" data-permission="delete_event">Delete Event</button>
-        <button class="role-button" id="logOut">Log Out</button>
-
-        <!-- Apply to create club or event box -->
-        <button
-        class="role-button"
-        id="createClubOrEvent"
-        data-permission="create-club-or-event">
-        Apply to create club
-        </button>
-    </div>
+    </div> -->
     
-    <div id="create-club-or-event_box" class="hidden"></div>
+    <!-- <div id="create-club-or-event_box" class="hidden"></div> -->
     
     <div class="side">
       <!--Here the sidebar of the page is located-->
@@ -65,6 +60,19 @@
           <h1>
             Events & clubs | <span class="club-list-link" id="clubListLink"> Club List</span>
           </h1>
+          <div class="button-group">
+            <!-- Apply to create club or event box -->
+            <button class="role-button" id="createClubOrEvent" data-permission="create-club-or-event">
+            Apply to create club
+            </button>
+            <div id="create-club-or-event_box" class="hidden"></div>
+            <button class="role-button" id="goDashboardClubOwner" class="hidden" data-permission="club_owner_role">
+              Club Owner
+            </button>
+            <button class="role-button" id="goDashboardStudent" class="hidden"  data-permission="student_role">
+              Student
+            </button>
+          </div>
         </div>
           <div class="filter">
             <h3>Filters</h3>

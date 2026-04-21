@@ -1,4 +1,4 @@
-* {
+/* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -117,7 +117,7 @@ body {
 }
 
 /* HERO IMAGE */
-.hero img {
+/*.hero img {
     width: 100%;
     max-height: 350px;
     object-fit: cover;

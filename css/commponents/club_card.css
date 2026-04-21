@@ -1,5 +1,8 @@
+<<<<<<< HEAD
 
 /*Club list*/
+=======
+>>>>>>> 6681531db15e373d4b3f8d62a6ad1150b64dff05
 /*Club card */
 .club-card {
   display: flex;
@@ -13,8 +16,13 @@
   border-radius: 10px;
   border: 1px solid #e0e0e0;
 
+<<<<<<< HEAD
 /*  subtle Moodle-like shadow */
 box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+=======
+    /*  subtle Moodle-like shadow */
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+>>>>>>> 6681531db15e373d4b3f8d62a6ad1150b64dff05
 
   transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
@@ -155,6 +163,9 @@ box-shadow: 0 2px 6px rgba(0,0,0,0.05);
     height: 50px; 
     border-radius: 4px;
 }
+<<<<<<< HEAD
 
 
 
+=======
+>>>>>>> 6681531db15e373d4b3f8d62a6ad1150b64dff05

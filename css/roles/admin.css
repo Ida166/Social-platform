@@ -1,7 +1,7 @@
 /* Specifik styling til 'admin' */
 
 /* Styling baseret på body-class */
-.admin .admin-btn-delete-event { /* .admin er den class <body> har og den anden del er den specefikke fx knap som skal styles på denne måde*/
+.admin-btn-delete-event { /* .admin er den class <body> har og den anden del er den specefikke fx knap som skal styles på denne måde*/
     display: inline-block;
     background-color: #f44336;
     color: white;

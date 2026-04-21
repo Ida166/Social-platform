@@ -1,8 +1,17 @@
 /* Specifik styling til 'club_owner'*/
 
 /* Styling baseret på body-class */
-.club_owner .club-btn-create-event {
+.club-btn-create-event {
     display: inline-block;
-    background-color: #4CAF50;
+    background-color: #228a26;
     color: white;
+}
+
+/*Not used right now*/
+.club_owner_button {
+    background-color: #f0ac0c;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    border: none;
 }
