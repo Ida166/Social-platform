@@ -1,3 +1,58 @@
+/* Events */
+
+const events = [
+    {
+    title: "Event C",
+    date: "2026-04-15",
+    start: "07:00",
+    end: "10:00"
+    },
+    {
+    title: "Event D",
+    date: "2026-04-25",
+    start: "07:00",
+    end: "10:00"
+    }
+
+]
+
+
+/* Event placering i kalenderen*/
+
+    function timeToRow(timeString) {
+        const [hour, minute] = timeString.split(":").map(Number); // vi splitter timer fra minutter
+        return hour * 4 + minute / 15+1; // der går 4 kvarter pr. time, og så er der de løse minutter.
+                                //så fordeler vi det hele på kvarter, fordi vores row grid er inddelt efter det.
+    }
+
+
+
+    function renderEvents(monday){
+        const container = document.querySelector(".eventcontainer"); //finder .eventContainer i html
+        container.innerHTML = ""; //tømmer indholdet fx hvis brugeren skifter til ny uge, så gamle events ikke fremgår
+
+        events.forEach(event => { //alle events brugeren har angivet køres igennem og får dato ift. kalenderen
+            const eventDate = new Date(event.date);
+
+            const diffFromMonday = Math.floor((eventDate - monday)/(1000*60*60*24)); //vi finder differencen fra mandag, fordi Date også tager tiden med, tager vi Math.floor, 
+            //så vi får en hel og ikke halve dage. Ikke brugbart til at finde dag i kolonnerne
+            //da der med Date objekter regnes i millisekunder, tager vi og dividerer differencen med antal milisekunder der er på et døgn, for at få dage
+
+            if (diffFromMonday>= 0 && diffFromMonday < 7){ //vi opretter kun indenfor den uge der er displayet
+                const element = document.createElement("div");  //vi laver et element "div"
+                element.classList.add("slot");                  //tilføjer class "slot"
+                element.textContent = event.title;              //som får titlen bruger har angivet
+
+                element.style.gridColumn = diffFromMonday + 1;   //diffFromMonday starter fra 0, imen mandag i kolonner starter på 1, så derfor +1
+                element.style.gridRow = timeToRow(event.start) + " / " + timeToRow(event.end); //starter fra mængde kvarter vi er inde i døgnet, og strækker sig til slut - igen antal kvarter inde i døgnet.
+                //i css er syntaks gridrow = start /end.
+                container.appendChild(element); //og så tilføjer vi til sidst 
+            }
+        });
+}
+
+
+
 // dato som objekt - 
 
         /*  DATO METHODS:
@@ -30,7 +85,7 @@
     document.getElementById("currentDate").textContent = today.day + "." + today.month + "." + today.year;
     }
 
-    setInterval(updateDate, 100);
+    setInterval(updateDate, 6000);
 
 /* Dynamiske datoer i selve kalenderen */
 
@@ -58,8 +113,12 @@
             document.getElementById("day" + (i+1)).textContent = dayInWeek.getDate() + "/" + (dayInWeek.getMonth() + 1);
             //Her lægges værdierne/datoeren over til tilsvarende id'er; day1, day2, osv.
         }
+    
+        renderEvents(monday);
 
     }
+
+
 
 function nextWeek() {
     weekOffset++;
@@ -72,6 +131,7 @@ function previousWeek() {
 }
 
 renderWeek();
+
 
 document.getElementById("previousWeek").addEventListener("click", previousWeek);
 document.getElementById("nextWeek").addEventListener("click", nextWeek);
