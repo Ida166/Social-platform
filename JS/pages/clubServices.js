@@ -1,29 +1,9 @@
-import { supabase } from '../../Supabase.js'
-
-/*Load in the clubs */
 export async function getClubs() {
-    const { data, error } = await supabase
-        .from('clubs')
-        .select('*')
-
-    if (error) {
-        console.error(error)
-        return []
-    }
-
-    return data
+    const res = await fetch("/clubs");
+    return await res.json();
 }
 
-/*Load in the events */
-export async function getEvent() {
-    const { data, error } = await supabase
-        .from('events')
-        .select('*')
-
-    if (error) {
-        console.error(error)
-        return []
-    }
-
-    return data
+export async function getEvents() {
+    const res = await fetch("/events");
+    return await res.json();
 }

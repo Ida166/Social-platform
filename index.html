@@ -1,24 +1,143 @@
-<!DOCTYPE html>
-<html lang="en"> <!-- Angiver at sproget på siden er engelsk-->
-<head> <!--head indeholder metadata som er data der ikke bliver vist på siden-->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!--fortæller browseren, hvordan siden skal skaleres på forskellige skærme-->
-    <title>Min Hjemmeside</title> <!--vises i browserens faneblad-->
-    <link rel="stylesheet" href="css/style.css"> <!--forbinder html siden med css-filen-->
-</head>
-<body class="login-page"> <!--styling af log ind pagen (login-page)-->
-    <div class="login-box"> <!--styling af login-box'en-->
-        <img class="AAU-image" src="assets/images/AAU-Logo.png" alt="Aalborg University Logo">
-        <p class="text">Choose a user type</p>
+<!--Fælles dashboard efter login -->
 
-        <!-- Knap der går til dashboard -->
-        <div class="button-container button-container-vertical">
-            <button class="role-button" id="goDashboardStudent">Student</button>
-            <button class="role-button" id="goDashboardClubOwner">Club Owner</button>
-            <button class="role-button" id="goDashboardAdmin">Admin</button>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MapOut - Dashboard</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/roles/user.css" />
+    <link rel="stylesheet" href="css/roles/admin.css" />
+    <link rel="stylesheet" href="css/commponents/club_card.css" /> 
+    <link rel="stylesheet" href="css/roles/club_owner.css" />
+    <link rel="stylesheet" href="css/commponents/event_card.css" />
+   
+    
+  </head>
+  <body>
+
+    <!--Test for visning af rollespecifikke elementer-->
+    <!-- <div>
+        <button class="club-btn-create-event" data-permission="create_event">Create Event</button>
+        <button class="admin-btn-delete-event" data-permission="delete_event">Delete Event</button>
+    </div> -->
+    
+    <!-- <div id="create-club-or-event_box" class="hidden"></div> -->
+    
+    <div class="side">
+      <!--Here the sidebar of the page is located-->
+      <aside class="sidebar">
+        <div class="sidebartop">
+          <img class="AAU-image-sidebar" src="assets/images/AAU-Logo-sidebar.png" alt="Aalborg University Logo">
+          <div class="menu-item">Dashboard</div>
+          <div class="menu-item">Calendar</div>
+          <div class="menu-item">CalMoodle</div>
+          <div class="menu-item">Events & clubs</div>
         </div>
+        <div class="sidebarbottom">
+          <div class="menu-item">Courses shortcut</div>
+          <div class="menu-item">Search</div>
+          <div class="menu-item">Courses xx</div>
+        </div>
+      </aside>
+
+      <!--Here the main side of the page is located-->
+      <div class="main">
+        <div style="margin-top:6px"></div>
+
+        <!--Club list container -->
+        <div id="club-list-box" class="hidden"></div> <!--Find the content in the file components/club_list.html-->
+        <!--Event page container-->
+        <div id="event-page-box" class="hidden"></div>
+
+        <div class="page-title">
+          <h1>
+            Events & clubs | <span class="club-list-link" id="clubListLink"> Club List</span>
+          </h1>
+          <div class="button-group">
+            <!-- Apply to create club or event box -->
+            <button class="role-button" id="createClubOrEvent" data-permission="create-club-or-event">
+            Apply to create club
+            </button>
+            <div id="create-club-or-event_box" class="hidden"></div>
+            <button class="role-button" id="goDashboardClubOwner" class="hidden" data-permission="club_owner_role">
+              Club Owner
+            </button>
+            <button class="role-button" id="goDashboardStudent" class="hidden"  data-permission="student_role">
+              Student
+            </button>
+          </div>
+        </div>
+          <div class="filter">
+            <h3>Filters</h3>
+          </div>
+          <div style="display:flex; justify-content: start; align-items: center;">
+              <h2 id="currentDate"></h2>
+              <div style="width: 300px;" class="datofilter"></div>
+          </div>
+
+          <!--selve kalenderen-->
+          <div class="calendarcontainer">
+            <div class="header">
+              <ul class="weekdays">
+                <li>Mon <span id="day1"></span></li> 
+                <li>Tue <span id="day2"></span></li>
+                <li>Wed <span id="day3"></span></li>
+                <li>Thu <span id="day4"></span></li>
+                <li>Fri <span id="day5"></span></li>
+                <li>Sat <span id="day6"></span></li>
+                <li>Sun <span id="day7"></span></li>
+              </ul>
+
+              <div class="calendarNavigation">
+                <button id="previousWeek">←</button>
+                <button id="nextWeek">→</button>
+              </div>
+            </div>
+
+          <script src="JS/core/calendar.js"></script>
+
+            <div class="timeslotscontainer">
+              <ul class="timeslots">
+                <li>00:00</li>
+                <li>1:00</li>
+                <li>2:00</li>
+                <li>3:00</li>
+                <li>4:00</li>
+                <li>5:00</li>
+                <li>6:00</li>
+                <li>7:00</li>
+                <li>8:00</li>
+                <li>9:00</li>
+                <li>10:00</li>
+                <li>11:00</li>
+                <li>12:00</li>
+                <li>13:00</li>
+                <li>14:00</li>
+                <li>15:00</li>
+                <li>16:00</li>
+                <li>18:00</li>
+                <li>19:00</li>
+                <li>20:00</li>
+                <li>21:00</li>
+                <li>22:00</li>
+                <li>23:00</li>
+                <li>00:00</li>
+              </ul>
+            </div>
+
+            <div class="eventcontainer">
+              <div class="slot slot1">
+                <div class="eventstatus"></div>
+                <span>Event A</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-    <script src="js/pages/loginPage.js"></script>
+
     <script type="module" src="js/pages/dashboardPage.js"></script>
-    <!--<script src="script.js"></script> nder html siden med js-filen-->
-</body>
+  </body>
 </html>

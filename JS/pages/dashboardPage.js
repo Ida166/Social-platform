@@ -6,21 +6,21 @@ import { hasPermission } from "../core/rbac.js"; //Henter funktionen hasPermissi
 import { getRole } from "../core/auth.js";
 
 /*Importer data fra database */
-import { supabase } from '../../Supabase.js'
+// import { supabase } from '../../Supabase.js'
 
 /*Import the club list */
     import { getClubs } from "./clubServices.js";
-    import { getEvent } from "./clubServices.js";
+    import { getEvents } from "./clubServices.js";
 
  
-
+console.log("API JS loaded");
 // Club owner buttton - Button to change between roles  
 const btnClubOwner = document.getElementById("goDashboardClubOwner");  
 
 // Redirect til dashboard og gem rolle i sessionStorage
 btnClubOwner.addEventListener("click", () => {
     sessionStorage.setItem("role", "club_owner"); // match auth.js naming
-    window.location.href = "dashboard.html";
+    window.location.href = "index.html";
 
 });
 
@@ -29,7 +29,7 @@ const btnStudent = document.getElementById("goDashboardStudent");
 
 btnStudent.addEventListener("click", () => {
     sessionStorage.setItem("role", "student"); //Gemmer rollen "student" i browserens sessionStorage
-    window.location.href = "dashboard.html";
+    window.location.href = "index.html";
 });
 
 
@@ -92,16 +92,22 @@ function initDashboard() {
     /*Import the club list */
     let clubsLoaded = false; //makes sure we do not load double
 
+    /*Load clubs */
     window.loadClubs = async function loadClubs(){
         if(clubsLoaded) return;
 
         const clubs = await getClubs();
-        const container = document.getElementById("club-list");
 
-        container.innerHTML = clubs.map(club => `
-            <div class="club-card" data-id="${club.id}">
-                <h3>${club.name}</h3>
-                <img src="${club.image}" alt="${club.name}" class="club-img"/>
+        const container = document.getElementById("club-list");
+        if (!container) {
+            console.error("club-list not found in DOM");
+            return;
+        }
+
+        container.innerHTML = clubs.map(clubs => `
+            <div class="club-card" data-id="${clubs.id}">
+                <h3>${clubs.name}</h3>
+                <img src="${clubs.image}" alt="${clubs.name}" class="club-img"/>
             </div>
         `).join("");
 
@@ -111,16 +117,24 @@ function initDashboard() {
             if (!card) return;
 
             const clubId = card.dataset.id;
+
+            if (!clubId) {
+                console.error("Missing clubId");
+                return;
+            }
+
             openClubPage(clubId);
+            
         });
+        
     }
 
     /*Import the event data*/
     async function openClubPage(clubId){
         const clubs = await getClubs();
-        const events = await getEvent();
+        const events = await getEvents();
 
-        const club = clubs.find(c => String(c.id) === clubId);
+        const club = clubs.find(c => String(c.id) === String(clubId));
 
         const container = document.getElementById("club-list-box");
 
@@ -130,7 +144,7 @@ function initDashboard() {
         }
 
         const clubEvents = events.filter(
-            e =>  String(e.clubId) === clubId && e.isPublished
+            e =>  String(e.clubId) === String(clubId) && e.isPublished === true
         );
 
       container.innerHTML = `
@@ -212,17 +226,18 @@ function initDashboard() {
 
             /*Close box when span is clicked */
             document.addEventListener("click", (e) => {
-                if (e.target.closest("#close-club-list")) {
+                if (e.target.closest("#close-club-list")) { 
                     const clubListBox = document.getElementById("club-list-box");
 
-                    clubListBox.classList.add("hidden");
-                    /*Clearing the page */
                     const clubContent = document.getElementById("club-content");
-                    if (clubContent) {
-                        clubContent.innerHTML = "";
+
+                    if (clubListBox) { //Hides the box 
+                        clubListBox.classList.add("hidden");
                     }
 
-                    clubsLoaded = false;
+                    if (clubContent) { //removes all html inside the container 
+                        clubContent.innerHTML = "";
+                    }
                 }
             });
         });
