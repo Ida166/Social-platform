@@ -16,12 +16,60 @@ const events = [
 
 ]
 
+/* Default timeslots */
+let calendarStartHour = 8;
+let calendarEndHour = 18;
+
+function updateCalendarTimeRange(monday){
+
+    let earliestHour = 8;
+    let latestHour = 18;
+
+    events.forEach(event=> {
+        const eventDate = new Date(event.date)
+        
+        const diffFromMonday = Math.floor((eventDate - monday)/ (1000*60*60*24));
+
+        if (diffFromMonday >=0 && diffFromMonday<7){
+
+            const [startHour] = event.start.split(":").map(Number);
+            const [endHour] = event.end.split(":").map(Number);
+
+            if (startHour < earliestHour){
+                earliestHour = startHour;
+            }
+            
+            if (endHour > latestHour){
+                latestHour = endHour;
+            }
+        }
+    });
+    calendarStartHour = Math.max(0, earliestHour - 1)
+    calendarEndHour = Math.min(24, latestHour + 1)
+    }
+
+/* Tider i kalender */
+ 
+function renderTimeslots(){
+    const timeslots = document.querySelector(".timeslots");
+    timeslots.innerHTML = "";
+    for (let hour = calendarStartHour; hour<=calendarEndHour; hour++){
+        const timeList = document.createElement("li");
+        timeList.textContent = hour + ":00";
+        timeslots.appendChild(timeList);
+    }
+
+    const rowCount = (calendarEndHour - calendarStartHour) * 4;
+
+    document.querySelector(".eventcontainer").style.gridTemplateRows = "repeat("+ rowCount +", 10px)";
+    
+}
 
 /* Event placering i kalenderen*/
 
     function timeToRow(timeString) {
         const [hour, minute] = timeString.split(":").map(Number); // vi splitter timer fra minutter
-        return hour * 4 + minute / 15+1; // der går 4 kvarter pr. time, og så er der de løse minutter.
+        return (hour - calendarStartHour) * 4 + minute / 15+1; // der går 4 kvarter pr. time, og så er der de løse minutter.
                                 //så fordeler vi det hele på kvarter, fordi vores row grid er inddelt efter det.
     }
 
@@ -114,8 +162,10 @@ const events = [
             //Her lægges værdierne/datoeren over til tilsvarende id'er; day1, day2, osv.
         }
     
+        
+        updateCalendarTimeRange(monday);
+        renderTimeslots();
         renderEvents(monday);
-
     }
 
 
