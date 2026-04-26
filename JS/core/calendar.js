@@ -1,5 +1,3 @@
-<<<<<<< Updated upstream
-=======
 /* Events */
 
 const events = [
@@ -106,9 +104,6 @@ function renderTimeslots(){
         });
 }
 
-
-
->>>>>>> Stashed changes
 // dato som objekt - 
 
         /*  DATO METHODS:
