@@ -1,0 +1,44 @@
+[
+  {
+    "clubid": 101,
+    "name": "AAU Board Games",
+    "category": "Games",
+    "description": "We meet around our common interest: The Table Top culture",
+    "ownerId": 301,
+    "members": [201,202,203,204,205,206,207,208,209,210,211,212,213,214,215,216,217,218,219,220],
+    "image": "assets/images/AAUBoardGames.png"
+  },
+  {
+    "clubid": 102,
+    "name": "AMPED",
+    "category": "Social",
+    "description": "We work to support and develop the social life on campus",
+    "ownerId": 302,
+    "members": [221,222,223,224,225,226,227,228,229,230,231,232,233,234,235]
+  },
+  {
+    "clubid": 103,
+    "name": "BD/SD Studenterorganisation",
+    "category": "Professional",
+    "description": "We are a professional and social network for students of Bæredygtig Design and Sustainable Design",
+    "ownerId": 303,
+    "members": [236,237,238,239,240,241,242,243]
+  },
+  {
+    "clubid": 104,
+    "name": "Digital Arts",
+    "category": "Arts",
+    "description": "At Digital Arts CPH, you can find others who like to create, watch, talk and think about art in many forms.",
+    "ownerId": 304,
+    "members": [244,245,246,247,248,249]
+  },
+  {
+    "clubid": 105,
+    "name": "Bouldering Crew",
+    "category": "Sports",
+    "description": "We meet up every Monday and Friday to climb together in Boulders Sydhavn",
+    "ownerId": 305,
+    "members": [250,251,252,253,254,255,256,257,258],
+     "image": "assets/images/AUUBoulders.png"
+  }
+]

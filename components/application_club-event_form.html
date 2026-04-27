@@ -1,48 +1,40 @@
 <div id="create-club-or-event-inner">
-  <button class="role-button" type="button" id="close-page">Go Back</button>
   <h2>Application to create a Club or Event</h2>
 
   <form id="application_for_club_or_event_form">
     <p>Your Details</p>
-    <input type="text" placeholder="Your Name" required />
-    <input type="email" placeholder="Email" required />
-    <input type="text" placeholder="Education" required />
-    <input type="text" placeholder="Phone Number" required />
+    <input type="text" name="full_name" placeholder="Your Name" required />
+    <input type="email" name="email" placeholder="Email" required />
+    <input type="text" name="education" placeholder="Education" required />
+    <input type="text" name="phone_number" placeholder="Phone Number" required />
 
     <p>Your Project</p>
     <div class="checkbox-group">
       <label>
-        <input type="checkbox" id="checkBoxClub" />
+        <input type="checkbox" id="checkBoxClub" name="create_club" />
         Create Club
       </label>
       <label>
-        <input type="checkbox" id="checkBoxEvent" />
+        <input type="checkbox" id="checkBoxEvent" name="create_event" />
         Create Event
       </label>
     </div>
 
-    <div id="event-filter-box" style="display: none; margin: 10px 0; padding: 15px; background: #f9f9f9; border: 1px solid #ddd; border-radius: 8px;">
-  <label for="eventScope" style="display: block; margin-bottom: 8px; font-weight: bold; color: #333;">
-    Hvem skal kunne se dette event?
-  </label>
-  <select id="eventScope" name="eventScope" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc; background-color: white; cursor: pointer;">
-    <option value="global">Globalt (Alle kan se det)</option>
-    <option value="club">Kun for klubbens medlemmer</option>
-  </select>
-</div>
-
     <div class="form-row">
-      <input type="text" placeholder="Club/Event Name" required />
-      <input type="text" placeholder="Category" required />
+      <input type="text" name="project_name" placeholder="Club/Event Name" required />
+      <input type="text" name="category" placeholder="Category" required />
     </div>
 
     <div class="form-row">
-      <textarea placeholder="Tell us about your idea"></textarea>
-      <textarea placeholder="What motivates you?"></textarea>
+      <textarea name="idea_description" placeholder="Tell us about your idea" required></textarea>
+      <textarea name="motivation" placeholder="What motivates you?" required></textarea>
     </div>
+
+    <p id="application-form-status" aria-live="polite"></p>
 
     <div class="button-container button-container-horizontal">
       <button class="role-button" type="submit">Send application</button>
+      <button class="role-button" type="button" id="close-page">Go Back</button>
     </div>
   </form>
 </div>

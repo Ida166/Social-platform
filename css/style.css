@@ -1,4 +1,4 @@
-/*general styling*/
+/* general styling */
 @media (max-width: 600px) {
   .text {
     font-size: 16px;
@@ -7,61 +7,54 @@
   .role-button {
     padding: 8px 16px;
   }
+
   .login-box {
     padding: 20px;
     width: 70%;
   }
 }
 
-/* Base button container*/
 .button-container {
   display: flex;
   gap: 15px;
   margin-top: 20px;
 }
-/* for horizontal buttors*/
+
 .button-container-horizontal {
   flex-direction: row;
   justify-content: center;
 }
-/*for vertical buttors*/
+
 .button-container-vertical {
   flex-direction: column;
   align-items: center;
 }
 
 .role-button {
-  background-color: #ebeaea; /* grå farve */
-  color: rgb(10, 10, 10); /* Tekstfarve */
-  border: none; /* 2px solid rgb(244, 217, 13); */
+  background-color: #ebeaea;
+  color: rgb(10, 10, 10);
+  border: none;
   padding: 10px 20px;
-  border-radius: 5px; /* Dette runder hjørnerne */
+  border-radius: 5px;
 }
+
 .role-button:hover {
-  background-color: #cac8c8; /* Mørkere når man holder musen over */
+  background-color: #cac8c8;
   color: rgb(0, 2, 108);
 }
 
-/*skjul som standard*/
 .club-btn-create-event,
 .admin-btn-delete-event {
   display: none;
-  margin: 10px;
-  padding: 10px 20px;
-  font-size: 16px;
-  border-radius: 5px;
-  border: none;
 }
 
-/*AAlborg University image login page*/
 .AAU-image {
   width: 50%;
   max-width: 400px;
-  display: block; /*makes it behave like a block*/
-  margin: 40px auto; /*centers it horizontally, 20px adds space above and below*/
+  display: block;
+  margin: 40px auto;
 }
 
-/*text, Styles the “Choose a user type” text*/
 .text {
   text-align: center;
   font-size: 20px;
@@ -69,36 +62,27 @@
   margin: 40px;
   color: rgb(15, 15, 39);
 }
-/*Creates the white card/box*/
+
 .login-box {
   background-color: white;
   padding: 40px;
-  border-radius: 10px; /*Rounds corners*/
+  border-radius: 10px;
   max-width: 450px;
   text-align: center;
-  box-shadow: 0 10px 30px rgba(21, 7, 71, 0.2); /*gives the fade on the boarder of the box*/
+  box-shadow: 0 10px 30px rgba(21, 7, 71, 0.2);
 }
 
-/*Centers the .login-box vertically and horizontally on the page*/
 .login-page {
   margin: 0;
   height: 100vh;
   display: flex;
-  justify-content: center; /* horizontal centering */
-  align-items: center; /* vertical centering */
+  justify-content: center;
+  align-items: center;
   padding: 40px;
-
   background-image: url("../assets/images/YOUR-BACKGROUND.jpg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-}
-
-/* Dashboard kalender */
-.page-title {
-  display: flex;
-  align-items: center;      /* keeps them vertically aligned */
-  justify-content: space-between; /* pushes items apart */  
 }
 
 .page-title h1 {
@@ -109,9 +93,43 @@
   line-height: 1;
 }
 
-.button-group {
+.page-header {
   display: flex;
-  gap: 10px; 
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 24px;
+}
+
+.dashboard-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.dashboard-action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 32px;
+  padding: 8px 16px;
+  border: 1px solid #ece7e3;
+  border-radius: 6px;
+  background-color: #f3efec;
+  color: #111;
+  font-size: 14px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.dashboard-action-btn:hover {
+  background-color: #ebe4df;
+  border-color: #ddd3cc;
+}
+
+.role-switch-btn {
+  min-width: 104px;
 }
 
 .club-list-link {
@@ -122,64 +140,13 @@
   color: rgb(13, 13, 53);
 }
 
-#club-list-box {
-  position: absolute; /* Position relative to .topbar */
-  top: 0; /* Appear directly under the topbar */
-  left: 0;
-  right: 0; /* Fill the width of topbar */
-  height: 100%;
-  inset: 0;
-  z-index: 20;
-
-  background-color: #ffffff; /* Gray overlay feel (the background is white)*/
-  padding-left: 20px; /*space between the sidebar*/
-}
-
-#club-list-inner {
-  background-color: #f3f3f3;
-  margin: 0 auto;
-
-  border: 1px solid #333;
-  border-radius: 8px;
-  padding: 20px;
-
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-}
-html, body {
-  height: 100%;
-}
-
-/* Form overlay */
-#create-club-or-event_box {
-  position: absolute; /* Position relative to .topbar */
-  top: 100px; /* Appear directly under the topbar */
-  right: 0; /* Fill the width of topbar */
-  bottom: 0;
-  z-index: 20;
-  background-color: #ffffff; /* Gray overlay feel (the background is white)*/
-  left: 0px; 
-  font-family: Arial, sans-serif;
-}
-
-#create-club-or-event-inner {
-  background-color: #f3f3f3;
-  margin: 0 auto;
-
-  border: 1px solid #333;
-  border-radius: 8px;
-  padding: 40px;
-  width: 60%; /*controls how wide it is */
-
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-}
-
 li {
-  list-style: none; /*lister for normalt bullets, som vi her fjerner*/
+  list-style: none;
 }
 
 ul {
-  margin: 0; /*fjerner afstand udenomlisten*/
-  padding: 0; /*fjerne indrykning inden i listen*/
+  margin: 0;
+  padding: 0;
 }
 
 .side {
@@ -194,15 +161,15 @@ ul {
   display: flex;
   background-color: #f3f3f3;
   flex-direction: column;
-  gap: 50px; /*mellemrum mellem de to sidebarer*/
+  gap: 50px;
   border-right: 1px solid;
 }
-/*AAlborg University image sidebar*/
+
 .AAU-image-sidebar {
   width: 100%;
   max-width: 400px;
-  display: block; /*makes it behave like a block*/
-  margin: 40px auto; /*centers it horizontally, 20px adds space above and below*/
+  display: block;
+  margin: 40px auto;
 }
 
 .sidebartop,
@@ -216,18 +183,15 @@ ul {
   display: flex;
   align-items: center;
   gap: 12px;
-
   padding: 12px 20px;
   margin: 0;
-
   background: #ffffff;
   border-radius: 8px;
-
   color: #333;
   cursor: pointer;
-
   transition: all 0.2s ease;
 }
+
 .menu-item:hover {
   background-color: #6586e062;
   color: #021323;
@@ -241,8 +205,43 @@ ul {
   padding: 20px;
 }
 
-.main h1 {
-  /* margin-top: 30px; */
+#dashboard-home,
+#dashboard-workspace {
+  width: 100%;
+}
+
+#dashboard-workspace {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+  gap: 24px;
+  align-items: start;
+}
+
+.dashboard-panel {
+  width: 100%;
+}
+
+#club-list-box,
+#create-club-or-event_box,
+#event-page-box {
+  background-color: #ffffff;
+  font-family: Arial, sans-serif;
+}
+
+#club-list-inner,
+#create-club-or-event-inner,
+.event-page-shell #event-page-inner {
+  background-color: #f3f3f3;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 32px;
+  width: min(100%, 980px);
+  margin: 0 auto;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+#create-club-or-event-inner {
+  padding: 40px;
 }
 
 .datofilter,
@@ -253,63 +252,40 @@ ul {
   border-radius: 8px;
   display: flex;
   align-items: center;
-  padding-left: 16px; /*brug padding i boksen og ikke i teksten for at justere tekst i en boks*/
-  border: 1px solid #ccc; /*light grey border */
+  padding-left: 16px;
+  border: 1px solid #ccc;
 }
-/*The text in filter*/
+
 .filter h3 {
-  font-size: 16px; /* smaller text */
-  font-weight: 400; /* normal weight (not bold) */
+  font-size: 16px;
+  font-weight: 400;
 }
+
 .datofilter {
   margin-left: 200px;
 }
 
-
 .calendarcontainer {
-    display: grid;
-    grid-template-columns: 70px 1fr;
-    grid-template-areas:
-        ". header"
-        "timeslots calendar";
-    margin-top: 20px;
-}
-
-
-.header {
-  grid-area: header;
-  position: relative;
-}
-
-.header button{
-  width: 50px;
-  height: 40px;
-  border-radius: 20%;
-  border: ;
-  background: #f0f0f0;
-  align-self: center;
-  justify-self: center;
+  display: grid;
+  grid-template-columns: 70px 1fr;
+  grid-template-areas:
+    ". header"
+    "timeslotscontainer main";
+  margin-top: 20px;
 }
 
 .weekdays {
-    display:grid;
-    grid-template-columns:repeat(7,1fr);
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  padding: 0;
+  font-weight: 500;
+  background-color: white;
+  border: 1px solid #d9d9d9;
+  border-radius: 10px 10px 0 0;
+  overflow: hidden;
 }
 
-#previousWeek{
-  position: absolute;
-  left: -60px;
-  top: 50%
-  transform: translateY(-50%)
-}
-
-#nextWeek {
-  position: absolute;
-  right: -60px;
-  top: 50%;
-  transform: translateY(-50%);
-}
-.weekdays li{
+.weekdays li {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -319,19 +295,12 @@ ul {
   background-color: white;
 }
 
-.weekdays li:last-child{
+.weekdays li:last-child {
   border-right: none;
 }
 
-
-.slot {
-  /*"indeni" eventcontainer - generelt om slot placering og sån*/
-  position: relative;
-  background: green;
-  border-radius: 5px;
-  z-index: 5; /*lag*/
-  color: white;
-  font-size: 15px;
+.header {
+  grid-area: header;
 }
 
 .timeslotscontainer {
@@ -339,12 +308,12 @@ ul {
   border-left: 1px solid #d9d9d9;
   border-bottom: 1px solid #d9d9d9;
   border-right: 1px solid #d9d9d9;
-  grid-area: timeslots;
+  grid-area: timeslotscontainer;
 }
 
 .timeslots {
-  display: flex; /*flex er en måde at arrangere elementer på*/
-  flex-direction: column; /*lodret under hinanden*/
+  display: flex;
+  flex-direction: column;
   align-items: stretch;
 }
 
@@ -364,7 +333,7 @@ ul {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   grid-template-rows: repeat(96, 10px);
-  grid-area: calendar;
+  grid-area: main;
   position: relative;
   border-right: 1px solid #d9d9d9;
   border-bottom: 1px solid #d9d9d9;
@@ -385,6 +354,7 @@ ul {
   );
   pointer-events: none;
 }
+
 .eventcontainer::after {
   content: "";
   position: absolute;
@@ -399,22 +369,33 @@ ul {
   pointer-events: none;
 }
 
+.slot {
+  position: relative;
+  background: green;
+  border-radius: 5px;
+  z-index: 5;
+  color: white;
+  font-size: 15px;
+}
 
-
+.slot1 {
+  top: 240px;
+  height: 40px;
+  width: 100%;
+  grid-column: 3;
+}
 
 #create-club-or-event_box_content {
   max-width: 100%;
   height: 100%;
 }
 
-/* Heading */
 #create-club-or-event_box h2 {
   font-size: 20px;
   margin-bottom: 20px;
   font-weight: 600;
 }
 
-/* Form sections */
 #application_for_club_or_event_form p {
   font-weight: 600;
   margin-top: 20px;
@@ -423,7 +404,6 @@ ul {
   padding-bottom: 5px;
 }
 
-/* Inputs & Textareas */
 #application_for_club_or_event_form input,
 #application_for_club_or_event_form textarea {
   width: 100%;
@@ -435,12 +415,11 @@ ul {
   box-sizing: border-box;
 }
 
-/*Makes the areas bigger*/
 #application_for_club_or_event_form textarea {
   min-height: 100px;
   resize: vertical;
 }
-/* Form rows, so they are not on to of each other  */
+
 .form-row {
   display: flex;
   gap: 20px;
@@ -451,7 +430,6 @@ ul {
   margin: 10px 0;
 }
 
-/* they are beside each other and text under check box*/
 #application_for_club_or_event_form label {
   display: inline-block;
   margin-right: 20px;
@@ -463,27 +441,37 @@ ul {
   display: none;
 }
 
-#clubListLink {
-    position: relative;
-}
+@media (max-width: 900px) {
+  .side {
+    grid-template-columns: 1fr;
+  }
 
-#clubListLink::after {
-    content: "See clubs and join";
-    position: absolute;
-    bottom: -35px;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: #333;
-    color: white;
-    padding: 5px 10px;
-    border-radius: 5px;
-    font-size: 12px;
-    white-space: nowrap;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.2s ease;
-}
+  .sidebar {
+    border-right: none;
+    border-bottom: 1px solid;
+  }
 
-#clubListLink:hover::after {
-    opacity: 1;
+  #dashboard-workspace {
+    grid-template-columns: 1fr;
+  }
+
+  #club-list-inner,
+  #create-club-or-event-inner,
+  .event-page-shell #event-page-inner {
+    padding: 20px;
+  }
+
+  .form-row {
+    flex-direction: column;
+  }
+
+  .page-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .dashboard-actions {
+    justify-content: flex-start;
+  }
+
 }

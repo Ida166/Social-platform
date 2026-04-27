@@ -1,1 +1,5 @@
-/* Specifik styling til 'user' */
+/* Specifik styling til 'student' */
+
+.student .role-button {
+    display: inline-block;
+}

@@ -1,17 +1,18 @@
-/* Specifik styling til 'club_owner'*/
+/* Specifik styling til 'club_owner' */
 
-/* Styling baseret på body-class */
-.club-btn-create-event {
-    display: inline-block;
-    background-color: #228a26;
-    color: white;
+.club_owner .club-btn-create-event {
+    display: inline-flex;
+    min-height: 42px;
+    padding: 10px 22px;
+    border: 1px solid #42a846;
+    background-color: #4caf50;
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 600;
 }
 
-/*Not used right now*/
-.club_owner_button {
-    background-color: #f0ac0c;
-    color: white;
-    padding: 10px 20px;
-    border-radius: 5px;
-    border: none;
+.club_owner .club-btn-create-event:hover {
+    background-color: #429b46;
+    border-color: #3a8b3e;
+    color: #ffffff;
 }

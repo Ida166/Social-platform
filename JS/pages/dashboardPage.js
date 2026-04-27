@@ -1,289 +1,323 @@
-// Hent rolle fra sessionStorage
+import { hasPermission } from "../core/rbac.js";
+import { getRole, setRole } from "../core/auth.js";
+import { getClubs, getEvent } from "./clubServices.js";
+import { supabase } from "../../Supabase.js";
 
+function applyRoleClass() {
+    const role = getRole();
+    document.body.classList.remove("student", "club_owner", "admin");
 
-// Import RBAC
-import { hasPermission } from "../core/rbac.js"; //Henter funktionen hasPermission fra rbac.js
-import { getRole } from "../core/auth.js";
+    if (role) {
+        document.body.classList.add(role);
+    }
+}
 
-/*Importer data fra database */
-// import { supabase } from '../../Supabase.js'
-
-/*Import the club list */
-    import { getClubs } from "./clubServices.js";
-    import { getEvents } from "./clubServices.js";
-    import { getJoinCount } from "./clubServices.js";
-    import { joinClub } from "./clubServices.js";
-
-    
-// Club owner buttton - Button to change between roles  
-const btnClubOwner = document.getElementById("goDashboardClubOwner");  
-
-// Redirect til dashboard og gem rolle i sessionStorage
-btnClubOwner.addEventListener("click", () => {
-    sessionStorage.setItem("role", "club_owner"); // match auth.js naming
-    window.location.href = "index.html";
-
-});
-
-//Student button - Button to change between roles 
-const btnStudent = document.getElementById("goDashboardStudent");
-
-btnStudent.addEventListener("click", () => {
-    sessionStorage.setItem("role", "student"); //Gemmer rollen "student" i browserens sessionStorage
-    window.location.href = "index.html";
-});
-
-
-//Udkommenteret da vi lige nu ikke ændrer styling baseret på rollen ved at sætte body's class.
-// Styling baseret på role
-// function applyRoleClass() { //tilføjer body.classList.add("club_owner") eller body.classList.add("admin")
-//     const role = getRole();
-//     document.body.classList.remove("student", "club_owner", "admin"); //Sikrer at der ikke ligger gemte roller tilbage
-//     if (role){
-//         document.body.classList.add(role); //Tilføj den nuværende brugers rolle som en CSS-klasse på hele siden
-//     } 
-// }
-
-// Permission-baseret UI
 function applyPermissions() {
-    const elements = document.querySelectorAll("[data-permission]"); //finder alle HTML-elementer som har attributten data-permission. (en knap kan have det som attribut: <button data-permission="create_event">Create Event</button>)
+    const elements = document.querySelectorAll("[data-permission]");
 
     elements.forEach(element => {
-        const permission = element.dataset.permission; //permission-værdien hentes(dataset læser data-atributter). I eksemplet med knappen læses der "create_event"
+        const permission = element.dataset.permission;
 
-        if (!hasPermission(permission)) { //tager en permission-string det kunne være "create_event" og returnerer true eller false
-            element.remove(); //Hvis brugeren ikke har permission → fjernes elementet modsat hvis de har forbliver den synlig
+        if (!hasPermission(permission)) {
+            element.remove();
         }
     });
 }
 
 function initDashboard() {
-    //applyRoleClass();       // Visuelle ændringer baseret på rolle. <body>'s class sættes til at være en af rollerne
-    applyPermissions();     // Fjern knapper som brugeren ikke må se
-   
-    /*oppening and closing of the application for club or events box */
-    const apply_create_club_or_event = document.getElementById("createClubOrEvent");
-    const apply_create_club_or_event_box = document.getElementById("create-club-or-event_box");
+    if (!getRole()) {
+        setRole("student");
+    }
 
-    if (apply_create_club_or_event) {
-        apply_create_club_or_event.addEventListener("click", async () => {
+    applyRoleClass();
+    applyPermissions();
 
-            // Hent HTML fra separat fil
-            const response = await fetch("components/application_club-event_form.html");
-            const html = await response.text();
+    const role = getRole();
+    const roleToggleButton = document.getElementById("roleToggleButton");
+    const createClubButton = document.getElementById("createClubOrEvent");
+    const createEventButton = document.getElementById("createEventButton");
+    const applyToCreateEventButton = document.getElementById("applyToCreateEventButton");
+    const clubListLink = document.getElementById("clubListLink");
 
-            // Indsæt HTML i container
-            apply_create_club_or_event_box.innerHTML = html;
+    const dashboardHome = document.getElementById("dashboard-home");
+    const dashboardWorkspace = document.getElementById("dashboard-workspace");
+    const clubListBox = document.getElementById("club-list-box");
+    const eventPageBox = document.getElementById("event-page-box");
+    const createClubBox = document.getElementById("create-club-or-event_box");
 
-            // Vis popup
-            apply_create_club_or_event_box.classList.remove("hidden");
-            const eventCheckbox = document.getElementById('checkBoxEvent');
-            const filterBox = document.getElementById('event-filter-box');
-            if (eventCheckbox && filterBox) {
-                eventCheckbox.addEventListener('change', function() {
-                if (this.checked) {
-                    filterBox.style.display = 'block'; // Vis boksen hvis der er flueben
-                } else {
-                    filterBox.style.display = 'none';  // Skjul den hvis fluebenet fjernes
-                }
-            });
+    let clubsLoaded = false;
+
+    if (roleToggleButton) {
+        roleToggleButton.textContent = "Log Out";
+    }
+
+    function closePanel(panel, { clear = true } = {}) {
+        if (!panel) return;
+
+        panel.classList.add("hidden");
+
+        if (clear) {
+            panel.innerHTML = "";
         }
+    }
 
-            // Luk-knap (skal bindes EFTER HTML er indsat)
-            const closeBtn = document.getElementById("close-page");
-            if (closeBtn) {
-                closeBtn.addEventListener("click", () => {
-                    apply_create_club_or_event_box.classList.add("hidden");
-                    apply_create_club_or_event_box.innerHTML = "";
-                });
+    function closeOtherPanels(activePanel) {
+        [clubListBox, eventPageBox, createClubBox].forEach(panel => {
+            if (panel !== activePanel) {
+                closePanel(panel);
             }
         });
     }
 
+    function updateDashboardVisibility() {
+        if (!dashboardHome || !dashboardWorkspace) return;
 
-    /*Import the club list */
-    let clubsLoaded = false; //makes sure we do not load double
+        const hasOpenPanels = [clubListBox, eventPageBox, createClubBox]
+            .some(panel => panel && !panel.classList.contains("hidden"));
 
-    /*Load clubs */
-    window.loadClubs = async function loadClubs(){
-        if(clubsLoaded) return;
+        dashboardHome.classList.toggle("hidden", hasOpenPanels);
+        dashboardWorkspace.classList.toggle("hidden", !hasOpenPanels);
+    }
 
-        const clubs = await getClubs();
+    async function loadComponent(path, container) {
+        closeOtherPanels(container);
 
-        const container = document.getElementById("club-list");
-        if (!container) {
-            console.error("club-list not found in DOM");
+        const response = await fetch(path);
+        const html = await response.text();
+
+        container.innerHTML = html;
+        container.classList.remove("hidden");
+        updateDashboardVisibility();
+    }
+
+    function setFormStatus(statusElement, message, isError = false) {
+        if (!statusElement) return;
+
+        statusElement.textContent = message;
+        statusElement.style.color = isError ? "#b42318" : "#027a48";
+    }
+
+    async function handleCreateClubApplicationSubmit(event) {
+        event.preventDefault();
+
+        const form = event.currentTarget;
+        const statusElement = form.querySelector("#application-form-status");
+        const submitButton = form.querySelector('button[type="submit"]');
+
+        const formData = new FormData(form);
+        const createClub = formData.get("create_club") === "on";
+        const createEvent = formData.get("create_event") === "on";
+
+        if (!createClub && !createEvent) {
+            setFormStatus(statusElement, "Select at least one option: Create Club or Create Event.", true);
             return;
         }
 
-        container.innerHTML = clubs.map(clubs => `
-            <div class="club-card" data-id="${clubs.id}">
-                <h3>${clubs.name}</h3>
-                <img src="${clubs.image}" alt="${clubs.name}" class="club-img"/>
+        const payload = {
+            full_name: formData.get("full_name")?.toString().trim(),
+            email: formData.get("email")?.toString().trim(),
+            education: formData.get("education")?.toString().trim(),
+            phone_number: formData.get("phone_number")?.toString().trim(),
+            create_club: createClub,
+            create_event: createEvent,
+            project_name: formData.get("project_name")?.toString().trim(),
+            category: formData.get("category")?.toString().trim(),
+            idea_description: formData.get("idea_description")?.toString().trim(),
+            motivation: formData.get("motivation")?.toString().trim()
+        };
+
+        try {
+            if (submitButton) {
+                submitButton.disabled = true;
+            }
+
+            setFormStatus(statusElement, "Sending application...");
+
+            const { error } = await supabase
+                .from("club_event_applications")
+                .insert([payload]);
+
+            if (error) {
+                throw error;
+            }
+
+            form.reset();
+            setFormStatus(statusElement, "Application sent successfully.");
+        } catch (error) {
+            console.error("Failed to save application:", error);
+            setFormStatus(statusElement, `Could not save application: ${error.message}`, true);
+        } finally {
+            if (submitButton) {
+                submitButton.disabled = false;
+            }
+        }
+    }
+
+    async function openCreateClubApplication() {
+        if (!createClubBox) return;
+
+        await loadComponent("components/application_club-event_form.html", createClubBox);
+
+        const applicationForm = createClubBox.querySelector("#application_for_club_or_event_form");
+        if (applicationForm) {
+            applicationForm.addEventListener("submit", handleCreateClubApplicationSubmit);
+        }
+
+        const closeBtn = createClubBox.querySelector("#close-page");
+        if (closeBtn) {
+            closeBtn.addEventListener("click", () => {
+                closePanel(createClubBox);
+                updateDashboardVisibility();
+            });
+        }
+    }
+
+    async function openEventTemplate() {
+        if (!eventPageBox) return;
+
+        await loadComponent("components/event_template.html", eventPageBox);
+
+        const closeEventBtn = eventPageBox.querySelector("#close-event-template");
+        if (closeEventBtn) {
+            closeEventBtn.addEventListener("click", () => {
+                closePanel(eventPageBox);
+                updateDashboardVisibility();
+            });
+        }
+    }
+
+    async function loadClubs() {
+        if (clubsLoaded) return;
+
+        const clubs = await getClubs();
+        const container = document.getElementById("club-list");
+
+        if (!container) return;
+
+        container.innerHTML = clubs.map(club => `
+            <div class="club-card" data-id="${club.clubid}">
+                <h3>${club.name}</h3>
+                <img src="${club.image}" alt="${club.name}" class="club-img"/>
             </div>
         `).join("");
 
-        /*Opens club page when user clicks on a club */
-        container.addEventListener("click", async (e) => {
-            const card = e.target.closest(".club-card");
+        clubsLoaded = true;
+
+        container.addEventListener("click", async event => {
+            const card = event.target.closest(".club-card");
             if (!card) return;
 
-            const clubId = card.dataset.id;
-
-            if (!clubId) {
-                console.error("Missing clubId");
-                return;
-            }
-
-            openClubPage(clubId);
-            
+            const clubId = Number(card.dataset.id);
+            await openClubPage(clubId);
         });
-        
     }
 
-    /*Import the event data*/
-    async function openClubPage(clubId){
+    async function openClubPage(clubId) {
         const clubs = await getClubs();
-        const events = await getEvents();
+        const events = await getEvent();
 
-        const club = clubs.find(c => String(c.id) === String(clubId));
+        const club = clubs.find(currentClub => currentClub.clubid === clubId);
 
-        const container = document.getElementById("club-list-box");
-
-        if (!club) {
-            container.innerHTML = "<p>Club not found</p>";
+        if (!club || !clubListBox) {
+            if (clubListBox) {
+                clubListBox.innerHTML = "<p>Club not found</p>";
+            }
             return;
         }
 
         const clubEvents = events.filter(
-            e =>  String(e.clubId) === String(clubId) && e.isPublished === true
+            currentEvent => currentEvent.clubId === clubId && currentEvent.isPublished
         );
 
-        //event HTML - 161
-        const eventsHTML = clubEvents.length > 0
-            ? clubEvents.map(event => `
-                <div class="event-card">
-                    <h3>${event.title || "Event"}</h3>
-                    <p><strong>Date:</strong> ${event.date}</p>
-                    <p><strong>Time:</strong> ${event.time}</p>
-                    <p><strong>Place:</strong> ${event.location}</p>
-                </div>
-            `).join("")
-            : "<p>No events available yet</p>";
+        clubListBox.innerHTML = `
+            <div class="content-area">
+                <h1>Events & clubs - Informationssite - ${club.name}</h1>
 
-      container.innerHTML = `
-        <div class="content-area">
-            <h1>Events & clubs - Informationssite - ${club.name}</h1>
-
-            <div class="white-box">
-                <div class="hero">
-                    <img src="${club.image}" alt="${club.name}">
-                </div>
-
-                <div class="description">
-                    <p><strong>Join us!</strong><br>
-                    ${club.description}</p>
-                </div>
-
-                <div class="info-section">
-                    <div class="info-card">
-                        <h3>Date:</h3>
-                        <p>${clubEvents.length > 0 ? clubEvents[0].date : 'Information follows'}</p>
-                        <h3>Time:</h3>
-                        <p>${clubEvents.length > 0 ? clubEvents[0].time : 'Information follows'}</p>
-                        <h3>Place:</h3>
-                        <p>${clubEvents.length > 0 ? clubEvents[0].location : 'Information follows'}</p>
+                <div class="white-box">
+                    <div class="hero">
+                        <img src="${club.image}" alt="${club.name}">
                     </div>
 
-                    <div class="info-card">
-                        <h3>Current members:</h3>
-                        <p>${club.memberCount || 'TBA'}</p>
-                        <h3>Contact info:</h3>
-                        <p>${club.contactEmail || 'No email provided'}</p>
-                        <p>${club.phone || ''}</p>
+                    <div class="description">
+                        <p><strong>Join us!</strong><br>${club.description}</p>
                     </div>
 
-                    <button class="join-btn">Join us</button>
+                    <div class="info-section">
+                        <div class="info-card">
+                            <h3>Date:</h3>
+                            <p>${clubEvents.length > 0 ? clubEvents[0].date : "Information follows"}</p>
+                            <h3>Time:</h3>
+                            <p>${clubEvents.length > 0 ? clubEvents[0].time : "Information follows"}</p>
+                            <h3>Place:</h3>
+                            <p>${clubEvents.length > 0 ? clubEvents[0].location : "Information follows"}</p>
+                        </div>
+
+                        <div class="info-card">
+                            <h3>Current members:</h3>
+                            <p>${club.memberCount || "TBA"}</p>
+                            <h3>Contact info:</h3>
+                            <p>${club.contactEmail || "No email provided"}</p>
+                            <p>${club.phone || ""}</p>
+                        </div>
+
+                        <button class="join-btn">Join us</button>
+                    </div>
+
+                    <button id="close-event-page" class="back-btn">Go Back</button>
                 </div>
-
-                <div class="event-section">
-                         <h2>Events</h2>
-                        ${eventsHTML}
-                    </div>
-
-                <button id="close-event-page" class="back-btn">Go Back</button>
             </div>
-        </div>
-    `;
+        `;
 
-        //function to import club member count and join a club
-        const count = await getJoinCount(clubId);
-
-        const joinBtn = document.querySelector(".join-btn");
-        joinBtn.textContent = `Join us (${count.joined} joined)`;
-
-        joinBtn.addEventListener("click", async () => {
-            const result = await joinClub(clubId);
-            joinBtn.textContent = `Join us (${result.joined} joined)`;
-        });
-       
-
-        // close the club page
-        const closeClubPage = container.querySelector("#close-event-page");
-
+        const closeClubPage = clubListBox.querySelector("#close-event-page");
         if (closeClubPage) {
             closeClubPage.addEventListener("click", async () => {
-                const response = await fetch("components/club_list.html");
-                const html = await response.text();
-
-                container.innerHTML = html;
-                await loadClubs();
+                await openClubList();
             });
         }
     }
-}
 
-    /*opening and closing of the club list */
-    
-    const clubListLink = document.getElementById("clubListLink");
-    
-    if(clubListLink){
-        clubListLink.addEventListener("click", async () => {
-        
-        const clubListBox = document.getElementById("club-list-box");
+    async function openClubList() {
+        if (!clubListBox) return;
 
-            // Hent HTML fra seperat fil
-            const response = await fetch("components/club_list.html");
-            const html = await response.text();
+        await loadComponent("components/club_list.html", clubListBox);
+        clubsLoaded = false;
+        await loadClubs();
 
-            //Indsæt HTML i container
-            clubListBox.innerHTML = html;
-            
-            //Function from clubServucSes.js that loads the clubs in 
-            await loadClubs();
-
-            //Vis box
-            clubListBox.classList.remove("hidden");
-
-            /*Close box when span is clicked */
-            document.addEventListener("click", (e) => {
-                if (e.target.closest("#close-club-list")) { 
-                    const clubListBox = document.getElementById("club-list-box");
-
-                    const clubContent = document.getElementById("club-content");
-
-                    if (clubListBox) { //Hides the box 
-                        clubListBox.classList.add("hidden");
-                    }
-
-                    if (clubContent) { //removes all html inside the container 
-                        clubContent.innerHTML = "";
-                    }
-                }
+        const closeClubList = clubListBox.querySelector("#close-club-list");
+        if (closeClubList) {
+            closeClubList.addEventListener("click", () => {
+                closePanel(clubListBox);
+                clubsLoaded = false;
+                updateDashboardVisibility();
             });
-        });
-
+        }
     }
 
-document.addEventListener("DOMContentLoaded", initDashboard); //DOMContentLoaded betyder: “Kør først, når hele HTML’en er indlæst.”
+    if (roleToggleButton) {
+        roleToggleButton.addEventListener("click", () => {
+            const nextRole = getRole() === "club_owner" ? "student" : "club_owner";
+            setRole(nextRole);
+            window.location.reload();
+        });
+    }
 
+    if (createClubButton) {
+        createClubButton.addEventListener("click", openCreateClubApplication);
+    }
+
+    if (createEventButton) {
+        createEventButton.addEventListener("click", openEventTemplate);
+    }
+
+    if (applyToCreateEventButton) {
+        applyToCreateEventButton.addEventListener("click", openEventTemplate);
+    }
+
+    if (clubListLink) {
+        clubListLink.addEventListener("click", openClubList);
+    }
+
+    updateDashboardVisibility();
+}
+
+document.addEventListener("DOMContentLoaded", initDashboard);
