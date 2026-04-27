@@ -12,6 +12,8 @@ import { getRole } from "../core/auth.js";
     import { getClubs } from "./clubServices.js";
     import { getEvents } from "./clubServices.js";
     import { createEvent } from "./clubServices.js";
+    import { getJoinCount } from "./clubServices.js";
+    import { joinClub } from "./clubServices.js";
 
  
 console.log("API JS loaded");
@@ -66,6 +68,12 @@ function applyPermissions() {
     });
 }
 
+function createLocalEvent(eventData) {
+    const events = JSON.parse(localStorage.getItem("localEvents") || "[]");
+    events.push(eventData);
+    localStorage.setItem("localEvents", JSON.stringify(events));
+}
+
 function initDashboard() {
     applyRoleClass();
     //applyRoleClass();       // Visuelle ændringer baseret på rolle. <body>'s class sættes til at være en af rollerne
@@ -90,6 +98,18 @@ function initDashboard() {
 
             // Vis popup
             apply_create_club_or_event_box.classList.remove("hidden");
+
+            const eventCheckbox = document.getElementById('checkBoxEvent');
+            const filterBox = document.getElementById('event-filter-box');
+            if (eventCheckbox && filterBox) {
+                eventCheckbox.addEventListener('change', function() {
+                    if (this.checked) {
+                        filterBox.style.display = 'block';
+                    } else {
+                        filterBox.style.display = 'none';
+                    }
+                });
+            }
 
             // Luk-knap (skal bindes EFTER HTML er indsat)
             const closeBtn = document.getElementById("close-page");
@@ -151,6 +171,7 @@ function initDashboard() {
                             submitButton.disabled = true;
                         }
 
+                        createLocalEvent(payload);
                         await createEvent(payload);
 
                         if (statusMessage) {
