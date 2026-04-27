@@ -38,45 +38,6 @@ app.get("/events", async (req, res) => {
     res.json(data);
 });
 
-/*Create event */
-app.post("/events", async (req, res) => {
-    const {
-        name,
-        date,
-        time,
-        clubId,
-        location,
-        description,
-        practicalInformation,
-        isPublished
-    } = req.body;
-
-    if (!name || !date || !time || !clubId || !location || !description) {
-        return res.status(400).json({
-            error: "Missing required event fields."
-        });
-    }
-
-    const { data, error } = await supabase
-        .from("events")
-        .insert([{
-            name,
-            date,
-            time,
-            clubId: Number(clubId),
-            location,
-            description,
-            practicalInformation,
-            isPublished: Boolean(isPublished)
-        }])
-        .select()
-        .single();
-
-    if (error) return res.status(500).json(error);
-
-    res.status(201).json(data);
-});
-
 /*Get the number of current joined members */
 app.get("/clubs/:id", async (req, res) => {
     const clubId = req.params.id;

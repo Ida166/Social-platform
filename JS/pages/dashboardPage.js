@@ -11,7 +11,35 @@ import { getRole } from "../core/auth.js";
 /*Import the club list */
     import { getClubs } from "./clubServices.js";
     import { getEvents } from "./clubServices.js";
-    import { createEvent } from "./clubServices.js";
+
+const LOCAL_EVENTS_KEY = "mapout_local_events";
+
+function readLocalEvents() {
+    const savedEvents = localStorage.getItem(LOCAL_EVENTS_KEY);
+
+    if (!savedEvents) {
+        return [];
+    }
+
+    try {
+        return JSON.parse(savedEvents);
+    } catch {
+        return [];
+    }
+}
+
+function createLocalEvent(eventData) {
+    const existingEvents = readLocalEvents();
+    const newEvent = {
+        id: Date.now(),
+        ...eventData
+    };
+
+    existingEvents.push(newEvent);
+    localStorage.setItem(LOCAL_EVENTS_KEY, JSON.stringify(existingEvents));
+
+    return newEvent;
+}
 
  
 console.log("API JS loaded");
@@ -126,11 +154,10 @@ function initDashboard() {
             }
 
             if (eventForm) {
-                eventForm.addEventListener("submit", async submitEvent => {
+                eventForm.addEventListener("submit", submitEvent => {
                     submitEvent.preventDefault();
 
                     const formData = new FormData(eventForm);
-                    const submitButton = eventForm.querySelector('button[type="submit"]');
                     const payload = {
                         name: formData.get("name")?.toString().trim(),
                         date: formData.get("date")?.toString().trim(),
@@ -142,31 +169,13 @@ function initDashboard() {
                         isPublished: true
                     };
 
+                    createLocalEvent(payload);
+
                     if (statusMessage) {
-                        statusMessage.textContent = "Saving event...";
+                        statusMessage.textContent = "Event saved locally.";
                     }
 
-                    try {
-                        if (submitButton) {
-                            submitButton.disabled = true;
-                        }
-
-                        await createEvent(payload);
-
-                        if (statusMessage) {
-                            statusMessage.textContent = "Event saved.";
-                        }
-
-                        eventForm.reset();
-                    } catch (error) {
-                        if (statusMessage) {
-                            statusMessage.textContent = error.message;
-                        }
-                    } finally {
-                        if (submitButton) {
-                            submitButton.disabled = false;
-                        }
-                    }
+                    eventForm.reset();
                 });
             }
         });
