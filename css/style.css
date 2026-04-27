@@ -267,27 +267,48 @@ ul {
 
 
 .calendarcontainer {
-  /*ydreramme*/
-  display: grid;
-  grid-template-columns: 70px 1fr; /*to kolonner - første 50px bred, og anden er auto, som er resten af pladsen*/
-  grid-template-areas: /*navngiver områder i griddet*/
-    ". header" /*øverst til venstre laves der et tom felt og øverst til højre er der header*/
-    "timeslotscontainer main"; /*nederest til venstre er der timeslot og nederst til højre har vi main*/
-  margin-top: 20px;
+    display: grid;
+    grid-template-columns: 70px 1fr;
+    grid-template-areas:
+        ". header"
+        "timeslots calendar";
+    margin-top: 20px;
 }
 
 
-.weekdays { /* kunne vruge en opdatering */
-  display: grid; 
-  grid-template-columns: repeat(7,1fr); /*7 lige store kolonner*/
-  padding: 0px;
-  font-weight: 500;
-  background-color: white;
-  border: 1px solid #d9d9d9;
-  border-radius: 10px 10px 0 0;
-  overflow: hidden;
+.header {
+  grid-area: header;
+  position: relative;
 }
 
+.header button{
+  width: 50px;
+  height: 40px;
+  border-radius: 20%;
+  border: ;
+  background: #f0f0f0;
+  align-self: center;
+  justify-self: center;
+}
+
+.weekdays {
+    display:grid;
+    grid-template-columns:repeat(7,1fr);
+}
+
+#previousWeek{
+  position: absolute;
+  left: -60px;
+  top: 50%
+  transform: translateY(-50%)
+}
+
+#nextWeek {
+  position: absolute;
+  right: -60px;
+  top: 50%;
+  transform: translateY(-50%);
+}
 .weekdays li{
   display: flex;
   flex-direction: column;
@@ -302,18 +323,23 @@ ul {
   border-right: none;
 }
 
-.header {
-  grid-area: header;
-}
 
-/* hvis vi sletter .header, bliver det sært*/
+.slot {
+  /*"indeni" eventcontainer - generelt om slot placering og sån*/
+  position: relative;
+  background: green;
+  border-radius: 5px;
+  z-index: 5; /*lag*/
+  color: white;
+  font-size: 15px;
+}
 
 .timeslotscontainer {
   background-color: white;
   border-left: 1px solid #d9d9d9;
   border-bottom: 1px solid #d9d9d9;
   border-right: 1px solid #d9d9d9;
-  grid-area: timeslotscontainer;
+  grid-area: timeslots;
 }
 
 .timeslots {
@@ -338,7 +364,7 @@ ul {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   grid-template-rows: repeat(96, 10px);
-  grid-area: main;
+  grid-area: calendar;
   position: relative;
   border-right: 1px solid #d9d9d9;
   border-bottom: 1px solid #d9d9d9;
@@ -373,23 +399,7 @@ ul {
   pointer-events: none;
 }
 
-.slot {
-  /*"indeni" eventcontainer - generelt om slot placering og sån*/
-  position: relative;
-  background: green;
-  border-radius: 5px;
-  z-index: 5; /*lag*/
-  color: white;
-  font-size: 15px;
-}
 
-.slot1 {
-  /*"indeni" eventcontainer - specifikt eksempel*/
-  top: 240px; /* 00:00-6:00 <=> 6*60 = 360 min, 360 / 15 = 24  */
-  height: 40px; /* hvert kvarter er 10px, dvs, 30 minutter er 20px*/
-  width: 100%; /*den vil udfylde 1/7-del af eventcontainer*/
-  grid-column: 3; /*inddelt i 7 collumns så dette beskrive hvilken dag*/
-}
 
 
 #create-club-or-event_box_content {
@@ -453,34 +463,27 @@ ul {
   display: none;
 }
 
-.role-button {
-  min-width: 150px;
-  min-height: 40px;
-  box-sizing: border-box;
-  white-space: nowrap;
+#clubListLink {
+    position: relative;
 }
 
-.club-btn-create-event,
-.admin-btn-delete-event {
-  min-width: 130px;
-  min-height: 40px;
-  box-sizing: border-box;
-  white-space: nowrap;
+#clubListLink::after {
+    content: "See clubs and join";
+    position: absolute;
+    bottom: -35px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #333;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 12px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
 }
 
-.button-group {
-  align-items: center;
-}
-
-.button-group button {
-  flex: 0 0 auto;
-}
-
-#createClubOrEvent {
-  min-width: 165px;
-}
-
-#goDashboardClubOwner,
-#goDashboardStudent {
-  min-width: 120px;
+#clubListLink:hover::after {
+    opacity: 1;
 }

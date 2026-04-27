@@ -11,38 +11,10 @@ import { getRole } from "../core/auth.js";
 /*Import the club list */
     import { getClubs } from "./clubServices.js";
     import { getEvents } from "./clubServices.js";
+    import { getJoinCount } from "./clubServices.js";
+    import { joinClub } from "./clubServices.js";
 
-const LOCAL_EVENTS_KEY = "mapout_local_events";
-
-function readLocalEvents() {
-    const savedEvents = localStorage.getItem(LOCAL_EVENTS_KEY);
-
-    if (!savedEvents) {
-        return [];
-    }
-
-    try {
-        return JSON.parse(savedEvents);
-    } catch {
-        return [];
-    }
-}
-
-function createLocalEvent(eventData) {
-    const existingEvents = readLocalEvents();
-    const newEvent = {
-        id: Date.now(),
-        ...eventData
-    };
-
-    existingEvents.push(newEvent);
-    localStorage.setItem(LOCAL_EVENTS_KEY, JSON.stringify(existingEvents));
-
-    return newEvent;
-}
-
- 
-console.log("API JS loaded");
+    
 // Club owner buttton - Button to change between roles  
 const btnClubOwner = document.getElementById("goDashboardClubOwner");  
 
@@ -72,15 +44,6 @@ btnStudent.addEventListener("click", () => {
 //     } 
 // }
 
-function applyRoleClass() {
-    const role = getRole();
-    document.body.classList.remove("student", "club_owner", "admin");
-
-    if (role) {
-        document.body.classList.add(role);
-    }
-}
-
 // Permission-baseret UI
 function applyPermissions() {
     const elements = document.querySelectorAll("[data-permission]"); //finder alle HTML-elementer som har attributten data-permission. (en knap kan have det som attribut: <button data-permission="create_event">Create Event</button>)
@@ -95,16 +58,12 @@ function applyPermissions() {
 }
 
 function initDashboard() {
-    applyRoleClass();
     //applyRoleClass();       // Visuelle ændringer baseret på rolle. <body>'s class sættes til at være en af rollerne
     applyPermissions();     // Fjern knapper som brugeren ikke må se
    
     /*oppening and closing of the application for club or events box */
     const apply_create_club_or_event = document.getElementById("createClubOrEvent");
     const apply_create_club_or_event_box = document.getElementById("create-club-or-event_box");
-    const createEventButton = document.getElementById("createEventButton");
-    const eventPageBox = document.getElementById("event-page-box");
-    const dashboardHome = document.getElementById("dashboard-home");
 
     if (apply_create_club_or_event) {
         apply_create_club_or_event.addEventListener("click", async () => {
@@ -118,6 +77,17 @@ function initDashboard() {
 
             // Vis popup
             apply_create_club_or_event_box.classList.remove("hidden");
+            const eventCheckbox = document.getElementById('checkBoxEvent');
+            const filterBox = document.getElementById('event-filter-box');
+            if (eventCheckbox && filterBox) {
+                eventCheckbox.addEventListener('change', function() {
+                if (this.checked) {
+                    filterBox.style.display = 'block'; // Vis boksen hvis der er flueben
+                } else {
+                    filterBox.style.display = 'none';  // Skjul den hvis fluebenet fjernes
+                }
+            });
+        }
 
             // Luk-knap (skal bindes EFTER HTML er indsat)
             const closeBtn = document.getElementById("close-page");
@@ -125,57 +95,6 @@ function initDashboard() {
                 closeBtn.addEventListener("click", () => {
                     apply_create_club_or_event_box.classList.add("hidden");
                     apply_create_club_or_event_box.innerHTML = "";
-                });
-            }
-        });
-    }
-
-    if (createEventButton && eventPageBox) {
-        createEventButton.addEventListener("click", async () => {
-            if (!hasPermission("create_event")) return;
-
-            const response = await fetch("components/event_template.html");
-            const html = await response.text();
-
-            eventPageBox.innerHTML = html;
-            eventPageBox.classList.remove("hidden");
-            dashboardHome?.classList.add("hidden");
-
-            const closeEventBtn = eventPageBox.querySelector("#close-event-template");
-            const eventForm = eventPageBox.querySelector("#event-template-form");
-            const statusMessage = eventPageBox.querySelector("#event-form-status");
-
-            if (closeEventBtn) {
-                closeEventBtn.addEventListener("click", () => {
-                    eventPageBox.classList.add("hidden");
-                    eventPageBox.innerHTML = "";
-                    dashboardHome?.classList.remove("hidden");
-                });
-            }
-
-            if (eventForm) {
-                eventForm.addEventListener("submit", submitEvent => {
-                    submitEvent.preventDefault();
-
-                    const formData = new FormData(eventForm);
-                    const payload = {
-                        name: formData.get("name")?.toString().trim(),
-                        date: formData.get("date")?.toString().trim(),
-                        time: formData.get("time")?.toString().trim(),
-                        clubId: formData.get("clubId") ? Number(formData.get("clubId")) : null,
-                        location: formData.get("location")?.toString().trim(),
-                        description: formData.get("description")?.toString().trim(),
-                        practicalInformation: formData.get("practicalInformation")?.toString().trim(),
-                        isPublished: true
-                    };
-
-                    createLocalEvent(payload);
-
-                    if (statusMessage) {
-                        statusMessage.textContent = "Event saved locally.";
-                    }
-
-                    eventForm.reset();
                 });
             }
         });
@@ -240,6 +159,18 @@ function initDashboard() {
             e =>  String(e.clubId) === String(clubId) && e.isPublished === true
         );
 
+        //event HTML - 161
+        const eventsHTML = clubEvents.length > 0
+            ? clubEvents.map(event => `
+                <div class="event-card">
+                    <h3>${event.title || "Event"}</h3>
+                    <p><strong>Date:</strong> ${event.date}</p>
+                    <p><strong>Time:</strong> ${event.time}</p>
+                    <p><strong>Place:</strong> ${event.location}</p>
+                </div>
+            `).join("")
+            : "<p>No events available yet</p>";
+
       container.innerHTML = `
         <div class="content-area">
             <h1>Events & clubs - Informationssite - ${club.name}</h1>
@@ -275,11 +206,28 @@ function initDashboard() {
                     <button class="join-btn">Join us</button>
                 </div>
 
+                <div class="event-section">
+                         <h2>Events</h2>
+                        ${eventsHTML}
+                    </div>
+
                 <button id="close-event-page" class="back-btn">Go Back</button>
             </div>
         </div>
     `;
+
+        //function to import club member count and join a club
+        const count = await getJoinCount(clubId);
+
+        const joinBtn = document.querySelector(".join-btn");
+        joinBtn.textContent = `Join us (${count.joined} joined)`;
+
+        joinBtn.addEventListener("click", async () => {
+            const result = await joinClub(clubId);
+            joinBtn.textContent = `Join us (${result.joined} joined)`;
+        });
        
+
         // close the club page
         const closeClubPage = container.querySelector("#close-event-page");
 
