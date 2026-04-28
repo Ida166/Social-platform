@@ -1,25 +1,22 @@
-/* Events */
+import { getEvents } from "../pages/clubServices.js";
 
-const events = [
-    { title: "Event B",
-    date: "2026-04-24",
-    start: "8:00",
-    end: "13:00"
-    },
-    {
-    title: "Event C",
-    date: "2026-04-25",
-    start: "16:00",
-    end: "17:00"
-    },
-    {
-    title: "Event D",
-    date: "2026-04-26",
-    start: "07:00",
-    end: "10:00"
+let events = [];
+
+/*Function that loads the events into the array events  */
+async function loadEventsFromDB() {
+    try {
+        events = await getEvents();
+        renderWeek(); //this rerenders calender after loading
+    } catch (err){
+        console.error("Failed to load events:", err);
     }
+}
 
-]
+/*Function that thakes the time fx 16:00-18:00 and split it into start and end */
+function splitTimeRange(timeRange = "") {
+    const [start = "00:00", end = "00:00"] = timeRange.split("-");
+    return { start, end };
+}
 
 /* Default timeslots */
 let calendarStartHour = 8;
@@ -37,8 +34,10 @@ function updateCalendarTimeRange(monday){
 
         if (diffFromMonday >=0 && diffFromMonday<7){
 
-            const [startHour] = event.start.split(":").map(Number);
-            const [endHour] = event.end.split(":").map(Number);
+            const { start, end } = splitTimeRange(event.time);
+
+            const [startHour] = start.split(":").map(Number);
+            const [endHour] = end.split(":").map(Number);
 
             if (startHour < earliestHour){
                 earliestHour = startHour;
@@ -97,7 +96,8 @@ function renderTimeslots(){
                 element.textContent = event.title;              //som får titlen bruger har angivet
 
                 element.style.gridColumn = diffFromMonday + 1;   //diffFromMonday starter fra 0, imen mandag i kolonner starter på 1, så derfor +1
-                element.style.gridRow = timeToRow(event.start) + " / " + timeToRow(event.end); //starter fra mængde kvarter vi er inde i døgnet, og strækker sig til slut - igen antal kvarter inde i døgnet.
+                const {start, end } = splitTimeRange(event.time);
+                element.style.gridRow = timeToRow(start) + " / " + timeToRow(end); //starter fra mængde kvarter vi er inde i døgnet, og strækker sig til slut - igen antal kvarter inde i døgnet.
                 //i css er syntaks gridrow = start /end.
                 container.appendChild(element); //og så tilføjer vi til sidst 
             }
@@ -181,7 +181,7 @@ function previousWeek() {
     renderWeek();
 }
 
-renderWeek();
+loadEventsFromDB();
 
 document.getElementById("previousWeek").addEventListener("click", previousWeek);
 document.getElementById("nextWeek").addEventListener("click", nextWeek);
