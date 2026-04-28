@@ -11,6 +11,7 @@ import { getRole } from "../core/auth.js";
 /*Import the club list */
     import { getClubs } from "./clubServices.js";
     import { getEvents } from "./clubServices.js";
+    import { createEvent } from "./clubServices.js";
     import { getJoinCount } from "./clubServices.js";
     import { joinClub } from "./clubServices.js";
 
@@ -57,13 +58,41 @@ function applyPermissions() {
     });
 }
 
+const LOCAL_EVENTS_KEY = "mapout_local_events";
+
+function readLocalEvents() {
+    const savedEvents = localStorage.getItem(LOCAL_EVENTS_KEY);
+    if (!savedEvents) {
+        return [];
+    }
+    try {
+        return JSON.parse(savedEvents);
+    } catch {
+        return [];
+    }
+}
+
+function createLocalEvent(eventData) {
+    const existingEvents = readLocalEvents();
+    const newEvent = {
+        id: Date.now(),
+        ...eventData
+    };
+    existingEvents.push(newEvent);
+    localStorage.setItem(LOCAL_EVENTS_KEY, JSON.stringify(existingEvents));
+    return newEvent;
+}
+
 function initDashboard() {
     //applyRoleClass();       // Visuelle ændringer baseret på rolle. <body>'s class sættes til at være en af rollerne
     applyPermissions();     // Fjern knapper som brugeren ikke må se
-   
+
     /*oppening and closing of the application for club or events box */
     const apply_create_club_or_event = document.getElementById("createClubOrEvent");
     const apply_create_club_or_event_box = document.getElementById("create-club-or-event_box");
+    const createEventButton = document.getElementById("createEventButton");
+    const eventPageBox = document.getElementById("event-page-box");
+    const dashboardHome = document.getElementById("dashboard-home");
 
     if (apply_create_club_or_event) {
         apply_create_club_or_event.addEventListener("click", async () => {
@@ -100,6 +129,76 @@ function initDashboard() {
         });
     }
 
+    if (createEventButton && eventPageBox) {
+        createEventButton.addEventListener("click", async () => {
+            if (!hasPermission("create_event")) return;
+
+            const response = await fetch("components/event_template.html");
+            const html = await response.text();
+
+            eventPageBox.innerHTML = html;
+            eventPageBox.classList.remove("hidden");
+            dashboardHome?.classList.add("hidden");
+
+            const closeEventBtn = eventPageBox.querySelector("#close-event-template");
+            const eventForm = eventPageBox.querySelector("#event-template-form");
+            const statusMessage = eventPageBox.querySelector("#event-form-status");
+
+            if (closeEventBtn) {
+                closeEventBtn.addEventListener("click", () => {
+                    eventPageBox.classList.add("hidden");
+                    eventPageBox.innerHTML = "";
+                    dashboardHome?.classList.remove("hidden");
+                });
+            }
+
+            if (eventForm) {
+                eventForm.addEventListener("submit", async submitEvent => {
+                    submitEvent.preventDefault();
+
+                    const formData = new FormData(eventForm);
+                    const submitButton = eventForm.querySelector('button[type="submit"]');
+                    const payload = {
+                        name: formData.get("name")?.toString().trim(),
+                        date: formData.get("date")?.toString().trim(),
+                        time: formData.get("time")?.toString().trim(),
+                        clubId: formData.get("clubId") ? Number(formData.get("clubId")) : null,
+                        location: formData.get("location")?.toString().trim(),
+                        description: formData.get("description")?.toString().trim(),
+                        practicalInformation: formData.get("practicalInformation")?.toString().trim(),
+                        isPublished: true
+                    };
+
+                    if (statusMessage) {
+                        statusMessage.textContent = "Saving event...";
+                    }
+
+                    try {
+                        if (submitButton) {
+                            submitButton.disabled = true;
+                        }
+
+                        createLocalEvent(payload);
+                        await createEvent(payload);
+
+                        if (statusMessage) {
+                            statusMessage.textContent = "Event saved.";
+                        }
+
+                        eventForm.reset();
+                    } catch (error) {
+                        if (statusMessage) {
+                            statusMessage.textContent = error.message;
+                        }
+                    } finally {
+                        if (submitButton) {
+                            submitButton.disabled = false;
+                        }
+                    }
+                });
+            }
+        });
+    }
 
     /*Import the club list */
     let clubsLoaded = false; //makes sure we do not load double
