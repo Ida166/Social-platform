@@ -1,0 +1,54 @@
+<div class="event-page-shell">
+  <div id="event-page-inner">
+    <div class="event-page-topbar">
+      <button class="button event-back-button" type="button" id="close-event-template">Go Back</button>
+    </div>
+
+    <h2>Event Page</h2>
+
+    <form id="event-template-form">
+      <div class="card clearfix">
+        <h3>
+          <strong>Event name</strong>
+          <input type="text" name="name" placeholder="Name of your event" required>
+        </h3>
+
+        <div class="section">
+          <strong>Date</strong>
+          <input type="date" name="date" required>
+        </div>
+
+        <div class="section">
+          <strong>Time</strong>
+          <input type="time" name="time" required>
+        </div>
+      </div>
+
+      <div class="card">
+        <strong>Club ID</strong>
+        <input type="number" name="clubId" placeholder="Club ID" required>
+      </div>
+
+      <div class="card">
+        <strong>Location</strong>
+        <input type="text" name="location" placeholder="Event location" required>
+      </div>
+
+      <div class="card">
+        <strong>Description</strong>
+        <textarea name="description" placeholder="Write event description here" required></textarea>
+      </div>
+
+      <div class="card">
+        <strong>Practical Information</strong>
+        <input type="text" name="practicalInformation" placeholder="Info">
+      </div>
+
+      <p id="event-form-status" aria-live="polite"></p>
+
+      <div class="event-page-actions">
+        <button class="button event-publish-button" type="submit" data-publish="true">Publish event</button>
+      </div>
+    </form>
+  </div>
+</div>

@@ -22,3 +22,22 @@ export async function joinClub(clubId) {
     });
     return await res.json();
 };
+
+/*Sends request to backend to create a new event */
+export async function createEvent(eventData) {
+    const res = await fetch("/events", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(eventData)
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+        throw new Error(data.message || data.details || "Event could not be saved");
+    }
+
+    return data;
+}

@@ -1,0 +1,104 @@
+.event-page-shell {
+  background-color: #f4f6f8;
+  padding: 30px;
+  min-height: 100%;
+  font-family: Arial, sans-serif;
+}
+
+.event-page-shell #event-page-inner {
+  max-width: 800px;
+  margin: auto;
+}
+
+.event-page-shell .event-page-topbar {
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 20px;
+}
+
+.event-page-shell h2 {
+  margin-bottom: 20px;
+}
+
+.event-page-shell .card {
+  background: #e6e6e6;
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+.event-page-shell .card h3 {
+  margin-top: 0;
+}
+
+.event-page-shell .button {
+  padding: 10px 16px;
+  background: #2f80ed;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.event-page-shell .button:hover {
+  background: #1366d6;
+}
+
+.event-page-shell .event-page-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.event-page-shell .section {
+  margin-top: 15px;
+}
+
+.event-page-shell input,
+.event-page-shell textarea {
+  width: 100%;
+  padding: 10px;
+  margin-top: 8px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  box-sizing: border-box;
+  font-size: 14px;
+}
+
+.event-page-shell textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.event-page-shell strong {
+  display: block;
+  margin-bottom: 8px;
+}
+
+.event-page-shell .clearfix::after {
+  content: "";
+  display: block;
+  clear: both;
+}
+
+.dashboard-create-event-button.club-btn-create-event {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: auto;
+  margin: 0;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  background-color: #47ad5f;
+  color: #ffffff;
+  font-size: 13.3333px;
+  font-weight: 400;
+  line-height: normal;
+  box-shadow: none;
+  cursor: pointer;
+}
+
+.dashboard-create-event-button.club-btn-create-event:hover {
+  background-color: #3d9b53;
+  color: #ffffff;
+}
