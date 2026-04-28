@@ -68,10 +68,29 @@ function applyPermissions() {
     });
 }
 
+const LOCAL_EVENTS_KEY = "mapout_local_events";
+
+function readLocalEvents() {
+    const savedEvents = localStorage.getItem(LOCAL_EVENTS_KEY);
+    if (!savedEvents) {
+        return [];
+    }
+    try {
+        return JSON.parse(savedEvents);
+    } catch {
+        return [];
+    }
+}
+
 function createLocalEvent(eventData) {
-    const events = JSON.parse(localStorage.getItem("localEvents") || "[]");
-    events.push(eventData);
-    localStorage.setItem("localEvents", JSON.stringify(events));
+    const existingEvents = readLocalEvents();
+    const newEvent = {
+        id: Date.now(),
+        ...eventData
+    };
+    existingEvents.push(newEvent);
+    localStorage.setItem(LOCAL_EVENTS_KEY, JSON.stringify(existingEvents));
+    return newEvent;
 }
 
 function initDashboard() {
