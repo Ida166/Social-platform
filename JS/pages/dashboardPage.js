@@ -1,6 +1,4 @@
 // Hent rolle fra sessionStorage
-
-
 // Import RBAC
 import { hasPermission } from "../core/rbac.js"; //Henter funktionen hasPermission fra rbac.js
 import { getRole } from "../core/auth.js";
@@ -215,6 +213,7 @@ function initDashboard() {
             return;
         }
 
+        //Converts the JS data from the database into HTML cards
         container.innerHTML = clubs.map(clubs => `
             <div class="club-card" data-id="${clubs.id}">
                 <h3>${clubs.name}</h3>
@@ -224,20 +223,18 @@ function initDashboard() {
 
         /*Opens club page when user clicks on a club */
         container.addEventListener("click", async (e) => {
-            const card = e.target.closest(".club-card");
+            const card = e.target.closest(".club-card"); //closest -> find the nearest club-card when cliked
             if (!card) return;
 
-            const clubId = card.dataset.id;
+            const clubId = card.dataset.id; 
 
             if (!clubId) {
                 console.error("Missing clubId");
                 return;
             }
 
-            openClubPage(clubId);
-            
-        });
-        
+            openClubPage(clubId);     
+        }); 
     }
 
     /*Import the event data*/
@@ -349,7 +346,7 @@ function initDashboard() {
     if(clubListLink){
         clubListLink.addEventListener("click", async () => {
         
-        const clubListBox = document.getElementById("club-list-box");
+        const clubListBox = document.getElementById("club-list-box"); // The box where the clubs will be shown
 
             // Hent HTML fra seperat fil
             const response = await fetch("components/club_list.html");
