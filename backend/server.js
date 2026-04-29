@@ -1,7 +1,7 @@
 import express from "express";
 import path from "path";
 import { fileURLToPath } from "url";
-import { supabase } from "./supabase.js";
+import { supabase } from "./Supabase.js";
 
 const app = express();
 
@@ -43,8 +43,7 @@ app.post("/events", async (req, res) => {
     const {
         name,
         date,
-        timeStart,
-        timeEnd,
+        time,
         clubId,
         location,
         description,
@@ -52,32 +51,22 @@ app.post("/events", async (req, res) => {
         isPublished
     } = req.body;
 
-    if (!name || !date || !timeStart || !timeEnd || !clubId || !location || !description) {
+    if (!name || !date || !time || !clubId || !location || !description) {
         return res.status(400).json({
             error: "Missing required event fields."
         });
     }
 
-    const { data: maxData } = await supabase
-        .from("events")
-        .select("id")
-        .order("id", { ascending: false })
-        .limit(1)
-        .single();
-
-    const nextId = maxData ? maxData.id + 1 : 1;
-
     const { data, error } = await supabase
         .from("events")
         .insert([{
-            id: nextId,
             title: name, //this maps frontend "name" to database "title" coulmn
             date,
-            time: `${timeStart}-${timeEnd}`,
+            time,
             clubId: Number(clubId),
             location,
             description,
-            practicalInfo: practicalInformation ? [practicalInformation] : null,
+            practicalInfo,
             isPublished: Boolean(isPublished)
         }])
         .select()
