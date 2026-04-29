@@ -31,7 +31,7 @@
 }
 
 .role-button {
-  background-color: #ebeaea; /* grå farve */
+  background-color: #ebeaea; /* blå*/
   color: rgb(10, 10, 10); /* Tekstfarve */
   border: none; /* 2px solid rgb(244, 217, 13); */
   padding: 10px 20px;
@@ -40,6 +40,27 @@
 .role-button:hover {
   background-color: #cac8c8; /* Mørkere når man holder musen over */
   color: rgb(0, 2, 108);
+}
+
+/* Kun Go Back knappen */
+#close-page {
+  background-color: #2f80ed;
+  color: white;
+}
+
+#close-page:hover {
+  background-color: #1366d6;
+
+}
+
+/* Send Application knappen*/
+.primary-button {
+  background-color: #2f80ed;
+  color: white;
+}
+
+.primary-button:hover {
+  background-color: #1366d6;
 }
 
 /*skjul som standard*/
