@@ -35,7 +35,7 @@ function updateCalendarTimeRange(monday){
         if (diffFromMonday >=0 && diffFromMonday<7){
 
             const { start, end } = splitTimeRange(event.time);
-
+            
             const [startHour] = start.split(":").map(Number);
             const [endHour] = end.split(":").map(Number);
 
