@@ -43,7 +43,8 @@ app.post("/events", async (req, res) => {
     const {
         name,
         date,
-        time,
+        timeStart,
+        timeEnd,
         clubId,
         location,
         description,
@@ -51,22 +52,32 @@ app.post("/events", async (req, res) => {
         isPublished
     } = req.body;
 
-    if (!name || !date || !time || !clubId || !location || !description) {
+    if (!name || !date || !timeStart || !timeEnd || !clubId || !location || !description) {
         return res.status(400).json({
             error: "Missing required event fields."
         });
     }
 
+    const { data: maxData } = await supabase
+        .from("events")
+        .select("id")
+        .order("id", { ascending: false })
+        .limit(1)
+        .single();
+
+    const nextId = maxData ? maxData.id + 1 : 1;
+
     const { data, error } = await supabase
         .from("events")
         .insert([{
+            id: nextId,
             title: name, //this maps frontend "name" to database "title" coulmn
             date,
-            time,
+            time: `${timeStart}-${timeEnd}`,
             clubId: Number(clubId),
             location,
             description,
-            practicalInfo,
+            practicalInfo: practicalInformation ? [practicalInformation] : null,
             isPublished: Boolean(isPublished)
         }])
         .select()

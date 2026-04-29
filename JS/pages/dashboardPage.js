@@ -159,7 +159,8 @@ function initDashboard() {
                     const payload = {
                         name: formData.get("name")?.toString().trim(),
                         date: formData.get("date")?.toString().trim(),
-                        time: formData.get("time")?.toString().trim(),
+                        timeStart: formData.get("timeStart")?.toString().trim(),
+                        timeEnd: formData.get("timeEnd")?.toString().trim(),
                         clubId: formData.get("clubId") ? Number(formData.get("clubId")) : null,
                         location: formData.get("location")?.toString().trim(),
                         description: formData.get("description")?.toString().trim(),
