@@ -18,19 +18,19 @@ import { getRole } from "../core/auth.js";
 const btnClubOwner = document.getElementById("goDashboardClubOwner");  
 
 // Redirect til dashboard og gem rolle i sessionStorage
-btnClubOwner.addEventListener("click", () => {
-    sessionStorage.setItem("role", "club_owner"); // match auth.js naming
-    window.location.href = "index.html";
+// btnClubOwner.addEventListener("click", () => {
+//     sessionStorage.setItem("role", "club_owner"); // match auth.js naming
+//     window.location.href = "index.html";
 
-});
+// });
 
 //Student button - Button to change between roles 
 const btnStudent = document.getElementById("goDashboardStudent");
 
-btnStudent.addEventListener("click", () => {
-    sessionStorage.setItem("role", "student"); //Gemmer rollen "student" i browserens sessionStorage
-    window.location.href = "index.html";
-});
+// btnStudent.addEventListener("click", () => {
+//     sessionStorage.setItem("role", "student"); //Gemmer rollen "student" i browserens sessionStorage
+//     window.location.href = "index.html";
+// });
 
 
 //Udkommenteret da vi lige nu ikke ændrer styling baseret på rollen ved at sætte body's class.
@@ -84,6 +84,14 @@ function createLocalEvent(eventData) {
 function initDashboard() {
     //applyRoleClass();       // Visuelle ændringer baseret på rolle. <body>'s class sættes til at være en af rollerne
     applyPermissions();     // Fjern knapper som brugeren ikke må se
+
+    //Redirect to log in page 
+    const logOut = document.getElementById("logOut");
+    if (logOut) {
+        logOut.addEventListener("click", () => {
+            window.location.href = "login.html";
+        });
+    }
 
     /*oppening and closing of the application for club or events box */
     const apply_create_club_or_event = document.getElementById("createClubOrEvent");

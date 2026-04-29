@@ -27,20 +27,8 @@ export const roles = {
         "create_event",
         "edit_own_event",
         "send_notifications",
-        "create-club-or-event",
         "student_role"
     ],
-    admin: [
-        "view_events",
-        "signup_event",
-        "view_clubs",
-        "view_calendar",
-        "create_event",
-        "edit_any_event",
-        "manage_clubs",
-        "publish_event",
-        "delete_event"
-    ]
 };
 
 import { getRole } from "./auth.js"; //returnerer brugerens rolle fra sessionStorage
