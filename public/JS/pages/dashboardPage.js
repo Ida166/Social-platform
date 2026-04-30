@@ -1,71 +1,18 @@
-// Hent rolle fra sessionStorage
-
-
-/*Importer data fra database */
-// import { supabase } from '../../Supabase.js'
-
-/*Import the club list */
+/*Import functions */
     import { getClubs } from "./clubServices.js";
     import { getEvents } from "./clubServices.js";
     import { createEvent } from "./clubServices.js";
     import { getJoinCount } from "./clubServices.js";
     import { joinClub } from "./clubServices.js";
 
-// Club owner buttton - Button to change between roles  
+// Club owner buttton & Student button - Button to change between roles  
 const btnClubOwner = document.getElementById("goDashboardClubOwner");  
-
-setTimeout(async () => {
-    console.log(await fetch("/me", { credentials: "include" }).then(r => r.json()));
-}, 1000);
-
-// Redirect til dashboard og gem rolle i sessionStorage
-// btnClubOwner.addEventListener("click", () => {
-//     sessionStorage.setItem("role", "club_owner"); // match auth.js naming
-//     window.location.href = "index.html";
-
-// });
-
-//Student button - Button to change between roles 
 const btnStudent = document.getElementById("goDashboardStudent");
 
-// btnStudent.addEventListener("click", () => {
-//     sessionStorage.setItem("role", "student"); //Gemmer rollen "student" i browserens sessionStorage
-//     window.location.href = "index.html";
-// });
-
-
-//Udkommenteret da vi lige nu ikke ændrer styling baseret på rollen ved at sætte body's class.
-// Styling baseret på role
-// function applyRoleClass() { //tilføjer body.classList.add("club_owner") eller body.classList.add("admin")
-//     const role = getRole();
-//     document.body.classList.remove("student", "club_owner", "admin"); //Sikrer at der ikke ligger gemte roller tilbage
-//     if (role){
-//         document.body.classList.add(role); //Tilføj den nuværende brugers rolle som en CSS-klasse på hele siden
-//     } 
-// }
-
-
-const LOCAL_EVENTS_KEY = "mapout_local_events";
-
-function readLocalEvents() {
-    const savedEvents = localStorage.getItem(LOCAL_EVENTS_KEY);
-    if (!savedEvents) {
-        return [];
-    }
-    try {
-        return JSON.parse(savedEvents);
-    } catch {
-        return [];
-    }
-}
-
 function initDashboard() {
-    //applyRoleClass();       // Visuelle ændringer baseret på rolle. <body>'s class sættes til at være en af rollerne
-        // Fjern knapper som brugeren ikke må se
 
     //Redirect to log in page 
     const logOut = document.getElementById("logOut");
-
     if (logOut) {
         logOut.addEventListener("click", async () => {
             await fetch("/logout", {
@@ -107,7 +54,6 @@ function initDashboard() {
                 }
             });
         }
-
             // Luk-knap (skal bindes EFTER HTML er indsat)
             const closeBtn = document.getElementById("close-page");
             if (closeBtn) {
@@ -311,6 +257,11 @@ function initDashboard() {
 
         joinBtn.addEventListener("click", async () => {
             const result = await joinClub(clubId);
+
+            if(!result){
+                return; 
+            }
+
             joinBtn.textContent = `Join us (${result.joined} joined)`;
         });
        
@@ -331,7 +282,6 @@ function initDashboard() {
 }
 
     /*opening and closing of the club list */
-    
     const clubListLink = document.getElementById("clubListLink");
     
     if(clubListLink){

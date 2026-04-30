@@ -10,17 +10,24 @@ export async function getEvents() {
 
 /*Sends request to backend to get the joined count of the given club */
 export async function getJoinCount(clubId) {
-    const res = await fetch(`/clubs/${clubId}`);
-    return await res.json();
-        
+    const res = await fetch(`/clubs/${clubId}/join-count`);
+    return res.json();  
 }
 
 /*Sends request to backend to update the joined count of the given club */
 export async function joinClub(clubId) {
     const res = await fetch(`/clubs/${clubId}/joined`, {
-        method: "POST"
+        method: "POST",
+        credentials: "include"
     });
-    return await res.json();
+
+    const data = await res.json();
+    if(!res.ok){
+        alert(data.message);
+        return null;
+    }
+
+    return data;
 };
 
 /*Sends request to backend to create a new event */

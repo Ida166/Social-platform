@@ -4,22 +4,23 @@ const btnClubOwner = document.getElementById("goDashboardClubOwner");
 
 
 async function login(role) {
-    const res = await fetch("/login-demo", {
+    //Sends log in request to backend
+    const res = await fetch("/login-demo", { 
         method: "POST",
+        credentials: "include",
         headers: {
             "Content-Type": "application/json"
         },
         body: JSON.stringify({ role })
     });
 
-    const data = await res.text();
-
     if (res.ok) {
         window.location.href = role === "student"
             ? "/student/index"
             : "/owner/index";
     } else {
-        console.error("Login failed:", data);
+        const errorText = await res.text();
+        console.error("Login failed:", errorText);
     }
 }
 
