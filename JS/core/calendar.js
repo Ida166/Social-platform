@@ -1,4 +1,4 @@
-import { getEvents } from "../pages/clubServices.js";
+import { getEvents, getEventJoinCount, joinEvent } from "../pages/clubServices.js";
 
 let events = [];
 
@@ -224,17 +224,14 @@ async function openEventPage(event) {
 
     const joinButton = container.querySelector("#join-event-btn");
 
-    joinButton.addEventListener("click", () => {
+    // Load current join count from DB
+    const countData = await getEventJoinCount(event.id);
+    joinButton.textContent = `Join event (${countData.joined} joined)`;
 
-    if (joinButton.classList.contains("joined")) {
-        joinButton.textContent = "Join event";
-        joinButton.classList.remove("joined");
-    } else {
-        joinButton.textContent = "You are now joined";
-        joinButton.classList.add("joined");
-    }
-
-});
+    joinButton.addEventListener("click", async () => {
+        const result = await joinEvent(event.id);
+        joinButton.textContent = `Join event (${result.joined} joined)`;
+    });
 }
 
 document.addEventListener("click", (e) => {
