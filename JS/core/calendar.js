@@ -213,7 +213,7 @@ async function openEventPage(event) {
     practicalList.innerHTML = "";
 
     if (event.practicalInfo) {
-        event.practicalinfo.forEach(item => {
+        event.practicalInfo.forEach(item => {
             const li = document.createElement("li");
             li.textContent = item;
             practicalList.appendChild(li);
