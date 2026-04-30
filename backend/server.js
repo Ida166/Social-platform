@@ -47,7 +47,7 @@ app.post("/events", async (req, res) => {
         clubId,
         location,
         description,
-        practicalInformation,
+        practicalInfo,
         isPublished
     } = req.body;
 
@@ -115,6 +115,41 @@ app.post("/clubs/:id/joined", async (req, res) => {
 });
 
 
+
+/* Get joined count for an event */
+app.get("/events/:id/joined", async (req, res) => {
+    const eventId = req.params.id;
+
+    const { data, error } = await supabase
+        .from("events")
+        .select("joined")
+        .eq("id", eventId)
+        .single();
+
+    if (error) return res.status(500).json(error);
+
+    res.json({ joined: data.joined || 0 });
+});
+
+/* Increment joined count for an event */
+app.post("/events/:id/joined", async (req, res) => {
+    const eventId = req.params.id;
+
+    const { data } = await supabase
+        .from("events")
+        .select("joined")
+        .eq("id", eventId)
+        .single();
+
+    const newCount = (data.joined || 0) + 1;
+
+    await supabase
+        .from("events")
+        .update({ joined: newCount })
+        .eq("id", eventId);
+
+    res.json({ joined: newCount });
+});
 
 /* Start server */
 app.listen(3000, () => {

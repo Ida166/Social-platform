@@ -1,4 +1,4 @@
-import { getEvents } from "../pages/clubServices.js";
+import { getEvents, getEventJoinCount, joinEvent } from "../pages/clubServices.js";
 
 let events = [];
 
@@ -96,6 +96,10 @@ function renderTimeslots(){
                 element.classList.add("slot");                  //tilføjer class "slot"
                 element.textContent = event.title;              //som får titlen bruger har angivet
 
+                element.addEventListener("click", () => {
+                openEventPage(event);
+        });
+
                 element.style.gridColumn = diffFromMonday + 1;   //diffFromMonday starter fra 0, imen mandag i kolonner starter på 1, så derfor +1
                 let {start, end } = splitTimeRange(event.time);
                 //Treat midnigt as 24:00
@@ -191,3 +195,53 @@ loadEventsFromDB();
 
 document.getElementById("previousWeek").addEventListener("click", previousWeek);
 document.getElementById("nextWeek").addEventListener("click", nextWeek);
+
+loadEventsFromDB();
+
+document.getElementById("previousWeek").addEventListener("click", previousWeek);
+document.getElementById("nextWeek").addEventListener("click", nextWeek);
+
+
+
+async function openEventPage(event) {
+
+    const response = await fetch("components/event_details.html");
+    const html = await response.text();
+
+    const container = document.getElementById("create-club-or-event_box");
+    container.innerHTML = html;
+
+    container.querySelector("#event-title").textContent = event.title;
+    container.querySelector("#event-location").textContent = event.location;
+    container.querySelector("#event-description").textContent = event.description;
+
+    const practicalList = container.querySelector("#event-practical");
+    practicalList.innerHTML = "";
+
+    if (event.practicalInfo) {
+        event.practicalInfo.forEach(item => {
+            const li = document.createElement("li");
+            li.textContent = item;
+            practicalList.appendChild(li);
+        });
+    }
+
+    container.style.display = "block";
+
+    const joinButton = container.querySelector("#join-event-btn");
+
+    // Load current join count from DB
+    const countData = await getEventJoinCount(event.id);
+    joinButton.textContent = `Join event (${countData.joined} joined)`;
+
+    joinButton.addEventListener("click", async () => {
+        const result = await joinEvent(event.id);
+        joinButton.textContent = `Join event (${result.joined} joined)`;
+    });
+}
+
+document.addEventListener("click", (e) => {
+    if (e.target.id === "close-event-details") {
+        document.getElementById("create-club-or-event_box").style.display = "none";
+    }
+});

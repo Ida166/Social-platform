@@ -23,7 +23,19 @@ export async function joinClub(clubId) {
     return await res.json();
 };
 
-/*Sends request to backend to create a new event */
+/*Sends request to backend to get the joined count of the given event */
+export async function getEventJoinCount(eventId) {
+    const res = await fetch(`/events/${eventId}/joined`);
+    return await res.json();
+}
+
+/*Sends request to backend to update the joined count of the given event */
+export async function joinEvent(eventId) {
+    const res = await fetch(`/events/${eventId}/joined`, {
+        method: "POST"
+    });
+    return await res.json();
+}
 export async function createEvent(eventData) {
     const res = await fetch("/events", {
         method: "POST",

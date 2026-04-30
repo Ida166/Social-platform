@@ -1,0 +1,67 @@
+/* Container rundt om event siden */
+.event-page-shell {
+  background-color: #f3f4f6;
+  padding: 40px;
+}
+
+/* Selve event boksen */
+#event-page-inner {
+  background-color: white;
+  border-radius: 10px;
+
+  border: 2px solid black;  /* sort ramme */
+
+  padding: 30px;
+  max-width: 900px;
+  margin: 40px auto;
+
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+
+/* Kortene inde i event siden */
+.card {
+  background-color: #eeeeee;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+/* Titel i kort */
+.card h3 {
+  margin-bottom: 8px;
+}
+
+/* Join button container */
+.event-page-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+/* Join button */
+.join-event-button {
+  background-color: #2f80ed;
+  color: white;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+/* Hover */
+.join-event-button:hover {
+  background-color: #1366d6;
+}
+
+/* Når man har joined */
+.button.join-event-button.joined {
+  background-color: #47ad5f;
+  color: white;
+}
+
+/* Hover når man har joined */
+.button.join-event-button.joined:hover {
+  background-color: #3d9b53;
+}
