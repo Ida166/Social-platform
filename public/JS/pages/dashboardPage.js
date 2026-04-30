@@ -178,6 +178,7 @@ function initDashboard() {
     async function openClubPage(clubId){
         const clubs = await getClubs();
         const events = await getEvents();
+        const members = await getJoinCount(clubId)
 
         const club = clubs.find(c => String(c.id) === String(clubId));
 
@@ -221,19 +222,19 @@ function initDashboard() {
                 <div class="info-section">
                     <div class="info-card">
                         <h3>Date:</h3>
-                        <p>${clubEvents.length > 0 ? clubEvents[0].date : 'Information follows'}</p>
+                        <p>${club.regularDate || 'Information follows'}</p>
                         <h3>Time:</h3>
-                        <p>${clubEvents.length > 0 ? clubEvents[0].time : 'Information follows'}</p>
+                        <p>${club.regularTime || 'Information follows'}</p>
                         <h3>Place:</h3>
-                        <p>${clubEvents.length > 0 ? clubEvents[0].location : 'Information follows'}</p>
+                        <p>${club.regularPlace || 'Information follows'}</p>
                     </div>
 
                     <div class="info-card">
                         <h3>Current members:</h3>
-                        <p>${club.memberCount || 'TBA'}</p>
+                        <p>${members.joined} members</p>
                         <h3>Contact info:</h3>
                         <p>${club.contactEmail || 'No email provided'}</p>
-                        <p>${club.phone || ''}</p>
+                        <p>${club.phone || 'No phonenumber provided'}</p>
                     </div>
 
                     <button class="join-btn">Join us</button>
@@ -253,16 +254,16 @@ function initDashboard() {
         const count = await getJoinCount(clubId);
 
         const joinBtn = document.querySelector(".join-btn");
-        joinBtn.textContent = `Join us (${count.joined} joined)`;
+        joinBtn.textContent = `Join us!`;
 
         joinBtn.addEventListener("click", async () => {
             const result = await joinClub(clubId);
 
+            //if alredy joined or failed
             if(!result){
                 return; 
             }
-
-            joinBtn.textContent = `Join us (${result.joined} joined)`;
+            joinBtn.textContent = `You joined the club!`;
         });
        
 
