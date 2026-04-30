@@ -47,7 +47,7 @@ app.post("/events", async (req, res) => {
         clubId,
         location,
         description,
-        practicalInformation,
+        practicalInfo,
         isPublished
     } = req.body;
 
