@@ -3,13 +3,13 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { supabase } from "./Supabase.js";
 import session from "express-session";
-import { randomUUID } from "crypto";
+import { randomUUID } from "crypto"; //generates random id
 
 const app = express();
 
 app.use(express.json());
 
-/* Needed for ES modules */
+/* Needed for ES modules so fx senfFile works*/
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -24,14 +24,11 @@ app.use(session({
 /* this enabels express to acces the fiels in our public folder directly in the browser */
 app.use(express.static(path.join(__dirname, "..", "public")));
 
-/*This sets log in page as our default homepage */
+/*This sets login page as our default homepage */
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "..", "public", "login.html"));
 });
-app.get("/me", (req, res) => {
-    res.json(req.session.user || null);
-     credentials: "include"
-});
+
 /*This function checks the users role  */
 function requireRole(role) {
   return (req, res, next) => {
@@ -48,13 +45,22 @@ function requireRole(role) {
 }
 
 // === This is log in and log out ===//
-/*Here we generate a random user id when user logs in  */
-app.post("/login-demo", (req, res) => {
-     console.log("BODY:", req.body);
-    req.session.user = {
-        id: randomUUID(),
+/*Here we generate a random user id when user logs in and saves it in the database  */
+app.post("/login-demo", async(req, res) => {
+    const userId = randomUUID();
+
+       req.session.user = {
+        id: userId,
         role: req.body.role
     };
+    
+    //save user in database
+    await supabase.from("users").insert([
+        {
+            id: userId,
+            role: req.body.role
+        }
+    ]);
 
     res.sendStatus(200);
 });
@@ -153,40 +159,55 @@ app.post("/events", async (req, res) => {
 });
 
 /*Get the number of current joined members */
-app.get("/clubs/:id", async (req, res) => {
+app.get("/clubs/:id/join-count", async (req, res) => {
     const clubId = req.params.id;
 
-    const { data, error } = await supabase 
-        .from("clubs")
-        .select("*")
-        .eq("id", clubId)
-        .single();
+    const { count, error } = await supabase 
+        .from("club_members")
+        .select("*", {count: "exact", head: true}) //count the rows
+        .eq("club_id", clubId)
 
     if (error) {
         return res.status(500).json(error);
     }
 
-    res.json(data)
+    res.json({ joined: count});
 });
 
 /* Update the database with new number of members in the club*/
 app.post("/clubs/:id/joined", async (req, res) => {
+    const userId = req.session.user?.id;
     const clubId = req.params.id;
 
-    const { data } = await supabase
-        .from("clubs")
-        .select("joined")
-        .eq("id", clubId)
-        .single();
-    const newCount = (data.joined || 0) + 1;
+    if(!userId){
+        return res.status(401).send("Not logged in");
+    }
 
-    await supabase  
-        .from("clubs")
-        .update({ joined: newCount })
-        .eq("id", clubId);
+    const { error } = await supabase
+        .from("club_members")
+        .insert([
+            {
+                user_id: userId,
+                club_id: clubId
+            }
+        ]);
 
-    res.json({ joined: newCount});
+    if(error){
+        return res.status(400).json({
+            message: "you alredy joined this club"
+        });
+    }
 
+    //get the updated count of joined
+    const { count, error: counterror } = await supabase 
+        .from("club_members")
+        .select("*", {count: "exact", head: true}) //count the rows
+        .eq("club_id", clubId)
+    
+    res.json({ 
+        message: "Joined successfully",
+        joined: count
+    });
 });
 
 /* Start server */
