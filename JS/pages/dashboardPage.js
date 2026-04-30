@@ -268,51 +268,11 @@ function initDashboard() {
             `).join("")
             : "<p>No events available yet</p>";
 
-      container.innerHTML = `
-        <div class="content-area">
-            <h1>Events & clubs - Informationssite - ${club.name}</h1>
-
-            <div class="white-box">
-                <div class="hero">
-                    <img src="${club.image}" alt="${club.name}">
-                </div>
-
-                <div class="description">
-                    <p><strong>Join us!</strong><br>
-                    ${club.description}</p>
-                </div>
-
-                <div class="info-section">
-                    <div class="info-card">
-                        <h3>Date:</h3>
-                        <p>${clubEvents.length > 0 ? clubEvents[0].date : 'Information follows'}</p>
-                        <h3>Time:</h3>
-                        <p>${clubEvents.length > 0 ? clubEvents[0].time : 'Information follows'}</p>
-                        <h3>Place:</h3>
-                        <p>${clubEvents.length > 0 ? clubEvents[0].location : 'Information follows'}</p>
-                    </div>
-
-                    <div class="info-card">
-                        <h3>Current members:</h3>
-                        <p>${club.memberCount || 'TBA'}</p>
-                        <h3>Contact info:</h3>
-                        <p>${club.contactEmail || 'No email provided'}</p>
-                        <p>${club.phone || ''}</p>
-                    </div>
-
-                    <button class="join-btn">Join us</button>
-                </div>
-
-                <div class="event-section">
-                         <h2>Events</h2>
-                        ${eventsHTML}
-                    </div>
-
-                <button id="close-event-page" class="back-btn">Go Back</button>
-            </div>
-        </div>
-    `;
-
+         //Henter club details filen
+        const response = await fetch("components/club_details.html");
+        const template = await response.text();
+        container.innerHTML = eval('`' + template + '`');
+       
         //function to import club member count and join a club
         const count = await getJoinCount(clubId);
 
