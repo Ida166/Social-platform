@@ -216,18 +216,30 @@ function initDashboard() {
     }
 
         async function openFullEventList() {
-        const box = document.getElementById("eventlist-page-box");
+            const box = document.getElementById("eventlist-page-box");
 
-        box.classList.remove("hidden");
+            const response = await fetch("/components/event_list.html");
+            const html = await response.text();
 
-        await loadFullEventList();
-}
+            box.innerHTML = html;
+            box.classList.remove("hidden");
+
+            await loadFullEventList();
+        }
 
         const eventListLink = document.getElementById("eventListLink");
 
         if (eventListLink) {
             eventListLink.addEventListener("click", openFullEventList);
         }
+
+        document.addEventListener("click", (e) => {
+            if (e.target.closest("#close-event-list")) {
+            const box = document.getElementById("eventlist-page-box");
+            box.classList.add("hidden");
+            box.innerHTML = ""; // ryd (valgfri men god)
+            }
+        });
 
 
     /*Import the event data*/
