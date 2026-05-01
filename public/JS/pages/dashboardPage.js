@@ -4,6 +4,8 @@
     import { createEvent } from "./clubServices.js";
     import { getJoinCount } from "./clubServices.js";
     import { joinClub } from "./clubServices.js";
+    import { getEventJoinCount } from "./clubServices.js";
+    import { joinEvent } from "./clubServices.js";
 
 // Club owner buttton & Student button - Button to change between roles  
 const btnClubOwner = document.getElementById("goDashboardClubOwner");  
@@ -200,18 +202,42 @@ function initDashboard() {
         }
 
         container.innerHTML = filteredAndSorted.map(event => `
-            <div class="event-card">                       
+            <div class="event-card" data-event-id="${event.id}">                       
                 <h3>${event.title || "Event"}</h3>
                 <p><strong>Date:</strong> ${event.date}</p>
                 <p><strong>Time:</strong> ${event.time}</p>
                 <p><strong>Place:</strong> ${event.location}</p>
                 <p>${event.description || ""}</p>
-            </div>
+
+                <div class="event-actions">
+                <button class="button join-event-button">Join event</button>
+                </div>
+                 </div>
         `).join("");
+    
+        
 
         //opretter event kort for hvert event
         //ved manglende title står der bare "Event"
         //med map laves nye html elementer, under event-card, som samles af joing.
+
+        const joinButtons = container.querySelectorAll(".join-event-button");
+
+            joinButtons.forEach(async (button) => {
+                const card = button.closest(".event-card");
+                const eventId = card.dataset.eventId;
+
+                const countData = await getEventJoinCount(eventId);
+                button.textContent = `Join event (${countData.joined} joined)`;
+
+                button.addEventListener("click", async () => {
+                    const result = await joinEvent(eventId);
+
+                    if (!result) return;
+
+                    button.textContent = `Joined (${result.joined})`;
+                });
+            });
     
     }
 

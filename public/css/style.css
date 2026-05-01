@@ -207,6 +207,7 @@ html, body {
   height: 100%;
 }
 
+
 #club-list-box {
   position: absolute; /* Position relative to .topbar */
   top: 0; /* Appear directly under the topbar */
