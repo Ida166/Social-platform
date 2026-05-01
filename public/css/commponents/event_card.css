@@ -45,7 +45,7 @@
 }
 
 
-/*the rigt side where the image is  
+/*the rigt side where the image is */
 
 /* image is targeted inside club-detail */
 .club-detail img {
@@ -83,39 +83,7 @@
   margin-top: 12px;
 }
 
-/*Event cards*/
-.event-card {
-  background: #fff;
 
-  padding: 14px 16px;
-
-  border-radius: 8px;
-  border: 1px solid #e0e0e0;
-
-  box-shadow: 0 2px 6px rgba(0,0,0,0.04);
-
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
-}
-
-.event-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-}
-
-.event-card h4 {
-  font-size: 16px;
-  font-weight: 600;
-  color: #0f6cbf;
-
-  margin-bottom: 6px;
-}
-
-.event-card p {
-  font-size: 14px;
-  color: #555;
-
-  margin: 2px 0;
-}
 
 /*Go back button */
 #close-event-page {
@@ -134,4 +102,16 @@
 
 #close-event-page:hover {
   background-color: #0c5aa6;
+}
+
+
+.event-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 12px;
+}
+
+.event-actions .join-event-button {
+  width: auto;
+  max-width: fit-content;
 }
