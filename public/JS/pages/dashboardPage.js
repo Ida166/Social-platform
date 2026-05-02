@@ -120,6 +120,8 @@ function initDashboard() {
 
                         if (statusMessage) {
                             statusMessage.textContent = "Event saved.";
+                            eventPageBox.classList.add("hidden");
+                            location.reload();
                         }
 
                         eventForm.reset();
