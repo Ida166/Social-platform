@@ -225,6 +225,7 @@ async function openEventPage(event) {
     const container = document.getElementById("create-club-or-event_box");
     container.innerHTML = html;
 
+    container.querySelector("#event-date-time").textContent = `${event.date} at ${event.time}`;
     container.querySelector("#event-title").textContent = event.title;
     container.querySelector("#event-location").textContent = event.location;
     container.querySelector("#event-description").textContent = event.description;

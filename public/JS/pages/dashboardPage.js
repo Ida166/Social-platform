@@ -295,6 +295,8 @@ function initDashboard() {
                     <p><strong>Date:</strong> ${event.date}</p>
                     <p><strong>Time:</strong> ${event.time}</p>
                     <p><strong>Place:</strong> ${event.location}</p>
+                    <p><strong>Description:</strong> ${event.description}</p>
+                    <p><strong>Practical information:</strong> ${event.practicalInfo}</p>
                 </div>
             `).join("")
             : "<p>No events available yet</p>";
