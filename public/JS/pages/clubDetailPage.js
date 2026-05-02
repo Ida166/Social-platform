@@ -102,10 +102,15 @@ async function init() {
                     ${eventsHTML}
                 </div>
             </div>
+        </div>
 
-            ${isOwner ? `
-            <div class="edit-club-form hidden" id="edit-club-form">
-                <h3>Edit Club Info</h3>
+        ${isOwner ? `
+        <div class="edit-modal-overlay hidden" id="edit-modal-overlay">
+            <div class="edit-modal">
+                <div class="edit-modal-header">
+                    <h3>Edit Club Info</h3>
+                    <button class="edit-modal-close" id="edit-modal-close">✕</button>
+                </div>
 
                 <label>Meeting day</label>
                 <input type="text" id="edit-regularDate" value="${club.regularDate || ""}" placeholder="e.g. Every Tuesday" />
@@ -140,8 +145,8 @@ async function init() {
                 <button class="edit-save-btn" id="edit-save-btn">Save changes</button>
                 <div class="edit-status" id="edit-status"></div>
             </div>
-            ` : ""}
         </div>
+        ` : ""}
     `;
 
     // Back button
@@ -158,8 +163,18 @@ async function init() {
 
     if (!isOwner) return;
 
+    const overlay = document.getElementById("edit-modal-overlay");
+
     document.getElementById("edit-club-btn").addEventListener("click", () => {
-        document.getElementById("edit-club-form").classList.toggle("hidden");
+        overlay.classList.remove("hidden");
+    });
+
+    document.getElementById("edit-modal-close").addEventListener("click", () => {
+        overlay.classList.add("hidden");
+    });
+
+    overlay.addEventListener("click", (e) => {
+        if (e.target === overlay) overlay.classList.add("hidden");
     });
 
     // Colour swatch selection + live uniqueness check
