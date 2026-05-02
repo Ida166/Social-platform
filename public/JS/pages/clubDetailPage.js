@@ -247,7 +247,7 @@ async function init() {
                 }
             }
 
-            statusEl.textContent = "Saved! Reloading...";
+            overlay.classList.remove("open");
             setTimeout(() => window.location.reload(), 800);
         } catch (err) {
             statusEl.textContent = err.message;
