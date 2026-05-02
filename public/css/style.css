@@ -549,6 +549,24 @@ ul {
   display: none;
 }
 
+.inline-link-btn {
+  display: inline-block;
+  background: #2f80ed;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 4px 12px;
+  font-size: 0.6em;
+  font-weight: 600;
+  cursor: pointer;
+  vertical-align: middle;
+  text-decoration: none;
+}
+
+.inline-link-btn:hover {
+  background: #1a5fb4;
+}
+
 #clubListLink {
     position: relative;
 }
