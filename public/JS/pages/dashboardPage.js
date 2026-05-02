@@ -4,6 +4,8 @@
     import { createEvent } from "./clubServices.js";
     import { getJoinCount } from "./clubServices.js";
     import { joinClub } from "./clubServices.js";
+    import { getEventJoinCount } from "./clubServices.js";
+    import { joinEvent } from "./clubServices.js";
 
 // Club owner buttton & Student button - Button to change between roles  
 const btnClubOwner = document.getElementById("goDashboardClubOwner");  
@@ -174,6 +176,98 @@ function initDashboard() {
         }); 
     }
 
+    /* Full eventlist*/
+        async function loadFullEventList() {    //kører når data er hentet
+        const events = await getEvents();       //sikrer al data hentet før vi går videre 
+
+            const now = new Date();             //laver ny dato
+
+            const filteredAndSorted = events
+            .filter(event => {                  //fjerner gamle datoer
+                const eventDateTime = new Date(`${event.date} ${event.time.split("-")[0]}`); //splitter 10:00-12:00 til array
+                return eventDateTime >= now;    //hvis det er efter i dag, så beholder vi det
+             })
+            .sort((a, b) => {                   //laver nye datoer igen
+                const dateA = new Date(`${a.date} ${a.time.split("-")[0]}`);
+                const dateB = new Date(`${b.date} ${b.time.split("-")[0]}`);
+                return dateA - dateB;           //med sort, returnes a ved negative værdier først, og ved positive værdier returnes b først.
+                                                // mindre tal - større tal = negativt
+            });
+
+        const container = document.querySelector(".full-eventlist-container"); // element hvor data skal ind
+
+        if (!container) {
+            console.error("full-eventlist-container not found in DOM"); //fejlkode i konsol, hvis container ikke findes i html
+            return;
+        }
+
+        container.innerHTML = filteredAndSorted.map(event => `
+            <div class="event-card" data-event-id="${event.id}">                       
+                <h3>${event.title || "Event"}</h3>
+                <p><strong>Date:</strong> ${event.date}</p>
+                <p><strong>Time:</strong> ${event.time}</p>
+                <p><strong>Place:</strong> ${event.location}</p>
+                <p>${event.description || ""}</p>
+
+                <div class="event-actions">
+                <button class="button join-event-button">Join event</button>
+                </div>
+                 </div>
+        `).join("");
+    
+        
+
+        //opretter event kort for hvert event
+        //ved manglende title står der bare "Event"
+        //med map laves nye html elementer, under event-card, som samles af joing.
+
+        const joinButtons = container.querySelectorAll(".join-event-button");
+
+            joinButtons.forEach(async (button) => {
+                const card = button.closest(".event-card");
+                const eventId = card.dataset.eventId;
+
+                const countData = await getEventJoinCount(eventId);
+                button.textContent = `Join event (${countData.joined} joined)`;
+
+                button.addEventListener("click", async () => {
+                    const result = await joinEvent(eventId);
+
+                    if (!result) return;
+
+                    button.textContent = `Joined (${result.joined})`;
+                });
+            });
+    
+    }
+
+        async function openFullEventList() {
+            const box = document.getElementById("eventlist-page-box");
+
+            const response = await fetch("/components/event_list.html");
+            const html = await response.text();
+
+            box.innerHTML = html;
+            box.classList.remove("hidden");
+
+            await loadFullEventList();
+        }
+
+        const eventListLink = document.getElementById("eventListLink");
+
+        if (eventListLink) {
+            eventListLink.addEventListener("click", openFullEventList);
+        }
+
+        document.addEventListener("click", (e) => {
+            if (e.target.closest("#close-event-list")) {
+            const box = document.getElementById("eventlist-page-box");
+            box.classList.add("hidden");
+            box.innerHTML = ""; // ryd (valgfri men god)
+            }
+        });
+
+
     /*Import the event data*/
     async function openClubPage(clubId){
         const clubs = await getClubs();
@@ -240,7 +334,7 @@ function initDashboard() {
             });
         }
     }
-}
+
 
     /*opening and closing of the club list */
     const clubListLink = document.getElementById("clubListLink");
@@ -281,6 +375,7 @@ function initDashboard() {
             });
         });
     }
+}
 
 document.addEventListener("DOMContentLoaded", initDashboard); //DOMContentLoaded betyder: “Kør først, når hele HTML’en er indlæst.”
 

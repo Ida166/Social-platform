@@ -50,9 +50,21 @@
 
 #close-page:hover {
   background-color: #1366d6;
-
 }
 
+/*alle back-buttons*/
+.back-btn {
+  background-color: #2f80ed;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.back-btn:hover {
+  background-color: #1366d6;
+}
 /* Send Application knappen*/
 .primary-button {
   background-color: #2f80ed;
@@ -135,13 +147,66 @@
   gap: 10px; 
 }
 
-.club-list-link {
+.list-link {
   cursor: pointer;
 }
 
-.club-list-link:hover {
+.list-link:hover {
   color: rgb(13, 13, 53);
 }
+
+#eventListLink {
+  position: relative;
+}
+
+#eventListLink::after {
+  content: "See all events";
+  position: absolute;
+  bottom: -35px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #333;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 12px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+#eventListLink:hover::after {
+  opacity: 1;
+}
+
+#eventlist-page-box {
+  position: absolute; /* Position relative to .topbar */
+  top: 0; /* Appear directly under the topbar */
+  left: 0;
+  right: 0; /* Fill the width of topbar */
+  height: 100%;
+  inset: 0;
+  z-index: 20;
+
+  background-color: #ffffff; /* Gray overlay feel (the background is white)*/
+  padding-left: 20px; /*space between the sidebar*/
+}
+
+#eventlist-inner {
+  background-color: #f3f3f3;
+  margin: 0 auto;
+
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 20px;
+
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+html, body {
+  height: 100%;
+}
+
 
 #club-list-box {
   position: absolute; /* Position relative to .topbar */
