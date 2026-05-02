@@ -24,7 +24,7 @@ async function loadClubs() {
         <div class="club-card" data-id="${club.id}"
              style="${club.color ? `border-left: 5px solid ${club.color};` : ""}">
             <h3>${club.name}</h3>
-            <img src="${club.image}" alt="${club.name}" class="club-img" />
+            ${club.image ? `<img src="${club.image}" alt="${club.name}" class="club-img" />` : ""}
         </div>
     `).join("");
 

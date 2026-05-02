@@ -9,6 +9,7 @@ const PRESET_COLORS = [
 
 const role = sessionStorage.getItem("role");
 const isOwner = role === "club_owner";
+const myClubId = sessionStorage.getItem("myClubId");
 const dashboardUrl = isOwner ? "/owner/index" : "/student/index";
 
 document.getElementById("dashboardLink").addEventListener("click", () => {
@@ -60,19 +61,19 @@ async function init() {
         : "<p>No events available yet</p>";
 
     const timeParts = (club.regularTime || "").split(" - ");
+    const isMyClub = isOwner && String(club.id) === myClubId;
 
     container.innerHTML = `
         <div class="content-area">
             <div class="club-page-topbar">
                 <button id="back-btn" class="back-btn">← Back to clubs</button>
-                ${isOwner ? `<button id="edit-club-btn" class="edit-club-btn">Edit Club</button>` : ""}
             </div>
 
             <h1>${club.name}</h1>
 
             <div class="white-box">
                 <div class="hero">
-                    <img src="${club.image || ""}" alt="${club.name}" />
+                    ${club.image ? `<img src="${club.image}" alt="${club.name}" />` : ""}
                 </div>
 
                 <div class="description">
@@ -104,8 +105,8 @@ async function init() {
                 </div>
             </div>
 
-            ${isOwner ? `
-            <div class="edit-club-form hidden" id="edit-club-form">
+            ${isMyClub ? `
+            <div class="edit-club-form" id="edit-club-form">
                 <h3>Edit Club Info</h3>
 
                 <label>Meeting day</label>
@@ -157,12 +158,7 @@ async function init() {
         document.getElementById("join-btn").textContent = "You joined the club!";
     });
 
-    if (!isOwner) return;
-
-    // Toggle edit form
-    document.getElementById("edit-club-btn").addEventListener("click", () => {
-        document.getElementById("edit-club-form").classList.toggle("hidden");
-    });
+    if (!isMyClub) return;
 
     // Colour swatch selection + live uniqueness check
     let selectedColor = club.color || "";

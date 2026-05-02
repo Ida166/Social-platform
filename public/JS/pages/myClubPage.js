@@ -55,7 +55,7 @@ async function init() {
     container.innerHTML = `
         <div class="myclub-shell">
             <div class="myclub-header">
-                <img src="${club.image || ""}" alt="${club.name}" class="myclub-hero-img" />
+                ${club.image ? `<img src="${club.image}" alt="${club.name}" class="myclub-hero-img" />` : ""}
                 <div>
                     <h2>${club.name}</h2>
                     <p>${club.category || ""} · ${members.joined} members</p>

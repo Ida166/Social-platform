@@ -41,7 +41,7 @@ function initDashboard() {
                     <div class="club-card" data-id="${myClub.id}"
                          style="${myClub.color ? `border-left: 5px solid ${myClub.color};` : ""}cursor:pointer">
                         <h3>${myClub.name}</h3>
-                        <img src="${myClub.image}" alt="${myClub.name}" class="club-img"/>
+                        ${myClub.image ? `<img src="${myClub.image}" alt="${myClub.name}" class="club-img"/>` : ""}
                     </div>
                 `;
 
