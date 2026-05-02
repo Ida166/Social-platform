@@ -112,7 +112,6 @@ app.get("/events", async (req, res) => {
         .select(`
             *,
             clubs(color)
-            )
         `);
 
     if (error) return res.status(500).json(error);

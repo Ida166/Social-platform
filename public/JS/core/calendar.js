@@ -97,6 +97,7 @@ function renderTimeslots(){
     }
 
     function renderEvents(monday){
+        
         const container = document.querySelector(".eventcontainer"); //finder .eventContainer i html
         container.innerHTML = ""; //tømmer indholdet fx hvis brugeren skifter til ny uge, så gamle events ikke fremgår
 
@@ -110,7 +111,7 @@ function renderTimeslots(){
             if (diffFromMonday>= 0 && diffFromMonday < 7){ //vi opretter kun indenfor den uge der er displayet
                 const element = document.createElement("div");  //vi laver et element "div"
                 element.classList.add("slot");   //tilføjer class "slot"
-                element.style.background =  event.club_id
+                element.style.background =  event.clubId
                     ? event.clubs.color
                     : getRandomColor(event.id); //If no club assigned to the event generate random color
 
