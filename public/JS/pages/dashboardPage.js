@@ -23,33 +23,12 @@ function showCalendarUI() {
 
 function initDashboard() {
 
-    // Show My Club section for club owners
-    const isOwner = sessionStorage.getItem("role") === "club_owner";
-    if (isOwner) {
-        const myClubSection = document.getElementById("my-club-section");
-        const myClubCardContainer = document.getElementById("my-club-card-container");
-
-        if (myClubSection && myClubCardContainer) {
-            getClubs().then(clubs => {
-                const myClub = clubs.find(c => c.owner_id) || clubs[0];
-                if (!myClub) return;
-
-                sessionStorage.setItem("myClubId", String(myClub.id));
-                myClubSection.classList.remove("hidden");
-
-                myClubCardContainer.innerHTML = `
-                    <div class="club-card" data-id="${myClub.id}"
-                         style="${myClub.color ? `border-left: 5px solid ${myClub.color};` : ""}cursor:pointer">
-                        <h3>${myClub.name}</h3>
-                        ${myClub.image ? `<img src="${myClub.image}" alt="${myClub.name}" class="club-img"/>` : ""}
-                    </div>
-                `;
-
-                myClubCardContainer.querySelector(".club-card").addEventListener("click", () => {
-                    window.location.href = `/club.html?id=${myClub.id}`;
-                });
-            });
-        }
+    // Persist myClubId for owner pages (My Club sidebar link)
+    if (sessionStorage.getItem("role") === "club_owner") {
+        getClubs().then(clubs => {
+            const myClub = clubs.find(c => c.owner_id) || clubs[0];
+            if (myClub) sessionStorage.setItem("myClubId", String(myClub.id));
+        });
     }
 
     //Redirect to log in page

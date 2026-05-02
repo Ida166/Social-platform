@@ -64,6 +64,7 @@ async function init() {
         <div class="content-area">
             <div class="club-page-topbar">
                 <button id="back-btn" class="back-btn">← Back to clubs</button>
+                ${isOwner ? `<button id="edit-club-btn" class="edit-club-btn">Edit Club</button>` : ""}
             </div>
 
             <h1>${club.name}</h1>
@@ -103,7 +104,7 @@ async function init() {
             </div>
 
             ${isOwner ? `
-            <div class="edit-club-form" id="edit-club-form">
+            <div class="edit-club-form hidden" id="edit-club-form">
                 <h3>Edit Club Info</h3>
 
                 <label>Meeting day</label>
@@ -156,6 +157,10 @@ async function init() {
     });
 
     if (!isOwner) return;
+
+    document.getElementById("edit-club-btn").addEventListener("click", () => {
+        document.getElementById("edit-club-form").classList.toggle("hidden");
+    });
 
     // Colour swatch selection + live uniqueness check
     let selectedColor = club.color || "";
