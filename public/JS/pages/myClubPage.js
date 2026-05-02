@@ -19,11 +19,8 @@ async function init() {
 
     const [clubs, events] = await Promise.all([getClubs(), getEvents()]);
 
-    // Find owner's club: prefer the one stored from the dashboard, else first with owner_id, else first club
-    const storedId = sessionStorage.getItem("myClubId");
-    const club = (storedId && clubs.find(c => String(c.id) === storedId))
-        || clubs.find(c => c.owner_id)
-        || clubs[0];
+    const club = clubs.reduce((max, c) => c.id > max.id ? c : max, clubs[0]);
+    sessionStorage.setItem("myClubId", String(club.id));
 
     if (!club) {
         container.innerHTML = "<p>No club found.</p>";

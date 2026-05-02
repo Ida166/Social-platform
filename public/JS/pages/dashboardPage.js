@@ -26,8 +26,9 @@ function initDashboard() {
     // Persist myClubId for owner pages (My Club sidebar link)
     if (sessionStorage.getItem("role") === "club_owner") {
         getClubs().then(clubs => {
-            const myClub = clubs.find(c => c.owner_id) || clubs[0];
-            if (myClub) sessionStorage.setItem("myClubId", String(myClub.id));
+            if (!clubs.length) return;
+            const myClub = clubs.reduce((max, c) => c.id > max.id ? c : max, clubs[0]);
+            sessionStorage.setItem("myClubId", String(myClub.id));
         });
     }
 
