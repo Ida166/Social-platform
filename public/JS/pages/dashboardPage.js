@@ -145,6 +145,18 @@ function initDashboard() {
             const eventForm = eventPageBox.querySelector("#event-template-form");
             const statusMessage = eventPageBox.querySelector("#event-form-status");
 
+            // Replace the Club ID number input with a dropdown of all clubs
+            const clubIdInput = eventForm?.querySelector('input[name="clubId"]');
+            if (clubIdInput) {
+                const clubs = await getClubs();
+                const select = document.createElement("select");
+                select.name = "clubId";
+                select.required = true;
+                select.innerHTML = `<option value="">Select a club</option>` +
+                    clubs.map(c => `<option value="${c.id}">${c.name}</option>`).join("");
+                clubIdInput.replaceWith(select);
+            }
+
             if (closeEventBtn) {
                 closeEventBtn.addEventListener("click", () => {
                     eventPageBox.classList.add("hidden");
