@@ -9,7 +9,6 @@ const PRESET_COLORS = [
 
 const role = sessionStorage.getItem("role");
 const isOwner = role === "club_owner";
-const myClubId = sessionStorage.getItem("myClubId");
 const dashboardUrl = isOwner ? "/owner/index" : "/student/index";
 
 document.getElementById("dashboardLink").addEventListener("click", () => {
@@ -61,8 +60,6 @@ async function init() {
         : "<p>No events available yet</p>";
 
     const timeParts = (club.regularTime || "").split(" - ");
-    const isMyClub = isOwner && String(club.id) === myClubId;
-
     container.innerHTML = `
         <div class="content-area">
             <div class="club-page-topbar">
@@ -105,7 +102,7 @@ async function init() {
                 </div>
             </div>
 
-            ${isMyClub ? `
+            ${isOwner ? `
             <div class="edit-club-form" id="edit-club-form">
                 <h3>Edit Club Info</h3>
 
@@ -158,7 +155,7 @@ async function init() {
         document.getElementById("join-btn").textContent = "You joined the club!";
     });
 
-    if (!isMyClub) return;
+    if (!isOwner) return;
 
     // Colour swatch selection + live uniqueness check
     let selectedColor = club.color || "";

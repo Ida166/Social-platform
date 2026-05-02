@@ -15,12 +15,7 @@ async function loadClubs() {
     const clubs = await getClubs();
     const container = document.getElementById("club-list");
 
-    const myClubId = sessionStorage.getItem("myClubId");
-    const visibleClubs = (role === "club_owner" && myClubId)
-        ? clubs.filter(c => String(c.id) !== myClubId)
-        : clubs;
-
-    container.innerHTML = visibleClubs.map(club => `
+    container.innerHTML = clubs.map(club => `
         <div class="club-card" data-id="${club.id}"
              style="${club.color ? `border-left: 5px solid ${club.color};` : ""}">
             <h3>${club.name}</h3>
