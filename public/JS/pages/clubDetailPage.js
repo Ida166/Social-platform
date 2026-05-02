@@ -105,7 +105,7 @@ async function init() {
         </div>
 
         ${isOwner ? `
-        <div class="edit-modal-overlay hidden" id="edit-modal-overlay">
+        <div class="edit-modal-overlay" id="edit-modal-overlay">
             <div class="edit-modal">
                 <div class="edit-modal-header">
                     <h3>Edit Club Info</h3>
@@ -166,15 +166,15 @@ async function init() {
     const overlay = document.getElementById("edit-modal-overlay");
 
     document.getElementById("edit-club-btn").addEventListener("click", () => {
-        overlay.classList.remove("hidden");
+        overlay.classList.add("open");
     });
 
     document.getElementById("edit-modal-close").addEventListener("click", () => {
-        overlay.classList.add("hidden");
+        overlay.classList.remove("open");
     });
 
     overlay.addEventListener("click", (e) => {
-        if (e.target === overlay) overlay.classList.add("hidden");
+        if (e.target === overlay) overlay.classList.remove("open");
     });
 
     // Colour swatch selection + live uniqueness check
