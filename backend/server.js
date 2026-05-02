@@ -15,6 +15,7 @@ const supabaseAdmin = createClient(
     process.env.SUPABASE_SERVICE_KEY
 );
 
+
 app.use(express.json());
 
 /* Needed for ES modules so fx senfFile works*/
@@ -29,13 +30,13 @@ app.use(session({
     cookie: { secure: false }
 }));
 
-/* this enabels express to acces the fiels in our public folder directly in the browser */
-app.use(express.static(path.join(__dirname, "..", "public")));
-
 /*This sets login page as our default homepage */
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "..", "public", "login.html"));
 });
+
+/* this enabels express to acces the fiels in our public folder directly in the browser */
+app.use(express.static(path.join(__dirname, "..", "public")));
 
 /*This function checks the users role  */
 function requireRole(role) {
@@ -320,8 +321,8 @@ app.patch("/clubs/:id", async (req, res) => {
     if (color) {
         const { data: existing } = await supabase
             .from("clubs")
-            .select("id, Color")
-            .eq("Color", color)
+            .select("id, color")
+            .eq("color", color)
             .neq("id", clubId)
             .maybeSingle();
 
@@ -337,7 +338,7 @@ app.patch("/clubs/:id", async (req, res) => {
     if (description !== undefined) updates.description = description;
     if (contactEmail !== undefined) updates.contactEmail = contactEmail;
     if (phone !== undefined) updates.phone = phone;
-    if (color !== undefined) updates.Color = color;
+    if (color !== undefined) updates.color = color;
 
     const { data, error } = await supabase
         .from("clubs")

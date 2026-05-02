@@ -1,3 +1,94 @@
+/* My Club dashboard section */
+.my-club-title {
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
+
+#my-club-card-container .club-card {
+    display: inline-flex;
+}
+
+/* My Club dedicated page */
+.myclub-shell {
+    max-width: 700px;
+    padding: 20px 0;
+}
+
+.myclub-header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.myclub-hero-img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.myclub-header h2 {
+    font-size: 1.8rem;
+    margin: 0;
+}
+
+.myclub-form {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.myclub-section {
+    background: #e6e6e6;
+    border-radius: 10px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.myclub-section h3 {
+    margin: 0 0 4px 0;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.myclub-section label {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.myclub-section input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+    background: white;
+    box-sizing: border-box;
+}
+
+.myclub-actions {
+    display: flex;
+    justify-content: flex-end;
+}
+
+#myclub-status {
+    font-size: 14px;
+    color: #2f80ed;
+    min-height: 20px;
+}
+
+.menu-item.active {
+    background-color: #6586e062;
+    color: #021323;
+}
+
 .club-page-topbar {
     display: flex;
     align-items: center;

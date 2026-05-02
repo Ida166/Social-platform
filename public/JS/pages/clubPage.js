@@ -125,7 +125,7 @@ export async function openClubPage(clubId, container) {
 
                 <label>Club colour</label>
                 <div class="color-swatches" id="color-swatches">
-                    ${buildSwatchesHTML(club.Color || "")}
+                    ${buildSwatchesHTML(club.color || "")}
                 </div>
                 <div class="color-warning hidden" id="color-warning">This colour is already taken by another club.</div>
 
@@ -169,7 +169,7 @@ export async function openClubPage(clubId, container) {
     }
 
     // Colour swatch selection + live uniqueness check
-    let selectedColor = club.Color || "";
+    let selectedColor = club.color || "";
     const swatchContainer = container.querySelector("#color-swatches");
     const colorWarning = container.querySelector("#color-warning");
 

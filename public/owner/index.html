@@ -24,6 +24,7 @@
           <div class="menu-item">Calendar</div>
           <div class="menu-item">CalMoodle</div>
           <div class="menu-item">Events & clubs</div>
+          <div class="menu-item active" onclick="window.location.href='/owner/myclub'">My Club</div>
         </div>
         <div class="sidebarbottom">
           <div class="menu-item">Courses shortcut</div>
@@ -47,6 +48,12 @@
         <div class="full-eventlist-container"></div>
           </div>
 
+        <!-- My Club section - visible to club owners -->
+        <div id="my-club-section" class="hidden">
+          <h2 class="my-club-title">My Club</h2>
+          <div id="my-club-card-container"></div>
+        </div>
+
         <div class="page-title">
           <h1>
             Events & clubs |  
@@ -64,7 +71,7 @@
           <div class="filter">
             <h3>Filters</h3>
           </div>
-          <div style="display:flex; justify-content: start; align-items: center;">
+          <div id="date-filter-row" style="display:flex; justify-content: start; align-items: center;">
               <h2 id="currentDate"></h2>
               <div style="width: 300px;" class="datofilter"></div>
           </div>

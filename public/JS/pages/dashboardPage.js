@@ -2,19 +2,57 @@
     import { getClubs } from "./clubServices.js";
     import { getEvents } from "./clubServices.js";
     import { createEvent } from "./clubServices.js";
-    import { getJoinCount } from "./clubServices.js";
-    import { joinClub } from "./clubServices.js";
     import { getEventJoinCount } from "./clubServices.js";
     import { joinEvent } from "./clubServices.js";
-    import { openClubPage } from "./clubPage.js";
 
 // Club owner buttton & Student button - Button to change between roles  
 const btnClubOwner = document.getElementById("goDashboardClubOwner");  
 const btnStudent = document.getElementById("goDashboardStudent");
 
+function hideCalendarUI() {
+    document.querySelector(".calendarcontainer")?.classList.add("hidden");
+    document.querySelector(".filter")?.classList.add("hidden");
+    document.getElementById("date-filter-row")?.classList.add("hidden");
+}
+
+function showCalendarUI() {
+    document.querySelector(".calendarcontainer")?.classList.remove("hidden");
+    document.querySelector(".filter")?.classList.remove("hidden");
+    document.getElementById("date-filter-row")?.classList.remove("hidden");
+}
+
 function initDashboard() {
 
-    //Redirect to log in page 
+    // Show My Club section for club owners
+    const isOwner = sessionStorage.getItem("role") === "club_owner";
+    if (isOwner) {
+        const myClubSection = document.getElementById("my-club-section");
+        const myClubCardContainer = document.getElementById("my-club-card-container");
+
+        if (myClubSection && myClubCardContainer) {
+            getClubs().then(clubs => {
+                const myClub = clubs.find(c => c.owner_id) || clubs[0];
+                if (!myClub) return;
+
+                sessionStorage.setItem("myClubId", String(myClub.id));
+                myClubSection.classList.remove("hidden");
+
+                myClubCardContainer.innerHTML = `
+                    <div class="club-card" data-id="${myClub.id}"
+                         style="${myClub.color ? `border-left: 5px solid ${myClub.color};` : ""}cursor:pointer">
+                        <h3>${myClub.name}</h3>
+                        <img src="${myClub.image}" alt="${myClub.name}" class="club-img"/>
+                    </div>
+                `;
+
+                myClubCardContainer.querySelector(".club-card").addEventListener("click", () => {
+                    window.location.href = `/club.html?id=${myClub.id}`;
+                });
+            });
+        }
+    }
+
+    //Redirect to log in page
     const logOut = document.getElementById("logOut");
     if (logOut) {
         logOut.addEventListener("click", async () => {
@@ -121,6 +159,7 @@ function initDashboard() {
             eventPageBox.innerHTML = html;
             eventPageBox.classList.remove("hidden");
             dashboardHome?.classList.add("hidden");
+            hideCalendarUI();
 
             const closeEventBtn = eventPageBox.querySelector("#close-event-template");
             const eventForm = eventPageBox.querySelector("#event-template-form");
@@ -131,6 +170,7 @@ function initDashboard() {
                     eventPageBox.classList.add("hidden");
                     eventPageBox.innerHTML = "";
                     dashboardHome?.classList.remove("hidden");
+                    showCalendarUI();
                 });
             }
 
@@ -182,51 +222,7 @@ function initDashboard() {
         });
     }
 
-    /*Import the club list */
-    let clubsLoaded = false; //makes sure we do not load double
-
-    window.reloadClubs = async function() {
-        clubsLoaded = false;
-        await window.loadClubs();
-    };
-
-    /*Load clubs */
-    window.loadClubs = async function loadClubs(){
-        if(clubsLoaded) return;
-        clubsLoaded = true;
-
-        const clubs = await getClubs();
-
-        const container = document.getElementById("club-list");
-        if (!container) {
-            console.error("club-list not found in DOM");
-            return;
-        }
-
-        //Converts the JS data from the database into HTML cards
-        container.innerHTML = clubs.map(club => `
-            <div class="club-card" data-id="${club.id}"
-                 style="${club.Color ? `border-left: 5px solid ${club.Color};` : ""}">
-                <h3>${club.name}</h3>
-                <img src="${club.image}" alt="${club.name}" class="club-img"/>
-            </div>
-        `).join("");
-
-        /*Opens club page when user clicks on a club */
-        container.addEventListener("click", async (e) => {
-            const card = e.target.closest(".club-card"); //closest -> find the nearest club-card when cliked
-            if (!card) return;
-
-            const clubId = card.dataset.id; 
-
-            if (!clubId) {
-                console.error("Missing clubId");
-                return;
-            }
-
-            handleOpenClubPage(clubId);
-        }); 
-    }
+    /*Club list now lives on /clubs.html - just navigate there */
 
     /* Full eventlist*/
         async function loadFullEventList() {    //kører når data er hentet
@@ -320,52 +316,12 @@ function initDashboard() {
         });
 
 
-    /*Import the event data - delegates to clubPage.js */
-    async function handleOpenClubPage(clubId){
-        const container = document.getElementById("club-list-box");
-        await openClubPage(clubId, container);
-    }
-
-
-    /*opening and closing of the club list */
+    /*Club list link navigates to the full clubs page */
     const clubListLink = document.getElementById("clubListLink");
-    
-    if(clubListLink){
-        clubListLink.addEventListener("click", async () => {
-        
-        const clubListBox = document.getElementById("club-list-box"); // The box where the clubs will be shown
-
-            // Hent HTML fra seperat fil
-            const response = await fetch("/components/club_list.html");
-            const html = await response.text();
-
-            //Indsæt HTML i container
-            clubListBox.innerHTML = html;
-            
-            //Function from clubServucSes.js that loads the clubs in 
-            await loadClubs();
-
-            //Vis box
-            clubListBox.classList.remove("hidden");
-
-            /*Close box when span is clicked */
-            document.addEventListener("click", (e) => {
-                if (e.target.closest("#close-club-list")) { 
-                    const clubListBox = document.getElementById("club-list-box");
-
-                    const clubContent = document.getElementById("club-content");
-
-                    if (clubListBox) { //Hides the box 
-                        clubListBox.classList.add("hidden");
-                    }
-
-                    if (clubContent) { //removes all html inside the container 
-                        clubContent.innerHTML = "";
-                    }
-                }
-            });
+    if (clubListLink) {
+        clubListLink.addEventListener("click", () => {
+            window.location.href = "/clubs.html";
         });
-
     }
 }
 
