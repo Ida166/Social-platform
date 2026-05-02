@@ -14,14 +14,17 @@ document.getElementById("backBtn").addEventListener("click", () => {
 async function loadClubs() {
     const clubs = await getClubs();
     const container = document.getElementById("club-list");
+    const myClubId = sessionStorage.getItem("myClubId");
 
-    container.innerHTML = clubs.map(club => `
+    container.innerHTML = clubs.map(club => {
+        const isMine = role === "club_owner" && myClubId && String(club.id) === myClubId;
+        return `
         <div class="club-card" data-id="${club.id}"
              style="${club.color ? `border-left: 5px solid ${club.color};` : ""}">
-            <h3>${club.name}</h3>
+            <h3>${club.name}${isMine ? ' <span class="my-club-badge">My Club</span>' : ""}</h3>
             ${club.image ? `<img src="${club.image}" alt="${club.name}" class="club-img" />` : ""}
-        </div>
-    `).join("");
+        </div>`;
+    }).join("");
 
     container.addEventListener("click", (e) => {
         const card = e.target.closest(".club-card");
