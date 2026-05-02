@@ -1,10 +1,10 @@
 export async function getClubs() {
-    const res = await fetch("/clubs");
+    const res = await fetch("/clubs", { cache: "no-store" });
     return await res.json();
 }
 
 export async function getEvents() {
-    const res = await fetch("/events");
+    const res = await fetch("/events", { cache: "no-store" });
     return await res.json();
 }
 
@@ -13,7 +13,6 @@ export async function getEventJoinCount(eventId) {
     const res = await fetch(`/events/${eventId}/join-count`);
     return await res.json();
 }
-
 
 /*Sends request to backend to update the joined count of the given event */
 export async function joinEvent(eventId) {

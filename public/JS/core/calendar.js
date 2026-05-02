@@ -84,7 +84,6 @@ function renderTimeslots(){
         let hash = 0;
         const str = String(seed);
 
-
         for ( let i = 0; i < str.length; i++){
             hash = str.charCodeAt(i) + ((hash << 5) - hash);
         }
@@ -97,24 +96,21 @@ function renderTimeslots(){
     }
 
     function renderEvents(monday){
-        
+
         const container = document.querySelector(".eventcontainer"); //finder .eventContainer i html
         container.innerHTML = ""; //tømmer indholdet fx hvis brugeren skifter til ny uge, så gamle events ikke fremgår
 
         events.forEach(event => { //alle events brugeren har angivet køres igennem og får dato ift. kalenderen
             const eventDate = new Date(event.date + "T00:00:00"); //det to local timezone
 
-            const diffFromMonday = Math.floor((eventDate - monday)/(1000*60*60*24)); //vi finder differencen fra mandag, fordi Date også tager tiden med, tager vi Math.floor, 
+            const diffFromMonday = Math.floor((eventDate - monday)/(1000*60*60*24)); //vi finder differencen fra mandag, fordi Date også tager tiden med, tager vi Math.floor,
             //så vi får en hel og ikke halve dage. Ikke brugbart til at finde dag i kolonnerne
             //da der med Date objekter regnes i millisekunder, tager vi og dividerer differencen med antal milisekunder der er på et døgn, for at få dage
 
             if (diffFromMonday>= 0 && diffFromMonday < 7){ //vi opretter kun indenfor den uge der er displayet
                 const element = document.createElement("div");  //vi laver et element "div"
                 element.classList.add("slot");   //tilføjer class "slot"
-                element.style.background =  event.clubId
-                    ? event.clubs.color
-                    : getRandomColor(event.id); //If no club assigned to the event generate random color
-
+                element.style.background = event.clubs?.color || getRandomColor(event.id);
                 element.textContent = event.title;              //som får titlen bruger har angivet
 
                 element.addEventListener("click", () => {
@@ -132,7 +128,6 @@ function renderTimeslots(){
                 container.appendChild(element); //og så tilføjer vi til sidst 
             }
         });
-
 }
 
 // dato som objekt - 
@@ -226,8 +221,8 @@ async function openEventPage(event) {
     const container = document.getElementById("create-club-or-event_box");
     container.innerHTML = html;
 
-    container.querySelector("#event-date-time").textContent = `${event.date} at ${event.time}`;
     container.querySelector("#event-title").textContent = event.title;
+    container.querySelector("#event-date-time").textContent = `${event.date} at ${event.time}`;
     container.querySelector("#event-location").textContent = event.location;
     container.querySelector("#event-description").textContent = event.description;
 
