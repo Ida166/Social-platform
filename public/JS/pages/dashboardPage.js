@@ -6,6 +6,7 @@
     import { joinClub } from "./clubServices.js";
     import { getEventJoinCount } from "./clubServices.js";
     import { joinEvent } from "./clubServices.js";
+    import { openClubPage } from "./clubPage.js";
 
 // Club owner buttton & Student button - Button to change between roles  
 const btnClubOwner = document.getElementById("goDashboardClubOwner");  
@@ -62,6 +63,50 @@ function initDashboard() {
                 closeBtn.addEventListener("click", () => {
                     apply_create_club_or_event_box.classList.add("hidden");
                     apply_create_club_or_event_box.innerHTML = "";
+                });
+            }
+
+            // Club creation submit
+            const clubForm = document.getElementById("application_for_club_or_event_form");
+            if (clubForm) {
+                clubForm.addEventListener("submit", async (e) => {
+                    e.preventDefault();
+                    const formData = new FormData(clubForm);
+                    const submitBtn = clubForm.querySelector('button[type="submit"]');
+
+                    const payload = {
+                        name: formData.get("clubName")?.toString().trim(),
+                        category: formData.get("category")?.toString().trim(),
+                        contactEmail: formData.get("email")?.toString().trim(),
+                        phone: formData.get("phone")?.toString().trim()
+                    };
+
+                    if (!payload.name || !payload.category) {
+                        alert("Club name and category are required.");
+                        return;
+                    }
+
+                    try {
+                        if (submitBtn) submitBtn.disabled = true;
+                        const res = await fetch("/clubs", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify(payload)
+                        });
+
+                        if (!res.ok) {
+                            const err = await res.json();
+                            throw new Error(err.error || err.message || "Failed to create club.");
+                        }
+
+                        alert("Club created successfully!");
+                        apply_create_club_or_event_box.classList.add("hidden");
+                        apply_create_club_or_event_box.innerHTML = "";
+                    } catch (err) {
+                        alert(err.message);
+                    } finally {
+                        if (submitBtn) submitBtn.disabled = false;
+                    }
                 });
             }
         });
@@ -140,9 +185,15 @@ function initDashboard() {
     /*Import the club list */
     let clubsLoaded = false; //makes sure we do not load double
 
+    window.reloadClubs = async function() {
+        clubsLoaded = false;
+        await window.loadClubs();
+    };
+
     /*Load clubs */
     window.loadClubs = async function loadClubs(){
         if(clubsLoaded) return;
+        clubsLoaded = true;
 
         const clubs = await getClubs();
 
@@ -153,10 +204,11 @@ function initDashboard() {
         }
 
         //Converts the JS data from the database into HTML cards
-        container.innerHTML = clubs.map(clubs => `
-            <div class="club-card" data-id="${clubs.id}">
-                <h3>${clubs.name}</h3>
-                <img src="${clubs.image}" alt="${clubs.name}" class="club-img"/>
+        container.innerHTML = clubs.map(club => `
+            <div class="club-card" data-id="${club.id}"
+                 style="${club.Color ? `border-left: 5px solid ${club.Color};` : ""}">
+                <h3>${club.name}</h3>
+                <img src="${club.image}" alt="${club.name}" class="club-img"/>
             </div>
         `).join("");
 
@@ -172,7 +224,7 @@ function initDashboard() {
                 return;
             }
 
-            openClubPage(clubId);     
+            handleOpenClubPage(clubId);
         }); 
     }
 
@@ -268,72 +320,10 @@ function initDashboard() {
         });
 
 
-    /*Import the event data*/
-    async function openClubPage(clubId){
-        const clubs = await getClubs();
-        const events = await getEvents();
-        const members = await getJoinCount(clubId)
-
-        const club = clubs.find(c => String(c.id) === String(clubId));
-
+    /*Import the event data - delegates to clubPage.js */
+    async function handleOpenClubPage(clubId){
         const container = document.getElementById("club-list-box");
-
-        if (!club) {
-            container.innerHTML = "<p>Club not found</p>";
-            return;
-        }
-
-        const clubEvents = events.filter(
-            e =>  String(e.clubId) === String(clubId) && e.isPublished === true
-        );
-
-        //event HTML - 161
-        const eventsHTML = clubEvents.length > 0
-            ? clubEvents.map(event => `
-                <div class="event-card">
-                    <h3>${event.title || "Event"}</h3>
-                    <p><strong>Date:</strong> ${event.date}</p>
-                    <p><strong>Time:</strong> ${event.time}</p>
-                    <p><strong>Place:</strong> ${event.location}</p>
-                </div>
-            `).join("")
-            : "<p>No events available yet</p>";
-
-
-        //Henter club details filen
-        const response = await fetch("/components/club_details.html");
-        const template = await response.text();
-        container.innerHTML = eval('`' + template + '`');
-
-        //function to import club member count and join a club
-        const count = await getJoinCount(clubId);
-
-        const joinBtn = document.querySelector(".join-btn");
-        joinBtn.textContent = `Join us!`;
-
-        joinBtn.addEventListener("click", async () => {
-            const result = await joinClub(clubId);
-
-            //if alredy joined or failed
-            if(!result){
-                return; 
-            }
-            joinBtn.textContent = `You joined the club!`;
-        });
-       
-
-        // close the club page
-        const closeClubPage = container.querySelector("#close-event-page");
-
-        if (closeClubPage) {
-            closeClubPage.addEventListener("click", async () => {
-                const response = await fetch("/components/club_list.html");
-                const html = await response.text();
-
-                container.innerHTML = html;
-                await loadClubs();
-            });
-        }
+        await openClubPage(clubId, container);
     }
 
 

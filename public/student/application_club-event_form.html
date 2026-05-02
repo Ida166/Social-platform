@@ -4,10 +4,10 @@
 
   <form id="application_for_club_or_event_form">
     <p>Your Details</p>
-    <input type="text" placeholder="Your Name" required />
-    <input type="email" placeholder="Email" required />
-    <input type="text" placeholder="Education" required />
-    <input type="text" placeholder="Phone Number" required />
+    <input type="text" name="applicantName" placeholder="Your Name" required />
+    <input type="email" name="email" placeholder="Email" required />
+    <input type="text" name="education" placeholder="Education" required />
+    <input type="text" name="phone" placeholder="Phone Number" required />
 
     <p>Your Project</p>
     <div class="checkbox-group">
@@ -32,13 +32,13 @@
 </div>
 
     <div class="form-row">
-      <input type="text" placeholder="Club/Event Name" required />
-      <input type="text" placeholder="Category" required />
+      <input type="text" name="clubName" placeholder="Club/Event Name" required />
+      <input type="text" name="category" placeholder="Category" required />
     </div>
 
     <div class="form-row">
-      <textarea placeholder="Tell us about your idea"></textarea>
-      <textarea placeholder="What motivates you?"></textarea>
+      <textarea name="idea" placeholder="Tell us about your idea"></textarea>
+      <textarea name="motivation" placeholder="What motivates you?"></textarea>
     </div>
 
     <div class="button-container button-container-horizontal">

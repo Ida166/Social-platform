@@ -4,8 +4,16 @@ import { fileURLToPath } from "url";
 import { supabase } from "./Supabase.js";
 import session from "express-session";
 import { randomUUID } from "crypto"; //generates random id
+import multer from "multer";
+import { createClient } from "@supabase/supabase-js";
 
 const app = express();
+const upload = multer({ storage: multer.memoryStorage() });
+
+const supabaseAdmin = createClient(
+    "https://sjtapuesjqubmdawxwzm.supabase.co",
+    process.env.SUPABASE_SERVICE_KEY
+);
 
 app.use(express.json());
 
@@ -261,6 +269,147 @@ app.post("/clubs/:id/joined", async (req, res) => {
         message: "Joined successfully",
         joined: count
     });
+});
+
+/*Create a new club (student application) */
+app.post("/clubs", async (req, res) => {
+    const { name, category, contactEmail, phone } = req.body;
+
+    if (!name || !category) {
+        return res.status(400).json({ error: "Name and category are required." });
+    }
+
+    // Get the current max id to assign the next one
+    const { data: maxData, error: maxError } = await supabase
+        .from("clubs")
+        .select("id")
+        .order("id", { ascending: false })
+        .limit(1)
+        .single();
+
+    if (maxError && maxError.code !== "PGRST116") {
+        return res.status(500).json(maxError);
+    }
+
+    const nextId = maxData ? maxData.id + 1 : 1;
+    const capitalizedCategory = category.charAt(0).toUpperCase() + category.slice(1);
+
+    const { data, error } = await supabase
+        .from("clubs")
+        .insert([{
+            id: nextId,
+            name,
+            category: capitalizedCategory,
+            contactEmail: contactEmail || null,
+            phone: phone || null
+        }])
+        .select()
+        .single();
+
+    if (error) return res.status(500).json(error);
+
+    res.status(201).json(data);
+});
+
+/*Update club details */
+app.patch("/clubs/:id", async (req, res) => {
+    const clubId = req.params.id;
+    const { regularDate, regularTime, regularPlace, description, contactEmail, phone, color } = req.body;
+
+    // Check colour uniqueness if a colour is being set
+    if (color) {
+        const { data: existing } = await supabase
+            .from("clubs")
+            .select("id, Color")
+            .eq("Color", color)
+            .neq("id", clubId)
+            .maybeSingle();
+
+        if (existing) {
+            return res.status(409).json({ error: "This colour is already taken by another club." });
+        }
+    }
+
+    const updates = {};
+    if (regularDate !== undefined) updates.regularDate = regularDate;
+    if (regularTime !== undefined) updates.regularTime = regularTime;
+    if (regularPlace !== undefined) updates.regularPlace = regularPlace;
+    if (description !== undefined) updates.description = description;
+    if (contactEmail !== undefined) updates.contactEmail = contactEmail;
+    if (phone !== undefined) updates.phone = phone;
+    if (color !== undefined) updates.Color = color;
+
+    const { data, error } = await supabase
+        .from("clubs")
+        .update(updates)
+        .eq("id", clubId)
+        .select()
+        .single();
+
+    if (error) return res.status(500).json(error);
+
+    res.json(data);
+});
+
+/*Upload club image to Supabase Storage */
+app.post("/clubs/:id/image", upload.single("image"), async (req, res) => {
+    const clubId = req.params.id;
+
+    if (!req.file) {
+        return res.status(400).json({ error: "No image file provided." });
+    }
+
+    const ext = req.file.originalname.split(".").pop();
+    const filePath = `${clubId}.${ext}`;
+
+    const { error: uploadError } = await supabaseAdmin.storage
+        .from("club-images")
+        .upload(filePath, req.file.buffer, {
+            contentType: req.file.mimetype,
+            upsert: true
+        });
+
+    if (uploadError) return res.status(500).json(uploadError);
+
+    const { data: urlData } = supabaseAdmin.storage
+        .from("club-images")
+        .getPublicUrl(filePath);
+
+    const publicUrl = urlData.publicUrl;
+
+    const { data, error } = await supabase
+        .from("clubs")
+        .update({ image: publicUrl })
+        .eq("id", clubId)
+        .select()
+        .single();
+
+    if (error) return res.status(500).json(error);
+
+    res.json({ image: publicUrl, club: data });
+});
+
+/*Update event details */
+app.patch("/events/:id", async (req, res) => {
+    const eventId = req.params.id;
+    const { timeStart, timeEnd } = req.body;
+
+    if (!timeStart || !timeEnd) {
+        return res.status(400).json({ error: "timeStart and timeEnd are required." });
+    }
+
+    const time = `${timeStart} - ${timeEnd}`;
+
+    const { data, error } = await supabase
+        .from("events")
+        .update({ time })
+        .eq("id", eventId)
+        .select()
+        .single();
+
+    if (error) return res.status(500).json(error);
+
+    res.json(data);
 });
 
 /* Start server */

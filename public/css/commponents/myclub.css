@@ -1,0 +1,127 @@
+.club-page-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.edit-club-btn {
+    padding: 8px 16px;
+    background: #3498db;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.edit-club-btn:hover {
+    background: #2980b9;
+}
+
+.edit-club-form {
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    margin-top: 16px;
+}
+
+.edit-club-form h3 {
+    margin-top: 0;
+    margin-bottom: 16px;
+}
+
+.edit-club-form label {
+    display: block;
+    margin-top: 12px;
+    margin-bottom: 4px;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.edit-club-form input,
+.edit-club-form textarea {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+    font-size: 14px;
+}
+
+.edit-club-form textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+.edit-time-row {
+    display: flex;
+    gap: 10px;
+}
+
+.edit-time-row input {
+    flex: 1;
+}
+
+.color-swatches {
+    display: grid;
+    grid-template-columns: repeat(5, 36px);
+    gap: 8px;
+    margin-top: 6px;
+}
+
+.color-swatch {
+    width: 36px;
+    height: 36px;
+    border-radius: 6px;
+    border: 3px solid transparent;
+    cursor: pointer;
+    transition: transform 0.1s, border-color 0.1s;
+}
+
+.color-swatch:hover {
+    transform: scale(1.1);
+}
+
+.color-swatch.selected {
+    border-color: #000;
+    transform: scale(1.15);
+}
+
+.color-swatch.taken {
+    opacity: 0.35;
+    cursor: not-allowed;
+}
+
+.color-warning {
+    color: #e74c3c;
+    font-size: 13px;
+    margin-top: 4px;
+}
+
+.edit-save-btn {
+    margin-top: 16px;
+    padding: 10px 20px;
+    background: #2ecc71;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.edit-save-btn:hover {
+    background: #27ae60;
+}
+
+.edit-save-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.edit-status {
+    margin-top: 8px;
+    font-size: 13px;
+    color: #555;
+}

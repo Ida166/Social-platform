@@ -15,6 +15,7 @@ async function login(role) {
     });
 
     if (res.ok) {
+        sessionStorage.setItem("role", role);
         window.location.href = role === "student"
             ? "/student/index"
             : "/owner/index";
