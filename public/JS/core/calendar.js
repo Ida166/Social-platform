@@ -80,6 +80,22 @@ function renderTimeslots(){
                                 //så fordeler vi det hele på kvarter, fordi vores row grid er inddelt efter det.
     }
 
+    function getRandomColor(seed){
+        let hash = 0;
+        const str = String(seed);
+
+
+        for ( let i = 0; i < str.length; i++){
+            hash = str.charCodeAt(i) + ((hash << 5) - hash);
+        }
+
+        const hue = Math.abs(hash) % 360;
+        const saturation = 60; //softer colors
+        const lightness = 55; //Avoids too dark or light
+
+         return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+    }
+
     function renderEvents(monday){
         const container = document.querySelector(".eventcontainer"); //finder .eventContainer i html
         container.innerHTML = ""; //tømmer indholdet fx hvis brugeren skifter til ny uge, så gamle events ikke fremgår
@@ -93,7 +109,11 @@ function renderTimeslots(){
 
             if (diffFromMonday>= 0 && diffFromMonday < 7){ //vi opretter kun indenfor den uge der er displayet
                 const element = document.createElement("div");  //vi laver et element "div"
-                element.classList.add("slot");                  //tilføjer class "slot"
+                element.classList.add("slot");   //tilføjer class "slot"
+                element.style.background =  event.club_id
+                    ? event.clubs.color
+                    : getRandomColor(event.id); //If no club assigned to the event generate random color
+
                 element.textContent = event.title;              //som får titlen bruger har angivet
 
                 element.addEventListener("click", () => {
@@ -111,6 +131,7 @@ function renderTimeslots(){
                 container.appendChild(element); //og så tilføjer vi til sidst 
             }
         });
+
 }
 
 // dato som objekt - 

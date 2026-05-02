@@ -227,7 +227,6 @@ function initDashboard() {
             joinBtn.textContent = `You joined the club!`;
         });
        
-
         // close the club page
         const closeClubPage = container.querySelector("#close-event-page");
 
@@ -281,7 +280,6 @@ function initDashboard() {
                 }
             });
         });
-
     }
 
 document.addEventListener("DOMContentLoaded", initDashboard); //DOMContentLoaded betyder: “Kør først, når hele HTML’en er indlæst.”

@@ -348,7 +348,6 @@ ul {
 .slot {
   /*"indeni" eventcontainer - generelt om slot placering og sån*/
   position: relative;
-  background: green;
   border-radius: 5px;
   z-index: 5; /*lag*/
   color: white;

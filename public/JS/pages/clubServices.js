@@ -14,6 +14,7 @@ export async function getEventJoinCount(eventId) {
     return await res.json();
 }
 
+
 /*Sends request to backend to update the joined count of the given event */
 export async function joinEvent(eventId) {
     const res = await fetch(`/events/${eventId}/joined`, {

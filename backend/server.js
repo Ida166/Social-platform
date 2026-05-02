@@ -104,11 +104,16 @@ app.get("/clubs", async (req, res) => {
     res.json(data);
 });
 
+
 /*Get event info */
 app.get("/events", async (req, res) => {
     const { data, error } = await supabase
         .from("events")
-        .select("*");
+        .select(`
+            *,
+            clubs(color)
+            )
+        `);
 
     if (error) return res.status(500).json(error);
 
@@ -129,7 +134,7 @@ app.post("/events", async (req, res) => {
         isPublished
     } = req.body;
 
-    if (!name || !date || !timeStart || !timeEnd || !clubId || !location || !description) {
+    if (!name || !date || !timeStart || !timeEnd || !location || !description) {
         return res.status(400).json({
             error: "Missing required event fields."
         });
@@ -144,7 +149,7 @@ app.post("/events", async (req, res) => {
             title: name, //this maps frontend "name" to database "title" coulmn
             date,
             time,
-            clubId: Number(clubId),
+            clubId: clubId ? Number(clubId) : null,
             location,
             description,
             practicalInfo: practicalInformation, 
