@@ -46,20 +46,19 @@
         <div class="full-eventlist-container"></div>
           </div>
 
-        <div class="page-title">
-          <h1>
-            Events & clubs |  
-            <span class="list-link" id="clubListLink">Show Full Club List</span> |
-            <span class="list-link" id="eventListLink">Show Full Event List</span>
-          </h1>
-          <div class="button-group">
-            <button class="role-button dashboard-create-event-button club-btn-create-event" id="createEventButton">
-              Create Event
-            </button>
-            <div id="create-club-or-event_box" class="hidden"></div>
-            <button class="role-button" id="logOut">Log Out</button>
+        <div id="dashboard-home">
+          <div class="page-title">
+            <h1>
+              Events & clubs |
+              <button class="list-link-btn" id="clubListLink">Show Full Club List</button> |
+              <button class="list-link-btn" id="eventListLink">Show Full Event List</button>
+            </h1>
+            <div class="button-group">
+              <button class="role-button dashboard-create-event-button club-btn-create-event" id="createEventButton">Create Event</button>
+              <div id="create-club-or-event_box" class="hidden"></div>
+              <button class="role-button" id="logOut">Log Out</button>
+            </div>
           </div>
-        </div>
           <div class="filter">
             <h3>Filters</h3>
           </div>
@@ -73,7 +72,7 @@
             <div class="header">
             <button id="previousWeek">←</button>
               <ul class="weekdays">
-                <li>Mon <span id="day1"></span></li> 
+                <li>Mon <span id="day1"></span></li>
                 <li>Tue <span id="day2"></span></li>
                 <li>Wed <span id="day3"></span></li>
                 <li>Thu <span id="day4"></span></li>
@@ -89,6 +88,7 @@
                 <div class="eventcontainer"></div>
              </div>
            <script type="module" src="/JS/core/calendar.js"></script>
+        </div>
         </div>
       </div>
     </div>

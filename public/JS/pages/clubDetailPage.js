@@ -215,8 +215,6 @@ async function init() {
                 phone: document.getElementById("edit-phone")?.value || "",
                 color: selectedColor
             };
-            console.log("[Save] Sending color:", selectedColor, "| Full payload:", payload);
-
             const res = await fetch(`/clubs/${clubId}`, {
                 method: "PATCH",
                 headers: { "Content-Type": "application/json" },
@@ -228,7 +226,6 @@ async function init() {
                 throw new Error(err.error || err.message || "Failed to save.");
             }
             const saved = await res.json();
-            console.log("[Save] Server returned:", saved);
 
             const imageFile = document.getElementById("edit-image")?.files?.[0];
             if (imageFile) {
