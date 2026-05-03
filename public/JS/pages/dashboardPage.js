@@ -51,6 +51,8 @@ function initDashboard() {
             // Indsæt HTML i container
             apply_create_club_or_event_box.innerHTML = html;
 
+            apply_create_club_or_event_box.style.display = "flex";
+
             // Vis popup
             apply_create_club_or_event_box.classList.remove("hidden");
             const eventCheckbox = document.getElementById('checkBoxEvent');
@@ -69,6 +71,7 @@ function initDashboard() {
             if (closeBtn) {
                 closeBtn.addEventListener("click", () => {
                     apply_create_club_or_event_box.classList.add("hidden");
+                    apply_create_club_or_event_box.style.display = "none";
                     apply_create_club_or_event_box.innerHTML = "";
                 });
             }

@@ -223,26 +223,32 @@ html, body {
 
 /* Form overlay */
 #create-club-or-event_box {
-  position: absolute; /* Position relative to .topbar */
-  top: 100px; /* Appear directly under the topbar */
-  right: 0; /* Fill the width of topbar */
-  bottom: 0;
-  z-index: 20;
-  background-color: #ffffff; /* Gray overlay feel (the background is white)*/
-  left: 0px; 
-  font-family: Arial, sans-serif;
+   position: fixed;
+  inset: 0;
+
+  display: none; /* hidden by default */
+  justify-content: center;
+  align-items: center;
+
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px);
+
+  z-index: 1000;
 }
 
-#create-club-or-event-inner {
-  background-color: #f3f3f3;
-  margin: 0 auto;
-
-  border: 1px solid #333;
-  border-radius: 8px;
-  padding: 40px;
-  width: 60%; /*controls how wide it is */
-
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+#create-club-or-event_box .modal-content {
+    width: 600px;
+    max-width: 120vw;
+    box-shadow: rgba(0, 0, 0, 0.3) 0px 10px 30px;
+    background: white;
+    border-radius: 10px;
+    border-width: 2px;
+    border-style: solid;
+    border-color: black;
+    border-image: initial;
+    padding: 20px;
+    max-height: 80vh;   /* limits height to viewport */
+    overflow-y: auto;   /* enables scrolling inside */
 }
 
 li {
