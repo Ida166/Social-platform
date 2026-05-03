@@ -1,30 +1,49 @@
-/* Container rundt om event siden */
-.event-page-shell {
-  background-color: #ffffff;
-  padding: 40px;
+#event-details-popup {
+  position: fixed;
+  inset: 0;
+  display: none;
+  justify-content: center;
+  align-items: center;
+
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px); /* 👈 this creates the blur effect */
+
+  z-index: 1000;
 }
 
-/* Selve event boksen */
-#event-page-inner {
-  background-color: white;
-  border-radius: 10px;
+#event-modal h2 {
+  font-size: 16px;
+  margin-bottom: 8px;
+}
 
-  border: 2px solid black;  /* sort ramme */
+#event-modal h3 {
+  font-size: 13px;
+  margin-bottom: 4px;
+}
+
+/* Modual shel that pops up*/
+#event-modal {
+  background: white;
+  border-radius: 10px;
+  border: 2px solid black;
+  font-size: 13px; /* base size smaller */
+  line-height: 1.3;
 
   padding: 30px;
-  max-width: 900px;
-  margin: 40px auto;
+  width: 420px;
+  height: 420px;
+  overflow-y: auto; /* allows scrolling if content is too long */
+  box-sizing: border-box;
 
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
 }
-
 
 /* Kortene inde i event siden */
 .card {
   background-color: #eeeeee;
   border-radius: 10px;
-  padding: 20px;
-  margin-bottom: 20px;
+  padding: 10px;
+  margin-bottom: 10px;
 }
 
 /* Titel i kort */

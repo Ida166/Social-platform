@@ -213,13 +213,17 @@ loadEventsFromDB();
 document.getElementById("previousWeek").addEventListener("click", previousWeek);
 document.getElementById("nextWeek").addEventListener("click", nextWeek);
 
-async function openEventPage(event) {
+async function openEventPage(event, eventElement) {
 
     const response = await fetch("/components/event_details.html");
     const html = await response.text();
 
-    const container = document.getElementById("create-club-or-event_box");
-    container.innerHTML = html;
+    const container = document.getElementById("event-details-popup");
+    container.innerHTML = `<div id="event-modal">${html}</div>`;
+
+    container.style.display = "flex";
+    
+    const modal = container.querySelector("#event-modal");
 
     container.querySelector("#event-title").textContent = event.title;
     container.querySelector("#event-date-time").textContent = `${event.date} at ${event.time}`;
@@ -234,8 +238,6 @@ async function openEventPage(event) {
         li.textContent = event.practicalInfo;
         practicalList.appendChild(li);
     }
-
-    container.style.display = "block";
 
     const joinButton = container.querySelector("#join-event-btn");
 
@@ -260,6 +262,6 @@ async function openEventPage(event) {
 
 document.addEventListener("click", (e) => {
     if (e.target.id === "close-event-details") {
-        document.getElementById("create-club-or-event_box").style.display = "none";
+        document.getElementById("event-details-popup").style.display = "none";
     }
 });
