@@ -173,14 +173,16 @@
 
 /*Individual event card */
 .event-card {
-    background: #ffffff;
-    padding: 20px;
-    margin-bottom: 15px;
-    border-radius: 8px;
+
+    gap: 16px;
+    background: #fff;
+    padding: 16px;
+    margin-bottom: 16px;
+    border-radius: 10px;
     border: 1px solid #e0e0e0;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
 }
+
 
 .event-card:hover {
     transform: translateY(-2px);

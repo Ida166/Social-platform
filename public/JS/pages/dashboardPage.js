@@ -244,7 +244,6 @@ function initDashboard() {
                  </div>
         `).join("");
     
-        
 
         //opretter event kort for hvert event
         //ved manglende title står der bare "Event"
