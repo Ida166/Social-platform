@@ -209,32 +209,26 @@ function initDashboard() {
         const clubs = await getClubs();
 
         const container = document.getElementById("club-list");
-        if (!container) {
-            console.error("club-list not found in DOM");
-            return;
-        }
+        if (!container) return;
 
-        //Converts the JS data from the database into HTML cards
-        container.innerHTML = clubs.map(clubs => `
-            <div class="club-card" data-id="${clubs.id}">
-                <h3>${clubs.name}</h3>
-                <img src="${clubs.image}" alt="${clubs.name}" class="club-img"/>
-            </div>
-        `).join("");
+        const template = document.getElementById("club-card-template");
+        container.innerHTML = ""; 
 
-        /*Opens club page when user clicks on a club */
+        clubs.forEach(club => {
+            const clone = template.content.cloneNode(true);
+            const card = clone.querySelector(".club-card");
+            card.dataset.id = club.id;
+            clone.querySelector("h3").textContent = club.name;
+            clone.querySelector(".club-img").src = club.image;
+            clone.querySelector(".club-img").alt = club.name;
+            container.appendChild(clone);
+        });
+
         container.addEventListener("click", async (e) => {
-            const card = e.target.closest(".club-card"); //closest -> find the nearest club-card when cliked
+            const card = e.target.closest(".club-card");
             if (!card) return;
-
             const clubId = card.dataset.id; 
-
-            if (!clubId) {
-                console.error("Missing clubId");
-                return;
-            }
-
-            openClubPage(clubId);     
+            if (clubId) openClubPage(clubId);     
         }); 
     }
 
@@ -256,35 +250,29 @@ function initDashboard() {
             e =>  String(e.clubId) === String(clubId) && e.isPublished === true
         );
 
-        //event HTML - 161
-        const eventsHTML = clubEvents.length > 0
-            ? clubEvents.map(event => `
-                <div class="event-card">
-                    <h3>${event.title || "Event"}</h3>
-                    <p><strong>Date:</strong> ${event.date}</p>
-                    <p><strong>Time:</strong> ${event.time}</p>
-                    <p><strong>Place:</strong> ${event.location}</p>
-                </div>
-            `).join("")
-            : "<p>No events available yet</p>";
-
-         //Henter club details filen
         const response = await fetch("components/club_details.html");
-        const template = await response.text();
-        container.innerHTML = eval('`' + template + '`');
+        const templateHTML = await response.text();
+        container.innerHTML = eval('`' + templateHTML + '`');
+
+        const eventsContainer = document.getElementById("club-events-container");
+        const eventTemplate = document.getElementById("event-card-template");
+
+        if (eventsContainer && eventTemplate) {
+            eventsContainer.innerHTML = ""; 
+            if (clubEvents.length > 0) {
+                clubEvents.forEach(event => {
+                    const clone = eventTemplate.content.cloneNode(true);
+                    clone.querySelector("h3").textContent = event.title || "Event";
+                    clone.querySelector(".event-date").textContent = event.date;
+                    clone.querySelector(".event-time").textContent = event.time;
+                    clone.querySelector(".event-place").textContent = event.location;
+                    eventsContainer.appendChild(clone);
+                });
+            } else {
+                eventsContainer.innerHTML = "<p>No events available yet</p>";
+            }
+        }
        
-        //function to import club member count and join a club
-        const count = await getJoinCount(clubId);
-
-        const joinBtn = document.querySelector(".join-btn");
-        joinBtn.textContent = `Join us (${count.joined} joined)`;
-
-        joinBtn.addEventListener("click", async () => {
-            const result = await joinClub(clubId);
-            joinBtn.textContent = `Join us (${result.joined} joined)`;
-        });
-       
-
         // close the club page
         const closeClubPage = container.querySelector("#close-event-page");
 
