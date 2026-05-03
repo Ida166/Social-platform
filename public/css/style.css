@@ -566,6 +566,23 @@ ul {
   background: #1a5fb4;
 }
 
+.list-link-btn {
+  background: #2f80ed;
+  border: 2px solid #2f80ed;
+  border-radius: 5px;
+  padding: 2px 8px;
+  font-size: inherit;
+  font-family: inherit;
+  font-weight: inherit;
+  color: white;
+  cursor: pointer;
+}
+
+.list-link-btn:hover {
+  background-color: #1366d6;
+  border-color: #1366d6;
+}
+
 #clubListLink {
     position: relative;
 }
