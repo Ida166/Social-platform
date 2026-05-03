@@ -213,7 +213,7 @@ loadEventsFromDB();
 document.getElementById("previousWeek").addEventListener("click", previousWeek);
 document.getElementById("nextWeek").addEventListener("click", nextWeek);
 
-async function openEventPage(event, eventElement) {
+async function openEventPage(event) {
 
     const response = await fetch("/components/event_details.html");
     const html = await response.text();
