@@ -1,5 +1,5 @@
 .event-page-shell {
-  background-color: #f4f6f8;
+  background-color: #ffffff;
   padding: 30px;
   min-height: 100%;
   font-family: Arial, sans-serif;
@@ -80,7 +80,7 @@
   clear: both;
 }
 
-.dashboard-create-event-button.club-btn-create-event {
+.blue-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -89,7 +89,7 @@
   padding: 10px 20px;
   border: none;
   border-radius: 5px;
-  background-color: #47ad5f;
+  background-color: #2f3d63;
   color: #ffffff;
   font-size: 13.3333px;
   font-weight: 400;
@@ -98,7 +98,7 @@
   cursor: pointer;
 }
 
-.dashboard-create-event-button.club-btn-create-event:hover {
-  background-color: #3d9b53;
+.blue-btn:hover {
+  background-color:#212b47;
   color: #ffffff;
 }

@@ -128,18 +128,25 @@
 }
 
 /* Dashboard kalender */
-.page-title {
+/* .page-title {
   display: flex;
   align-items: center;      /* keeps them vertically aligned */
-  justify-content: space-between; /* pushes items apart */  
+  /*justify-content: space-between; /* pushes items apart */  
+/*} */
+
+.page-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.2rem 1.5rem;
 }
 
 .page-title h1 {
   margin: 0;
-  font-size: 2rem;
+  font-size: 1.8rem;
   font-weight: 600;
   font-family: Arial, sans-serif;
-  line-height: 1;
+  color: #1d2125;
 }
 
 .button-group {
@@ -157,27 +164,6 @@
 
 #eventListLink {
   position: relative;
-}
-
-#eventListLink::after {
-  content: "See all events";
-  position: absolute;
-  bottom: -35px;
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: #333;
-  color: white;
-  padding: 5px 10px;
-  border-radius: 5px;
-  font-size: 12px;
-  white-space: nowrap;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.2s ease;
-}
-
-#eventListLink:hover::after {
-  opacity: 1;
 }
 
 #eventlist-page-box {
@@ -566,44 +552,31 @@ ul {
   background: #1a5fb4;
 }
 
+.subtitle {
+  padding-left: 1.5rem;
+  color: #4b5563;
+}
+
 .list-link-btn {
-  background: #2f80ed;
-  border: 2px solid #2f80ed;
-  border-radius: 5px;
-  padding: 2px 8px;
-  font-size: inherit;
+  background: none;
+  border: 1px solid transparent;
+  padding: 0.25rem 0.5rem;
+  font-size: 1rem;
+  font-weight: 400;
   font-family: inherit;
-  font-weight: inherit;
-  color: white;
+
+  color: #0c0c0c;
   cursor: pointer;
+
+   border-radius: 4px;
+   transition: all 0.15s ease;
 }
 
 .list-link-btn:hover {
-  background-color: #1366d6;
-  border-color: #1366d6;
+  color: #ffffff;
+  background-color: rgb(27, 56, 78);
 }
 
 #clubListLink {
     position: relative;
-}
-
-#clubListLink::after {
-    content: "See clubs and join";
-    position: absolute;
-    bottom: -35px;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: #333;
-    color: white;
-    padding: 5px 10px;
-    border-radius: 5px;
-    font-size: 12px;
-    white-space: nowrap;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.2s ease;
-}
-
-#clubListLink:hover::after {
-    opacity: 1;
 }
