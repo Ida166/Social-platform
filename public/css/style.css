@@ -65,15 +65,6 @@
 .back-btn:hover {
   background-color: #15202f;
 }
-/* Send Application knappen*/
-.primary-button {
-  background-color: #2f80ed;
-  color: white;
-}
-
-.primary-button:hover {
-  background-color: #1366d6;
-}
 
 /*skjul som standard*/
 .club-btn-create-event,
