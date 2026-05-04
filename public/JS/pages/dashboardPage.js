@@ -415,8 +415,11 @@ function initDashboard() {
 
         const toTop = document.getElementById("goToTheTopEventList");
         if (toTop) {
-            toTop.addEventListener("click", () => {
-                window.scrollTo({ top: 0, behavior: "smooth" });
+            toTop.addEventListener("click", (e) => {
+                window.scrollTo({
+                    top: 0,
+                    behavior: "smooth"
+                });
             });
         }
     }
