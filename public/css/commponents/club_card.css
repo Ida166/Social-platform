@@ -137,18 +137,7 @@
 }
 
 .join-btn {
-    background-color: #5f8f9b;
-    color: white;
-    padding: 0 40px;
-    border: none;
-    cursor: pointer;
-    align-self: center;
-    font-weight: bold;
-    height: 50px; 
-    border-radius: 4px;
-}
-.join-btn {
-    background-color: #5f8f9b;
+    background-color: #2f3d63;
     color: white;
     padding: 0 40px;
     border: none;

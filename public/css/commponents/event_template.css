@@ -31,19 +31,6 @@
   margin-top: 0;
 }
 
-.event-page-shell .button {
-  padding: 10px 16px;
-  background: #2f80ed;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-.event-page-shell .button:hover {
-  background: #1366d6;
-}
-
 .event-page-shell .event-page-actions {
   display: flex;
   justify-content: flex-end;

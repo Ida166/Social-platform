@@ -60,7 +60,7 @@
 
 /* Join button */
 .join-event-button {
-  background-color: #2f80ed;
+  background-color: #2f3d63;
   color: white;
   padding: 10px 16px;
   border: none;
@@ -71,7 +71,7 @@
 
 /* Hover */
 .join-event-button:hover {
-  background-color: #1366d6;
+  background-color: #1e2b3b;
 }
 
 /* Når man har joined */

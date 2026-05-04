@@ -44,7 +44,7 @@
 
 /* Kun Go Back knappen */
 #close-page {
-  background-color: #2f80ed;
+  background-color: #2f3d63;
   color: white;
 }
 
@@ -54,7 +54,7 @@
 
 /*alle back-buttons*/
 .back-btn {
-  background-color: #2f80ed;
+  background-color: #2f3d63;
   color: white;
   border: none;
   padding: 10px 20px;
@@ -63,7 +63,7 @@
 }
 
 .back-btn:hover {
-  background-color: #1366d6;
+  background-color: #15202f;
 }
 /* Send Application knappen*/
 .primary-button {
