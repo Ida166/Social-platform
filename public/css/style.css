@@ -493,7 +493,8 @@ ul {
 
 /* Inputs & Textareas */
 #application_for_club_or_event_form input,
-#application_for_club_or_event_form textarea {
+#application_for_club_or_event_form textarea,
+#application_for_club_or_event_form select {
   width: 100%;
   padding: 10px 12px;
   margin: 8px 0;

@@ -62,17 +62,29 @@ function initDashboard() {
 
             // Vis popup
             apply_create_club_or_event_box.classList.remove("hidden");
+            // Toggle fields based on radio selection
+            const clubCheckbox = document.getElementById('checkBoxClub');
             const eventCheckbox = document.getElementById('checkBoxEvent');
-            const filterBox = document.getElementById('event-filter-box');
-            if (eventCheckbox && filterBox) {
+            const clubFields = document.getElementById('club-fields');
+            const eventFields = document.getElementById('event-fields');
+
+            if (clubCheckbox) {
+                clubCheckbox.addEventListener('change', function() {
+                    if (this.checked) {
+                        clubFields.style.display = 'block';
+                        eventFields.style.display = 'none';
+                    }
+                });
+            }
+            if (eventCheckbox) {
                 eventCheckbox.addEventListener('change', function() {
-                if (this.checked) {
-                    filterBox.style.display = 'block'; // Vis boksen hvis der er flueben
-                } else {
-                    filterBox.style.display = 'none';  // Skjul den hvis fluebenet fjernes
-                }
-            });
-        }
+                    if (this.checked) {
+                        eventFields.style.display = 'block';
+                        clubFields.style.display = 'none';
+                    }
+                });
+            }
+
             // Luk-knap (skal bindes EFTER HTML er indsat)
             const closeBtn = document.getElementById("close-page");
             if (closeBtn) {
@@ -83,40 +95,80 @@ function initDashboard() {
                 });
             }
 
-            // Club creation submit
-            const clubForm = document.getElementById("application_for_club_or_event_form");
-            if (clubForm) {
-                clubForm.addEventListener("submit", async (e) => {
+            const appForm = document.getElementById("application_for_club_or_event_form");
+            if (appForm) {
+                appForm.addEventListener("submit", async (e) => {
                     e.preventDefault();
-                    const formData = new FormData(clubForm);
-                    const submitBtn = clubForm.querySelector('button[type="submit"]');
+                    const formData = new FormData(appForm);
+                    const submitBtn = appForm.querySelector('button[type="submit"]');
+                    const projectType = formData.get("projectType");
 
-                    const payload = {
-                        name: formData.get("clubName")?.toString().trim(),
-                        category: formData.get("category")?.toString().trim(),
-                        contactEmail: formData.get("email")?.toString().trim(),
-                        phone: formData.get("phone")?.toString().trim()
-                    };
-
-                    if (!payload.name || !payload.category) {
-                        alert("Club name and category are required.");
+                    if (!projectType) {
+                        alert("Please select Create Club or Create Event.");
                         return;
                     }
 
                     try {
                         if (submitBtn) submitBtn.disabled = true;
-                        const res = await fetch("/clubs", {
-                            method: "POST",
-                            headers: { "Content-Type": "application/json" },
-                            body: JSON.stringify(payload)
-                        });
 
-                        if (!res.ok) {
-                            const err = await res.json();
-                            throw new Error(err.error || err.message || "Failed to create club.");
+                        if (projectType === "club") {
+                            const payload = {
+                                name: formData.get("clubName")?.toString().trim(),
+                                category: formData.get("category")?.toString().trim(),
+                                contactEmail: formData.get("email")?.toString().trim(),
+                                phone: formData.get("phone")?.toString().trim()
+                            };
+
+                            if (!payload.name || !payload.category) {
+                                alert("Club name and category are required.");
+                                return;
+                            }
+
+                            const res = await fetch("/clubs", {
+                                method: "POST",
+                                headers: { "Content-Type": "application/json" },
+                                body: JSON.stringify(payload)
+                            });
+
+                            if (!res.ok) {
+                                const err = await res.json();
+                                throw new Error(err.error || err.message || "Failed to create club.");
+                            }
+
+                            alert("Club created successfully!");
+
+                        } else {
+                            const payload = {
+                                name: formData.get("name")?.toString().trim(),
+                                date: formData.get("date")?.toString().trim(),
+                                timeStart: formData.get("timeStart")?.toString().trim(),
+                                timeEnd: formData.get("timeEnd")?.toString().trim(),
+                                clubId: formData.get("clubId") ? Number(formData.get("clubId")) : null,
+                                location: formData.get("location")?.toString().trim(),
+                                description: formData.get("description")?.toString().trim(),
+                                practicalInformation: formData.get("practicalInformation")?.toString().trim(),
+                                isPublished: true
+                            };
+
+                            if (!payload.name || !payload.date || !payload.timeStart || !payload.timeEnd || !payload.clubId || !payload.location || !payload.description) {
+                                alert("Please fill in all required event fields.");
+                                return;
+                            }
+
+                            const res = await fetch("/events", {
+                                method: "POST",
+                                headers: { "Content-Type": "application/json" },
+                                body: JSON.stringify(payload)
+                            });
+
+                            if (!res.ok) {
+                                const err = await res.json();
+                                throw new Error(err.error || err.message || "Failed to create event.");
+                            }
+
+                            alert("Event created successfully!");
                         }
 
-                        alert("Club created successfully!");
                         apply_create_club_or_event_box.style.display = "none";
                         apply_create_club_or_event_box.classList.add("hidden");
                         apply_create_club_or_event_box.innerHTML = "";
@@ -241,8 +293,11 @@ function initDashboard() {
             return;
         }
 
+        const isOwner = sessionStorage.getItem("role") === "club_owner";
+
         container.innerHTML = filteredAndSorted.map(event => `
-            <div class="event-card" data-event-id="${event.id}">                       
+            <div class="event-card" data-event-id="${event.id}"
+                 style="${event.clubs?.color ? `border-left: 5px solid ${event.clubs.color};` : ""}">
                 <h3>${event.title || "Event"}</h3>
                 <p><strong>Date:</strong> ${event.date}</p>
                 <p><strong>Time:</strong> ${event.time}</p>
@@ -250,18 +305,13 @@ function initDashboard() {
                 <p>${event.description || ""}</p>
 
                 <div class="event-actions">
-                <button class="button join-event-button">Join event</button>
+                    <button class="button join-event-button">Join event</button>
+                    ${isOwner ? `<button class="button edit-event-button blue-btn">Edit</button>` : ""}
                 </div>
-                 </div>
+            </div>
         `).join("");
-    
-
-        //opretter event kort for hvert event
-        //ved manglende title står der bare "Event"
-        //med map laves nye html elementer, under event-card, som samles af joing.
 
         const joinButtons = container.querySelectorAll(".join-event-button");
-
             joinButtons.forEach(async (button) => {
                 const card = button.closest(".event-card");
                 const eventId = card.dataset.eventId;
@@ -271,12 +321,97 @@ function initDashboard() {
 
                 button.addEventListener("click", async () => {
                     const result = await joinEvent(eventId);
-
                     if (!result) return;
-
                     button.textContent = `Joined (${result.joined})`;
                 });
             });
+
+        if (isOwner) {
+            container.querySelectorAll(".edit-event-button").forEach(button => {
+                button.addEventListener("click", (e) => {
+                    e.stopPropagation();
+                    const card = button.closest(".event-card");
+                    const eventId = card.dataset.eventId;
+                    const event = filteredAndSorted.find(ev => String(ev.id) === String(eventId));
+                    if (!event) return;
+
+                    const [timeStart, timeEnd] = (event.time || "").split(" - ");
+
+                    const existing = document.getElementById("edit-event-modal");
+                    if (existing) existing.remove();
+
+                    const modal = document.createElement("div");
+                    modal.id = "edit-event-modal";
+                    modal.className = "edit-modal-overlay";
+                    modal.innerHTML = `
+                        <div class="edit-modal">
+                            <div class="edit-modal-header">
+                                <h3>Edit Event</h3>
+                                <button class="edit-modal-close" id="close-edit-event">✕</button>
+                            </div>
+                            <label>Title</label>
+                            <input type="text" id="edit-event-title" value="${event.title || ""}" />
+                            <label>Date</label>
+                            <input type="date" id="edit-event-date" value="${event.date || ""}" />
+                            <label>Time</label>
+                            <div class="edit-time-row">
+                                <input type="time" id="edit-event-timeStart" value="${timeStart?.trim() || ""}" />
+                                <input type="time" id="edit-event-timeEnd" value="${timeEnd?.trim() || ""}" />
+                            </div>
+                            <label>Location</label>
+                            <input type="text" id="edit-event-location" value="${event.location || ""}" />
+                            <label>Description</label>
+                            <textarea id="edit-event-description">${event.description || ""}</textarea>
+                            <label>Practical Information</label>
+                            <input type="text" id="edit-event-practicalInfo" value="${event.practicalInfo || ""}" />
+                            <button class="edit-save-btn" id="save-edit-event">Save changes</button>
+                            <div id="edit-event-status"></div>
+                        </div>
+                    `;
+
+                    document.body.appendChild(modal);
+                    modal.classList.add("open");
+
+                    document.getElementById("close-edit-event").addEventListener("click", () => modal.remove());
+                    modal.addEventListener("click", (ev) => { if (ev.target === modal) modal.remove(); });
+
+                    document.getElementById("save-edit-event").addEventListener("click", async () => {
+                        const saveBtn = document.getElementById("save-edit-event");
+                        const statusEl = document.getElementById("edit-event-status");
+                        saveBtn.disabled = true;
+                        statusEl.textContent = "Saving...";
+
+                        try {
+                            const res = await fetch(`/events/${eventId}`, {
+                                method: "PATCH",
+                                headers: { "Content-Type": "application/json" },
+                                body: JSON.stringify({
+                                    title: document.getElementById("edit-event-title").value,
+                                    date: document.getElementById("edit-event-date").value,
+                                    timeStart: document.getElementById("edit-event-timeStart").value,
+                                    timeEnd: document.getElementById("edit-event-timeEnd").value,
+                                    location: document.getElementById("edit-event-location").value,
+                                    description: document.getElementById("edit-event-description").value,
+                                    practicalInfo: document.getElementById("edit-event-practicalInfo").value
+                                })
+                            });
+
+                            if (!res.ok) {
+                                const err = await res.json();
+                                throw new Error(err.error || "Failed to save.");
+                            }
+
+                            modal.remove();
+                            await loadFullEventList();
+                        } catch (err) {
+                            statusEl.textContent = err.message;
+                        } finally {
+                            saveBtn.disabled = false;
+                        }
+                    });
+                });
+            });
+        }
     
     }
 
