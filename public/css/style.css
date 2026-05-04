@@ -198,16 +198,6 @@ html, body {
   padding-left: 20px; /*space between the sidebar*/
 }
 
-#club-list-inner {
-  background-color: #f3f3f3;
-  margin: 0 auto;
-
-  border: 1px solid #333;
-  border-radius: 8px;
-  padding: 20px;
-
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-}
 html, body {
   height: 100%;
 }

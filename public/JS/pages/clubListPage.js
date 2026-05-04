@@ -31,6 +31,14 @@ async function loadClubs() {
         if (!card) return;
         window.location.href = `/club.html?id=${card.dataset.id}`;
     });
+
+    const toTop = document.getElementById("goToTheTop");
+    toTop.addEventListener("click", (e) => {
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
+    });
 }
 
 loadClubs();

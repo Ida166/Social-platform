@@ -277,7 +277,14 @@ function initDashboard() {
                     button.textContent = `Joined (${result.joined})`;
                 });
             });
-    
+
+        const toTop = document.getElementById("goToTheTopEventList");
+            toTop.addEventListener("click", (e) => {
+                window.scrollTo({
+                    top: 0,
+                    behavior: "smooth"
+                });
+            });
     }
 
         async function openFullEventList() {
