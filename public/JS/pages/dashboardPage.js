@@ -21,6 +21,13 @@ function initDashboard() {
         });
     }
 
+    const dashboardLink = document.getElementById("dashboardLink");
+    if (dashboardLink) {
+        dashboardLink.addEventListener("click", () => {
+            window.location.reload();
+        });
+    }
+
     //Redirect to log in page
     const logOut = document.getElementById("logOut");
     if (logOut) {
@@ -110,6 +117,7 @@ function initDashboard() {
                         }
 
                         alert("Club created successfully!");
+                        apply_create_club_or_event_box.style.display = "none";
                         apply_create_club_or_event_box.classList.add("hidden");
                         apply_create_club_or_event_box.innerHTML = "";
                     } catch (err) {
