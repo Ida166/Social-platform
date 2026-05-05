@@ -52,11 +52,12 @@ async function init() {
 
     const eventsHTML = clubEvents.length > 0
         ? clubEvents.map(event => `
-            <div class="event-card" ${club.color ? `style="border-left:4px solid ${club.color};"` : ""}>
+            <div class="event-card" data-event-id="${event.id}" ${club.color ? `style="border-left:4px solid ${club.color};"` : ""}>
                 <h3>${event.title || "Event"}</h3>
                 <p><strong>Date:</strong> ${event.date}</p>
                 <p><strong>Time:</strong> ${event.time}</p>
                 <p><strong>Place:</strong> ${event.location}</p>
+                ${isOwner ? `<div class="event-actions"><button class="button edit-event-button blue-btn">Edit</button></div>` : ""}
             </div>
         `).join("")
         : "<p>No events available yet</p>";
@@ -65,7 +66,7 @@ async function init() {
     container.innerHTML = `
         <div class="content-area">
             <div class="club-page-topbar">
-                <button id="back-btn" class="back-btn">← Back to clubs</button>
+                <button id="back-btn" class="back-btn">Go Back</button>
                 ${isOwner ? `<button id="edit-club-btn" class="edit-club-btn">Edit Club</button>` : ""}
             </div>
 
@@ -164,6 +165,92 @@ async function init() {
     });
 
     if (!isOwner) return;
+
+    // Edit event buttons
+    document.querySelectorAll(".edit-event-button").forEach(button => {
+        button.addEventListener("click", (e) => {
+            e.stopPropagation();
+            const card = button.closest(".event-card");
+            const eventId = card.dataset.eventId;
+            const event = clubEvents.find(ev => String(ev.id) === String(eventId));
+            if (!event) return;
+
+            const [timeStart, timeEnd] = (event.time || "").split(" - ");
+
+            const existing = document.getElementById("edit-event-modal");
+            if (existing) existing.remove();
+
+            const modal = document.createElement("div");
+            modal.id = "edit-event-modal";
+            modal.className = "edit-modal-overlay";
+            modal.innerHTML = `
+                <div class="edit-modal">
+                    <div class="edit-modal-header">
+                        <h3>Edit Event</h3>
+                        <button class="edit-modal-close" id="close-edit-event">✕</button>
+                    </div>
+                    <label>Title</label>
+                    <input type="text" id="edit-event-title" value="${event.title || ""}" />
+                    <label>Date</label>
+                    <input type="date" id="edit-event-date" value="${event.date || ""}" />
+                    <label>Time</label>
+                    <div class="edit-time-row">
+                        <input type="time" id="edit-event-timeStart" value="${timeStart?.trim() || ""}" />
+                        <input type="time" id="edit-event-timeEnd" value="${timeEnd?.trim() || ""}" />
+                    </div>
+                    <label>Location</label>
+                    <input type="text" id="edit-event-location" value="${event.location || ""}" />
+                    <label>Description</label>
+                    <textarea id="edit-event-description">${event.description || ""}</textarea>
+                    <label>Practical Information</label>
+                    <input type="text" id="edit-event-practicalInfo" value="${event.practicalInfo || ""}" />
+                    <button class="edit-save-btn" id="save-edit-event">Save changes</button>
+                    <div class="edit-status" id="edit-event-status"></div>
+                </div>
+            `;
+
+            document.body.appendChild(modal);
+            modal.classList.add("open");
+
+            document.getElementById("close-edit-event").addEventListener("click", () => modal.remove());
+            modal.addEventListener("click", (ev) => { if (ev.target === modal) modal.remove(); });
+
+            document.getElementById("save-edit-event").addEventListener("click", async () => {
+                const saveBtn = document.getElementById("save-edit-event");
+                const statusEl = document.getElementById("edit-event-status");
+                saveBtn.disabled = true;
+                statusEl.textContent = "Saving...";
+
+                try {
+                    const res = await fetch(`/events/${eventId}`, {
+                        method: "PATCH",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            title: document.getElementById("edit-event-title").value,
+                            date: document.getElementById("edit-event-date").value,
+                            timeStart: document.getElementById("edit-event-timeStart").value,
+                            timeEnd: document.getElementById("edit-event-timeEnd").value,
+                            location: document.getElementById("edit-event-location").value,
+                            description: document.getElementById("edit-event-description").value,
+                            practicalInfo: document.getElementById("edit-event-practicalInfo").value
+                        })
+                    });
+
+                    if (!res.ok) {
+                        const err = await res.json();
+                        throw new Error(err.error || "Failed to save.");
+                    }
+
+                    modal.remove();
+                    window.location.reload();
+                } catch (err) {
+                    statusEl.textContent = err.message;
+                } finally {
+                    saveBtn.disabled = false;
+                }
+            });
+        });
+    });
 
     const overlay = document.getElementById("edit-modal-overlay");
 

@@ -396,17 +396,22 @@ app.post("/clubs/:id/image", upload.single("image"), async (req, res) => {
 /*Update event details */
 app.patch("/events/:id", async (req, res) => {
     const eventId = req.params.id;
-    const { timeStart, timeEnd } = req.body;
+    const { timeStart, timeEnd, title, date, location, description, practicalInfo } = req.body;
 
     if (!timeStart || !timeEnd) {
         return res.status(400).json({ error: "timeStart and timeEnd are required." });
     }
 
-    const time = `${timeStart} - ${timeEnd}`;
+    const updates = { time: `${timeStart} - ${timeEnd}` };
+    if (title !== undefined) updates.title = title;
+    if (date !== undefined) updates.date = date;
+    if (location !== undefined) updates.location = location;
+    if (description !== undefined) updates.description = description;
+    if (practicalInfo !== undefined) updates.practicalInfo = practicalInfo;
 
     const { data, error } = await supabase
         .from("events")
-        .update({ time })
+        .update(updates)
         .eq("id", eventId)
         .select()
         .single();
