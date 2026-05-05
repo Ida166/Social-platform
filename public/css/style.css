@@ -175,16 +175,10 @@ html, body {
 
 
 #club-list-box {
-  position: absolute; /* Position relative to .topbar */
-  top: 0; /* Appear directly under the topbar */
-  left: 0;
-  right: 0; /* Fill the width of topbar */
-  height: 100%;
-  inset: 0;
-  z-index: 20;
-
-  background-color: #ffffff; /* Gray overlay feel (the background is white)*/
-  padding-left: 20px; /*space between the sidebar*/
+  position: relative;  
+  width: 100%;
+  background-color: #ffffff;
+  padding-left: 20px;
 }
 
 html, body {
@@ -309,11 +303,15 @@ ul {
 }
 
 .main {
-  position: relative;
+  
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  padding: 20px;
+  padding: 30px;
+}
+
+#club-list {
+  margin-top: 20px;
+
 }
 
 .main h1 {
