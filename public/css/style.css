@@ -4,7 +4,9 @@
     font-size: 16px;
   }
 
- 
+  .role-button {
+    padding: 8px 16px;
+  }
   .login-box {
     padding: 20px;
     width: 70%;
@@ -34,11 +36,20 @@
   border: none; /* 2px solid rgb(244, 217, 13); */
   padding: 10px 20px;
   border-radius: 5px; /* Dette runder hjørnerne */
-  cursor: pointer;
 }
 .role-button:hover {
   background-color: #cac8c8; /* Mørkere når man holder musen over */
   color: rgb(0, 2, 108);
+}
+
+/* Kun Go Back knappen */
+#close-page {
+  background-color: #2f3d63;
+  color: white;
+}
+
+#close-page:hover {
+  background-color: #1366d6;
 }
 
 /*alle back-buttons*/
@@ -406,7 +417,6 @@ ul {
   z-index: 5; /*lag*/
   color: white;
   font-size: 15px;
-  cursor: pointer;
 }
 
 .timeslotscontainer {
