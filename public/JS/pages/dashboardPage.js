@@ -77,10 +77,21 @@ function initDashboard() {
                 });
             }
             if (eventCheckbox) {
-                eventCheckbox.addEventListener('change', function() {
+                eventCheckbox.addEventListener('change', async function() {
                     if (this.checked) {
                         eventFields.style.display = 'block';
                         clubFields.style.display = 'none';
+
+                        const clubSelect = document.getElementById('apply-club-select');
+                        if (clubSelect && clubSelect.options.length === 1) {
+                            const clubs = await getClubs();
+                            clubs.forEach(c => {
+                                const option = document.createElement('option');
+                                option.value = c.id;
+                                option.textContent = c.name;
+                                clubSelect.appendChild(option);
+                            });
+                        }
                     }
                 });
             }
@@ -189,8 +200,8 @@ function initDashboard() {
             const html = await response.text();
 
             eventPageBox.innerHTML = html;
+            eventPageBox.style.display = "flex";
             eventPageBox.classList.remove("hidden");
-            dashboardHome?.classList.add("hidden");
 
             const closeEventBtn = eventPageBox.querySelector("#close-event-template");
             const eventForm = eventPageBox.querySelector("#event-template-form");
@@ -210,9 +221,9 @@ function initDashboard() {
 
             if (closeEventBtn) {
                 closeEventBtn.addEventListener("click", () => {
+                    eventPageBox.style.display = "none";
                     eventPageBox.classList.add("hidden");
                     eventPageBox.innerHTML = "";
-                    dashboardHome?.classList.remove("hidden");
                 });
             }
 
@@ -247,7 +258,9 @@ function initDashboard() {
 
                         if (statusMessage) {
                             statusMessage.textContent = "Event saved.";
+                            eventPageBox.style.display = "none";
                             eventPageBox.classList.add("hidden");
+                            eventPageBox.innerHTML = "";
                             location.reload();
                         }
 

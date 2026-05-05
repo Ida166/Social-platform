@@ -66,7 +66,7 @@ async function init() {
     container.innerHTML = `
         <div class="content-area">
             <div class="club-page-topbar">
-                <button id="back-btn" class="back-btn">Back to clubs</button>
+                <button id="back-btn" class="back-btn">Go Back</button>
                 ${isOwner ? `<button id="edit-club-btn" class="edit-club-btn">Edit Club</button>` : ""}
             </div>
 
