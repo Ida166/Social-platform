@@ -5,10 +5,20 @@
     import { getEventJoinCount } from "./clubServices.js";
     import { joinEvent } from "./clubServices.js";
 
-// Club owner buttton & Student button - Button to change between roles  
-const btnClubOwner = document.getElementById("goDashboardClubOwner");  
-const btnStudent = document.getElementById("goDashboardStudent");
+const PRESET_COLORS = [
+    "#e74c3c", "#e67e22", "#f1c40f", "#2ecc71", "#1abc9c",
+    "#3498db", "#2980b9", "#9b59b6", "#e91e63", "#ff5722",
+    "#c0392b", "#27ae60", "#16a085", "#1565c0", "#6a1b9a",
+    "#795548", "#607d8b", "#f06292", "#aed581", "#4dd0e1"
+];
 
+function buildApplySwatchesHTML(takenColors = []) {
+    return PRESET_COLORS.map(c => {
+        const isTaken = takenColors.includes(c);
+        const classes = ["color-swatch", isTaken ? "taken" : ""].filter(Boolean).join(" ");
+        return `<div class="${classes}" data-color="${c}" style="background:${c};" title="${isTaken ? "Already taken" : c}"></div>`;
+    }).join("");
+}
 
 function initDashboard() {
 
@@ -46,7 +56,6 @@ function initDashboard() {
     const apply_create_club_or_event_box = document.getElementById("create-club-or-event_box");
     const createEventButton = document.getElementById("createEventButton");
     const eventPageBox = document.getElementById("event-page-box");
-    const dashboardHome = document.getElementById("dashboard-home");
 
     if (apply_create_club_or_event) {
         apply_create_club_or_event.addEventListener("click", async () => {
@@ -68,11 +77,30 @@ function initDashboard() {
             const clubFields = document.getElementById('club-fields');
             const eventFields = document.getElementById('event-fields');
 
+            let applySelectedColor = "";
+
             if (clubCheckbox) {
-                clubCheckbox.addEventListener('change', function() {
+                clubCheckbox.addEventListener('change', async function() {
                     if (this.checked) {
                         clubFields.style.display = 'block';
                         eventFields.style.display = 'none';
+
+                        const swatchContainer = document.getElementById('apply-color-swatches');
+                        const colorWarning = document.getElementById('apply-color-warning');
+                        if (swatchContainer) {
+                            const clubs = await getClubs();
+                            const takenColors = clubs.map(c => c.color).filter(Boolean);
+                            swatchContainer.innerHTML = buildApplySwatchesHTML(takenColors);
+
+                            swatchContainer.addEventListener('click', (e) => {
+                                const swatch = e.target.closest('.color-swatch');
+                                if (!swatch || swatch.classList.contains('taken')) return;
+                                swatchContainer.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('selected'));
+                                if (colorWarning) colorWarning.classList.add('hidden');
+                                swatch.classList.add('selected');
+                                applySelectedColor = swatch.dataset.color;
+                            });
+                        }
                     }
                 });
             }
@@ -144,6 +172,27 @@ function initDashboard() {
                             if (!res.ok) {
                                 const err = await res.json();
                                 throw new Error(err.error || err.message || "Failed to create club.");
+                            }
+
+                            const newClub = await res.json();
+                            const newClubId = newClub.id;
+
+                            const imageInput = document.getElementById("apply-club-image");
+                            if (imageInput && imageInput.files.length > 0) {
+                                const imgForm = new FormData();
+                                imgForm.append("image", imageInput.files[0]);
+                                await fetch(`/clubs/${newClubId}/image`, {
+                                    method: "POST",
+                                    body: imgForm
+                                });
+                            }
+
+                            if (applySelectedColor) {
+                                await fetch(`/clubs/${newClubId}`, {
+                                    method: "PATCH",
+                                    headers: { "Content-Type": "application/json" },
+                                    body: JSON.stringify({ color: applySelectedColor })
+                                });
                             }
 
                             alert("Club created successfully!");
