@@ -275,6 +275,100 @@ app.post("/clubs/:id/joined", async (req, res) => {
     });
 });
 
+/* Unjoin an event */
+app.delete("/events/:id/joined", async (req, res) => {
+    const userId = req.session.user?.id;
+    const eventId = req.params.id;
+
+    if (!userId) {
+        return res.status(401).send("Not logged in");
+    }
+
+    const { error } = await supabase
+        .from("event_joined")
+        .delete()
+        .eq("user_id", userId)
+        .eq("event_id", eventId);
+
+    if (error) {
+        return res.status(500).json({ message: "Could not unjoin event" });
+    }
+
+    const { count, error: countError } = await supabase
+        .from("event_joined")
+        .select("*", { count: "exact", head: true })
+        .eq("event_id", eventId);
+
+    if (countError) {
+        return res.status(500).json(countError);
+    }
+
+    res.json({ joined: count });
+});
+
+/* Check if user has joined an event */
+app.get("/events/:id/joined/me", async (req, res) => {
+    const userId = req.session.user?.id;
+    const eventId = req.params.id;
+
+    if (!userId) return res.json({ hasJoined: false });
+
+    const { count } = await supabase
+        .from("event_joined")
+        .select("*", { count: "exact", head: true })
+        .eq("user_id", userId)
+        .eq("event_id", eventId);
+
+    res.json({ hasJoined: count > 0 });
+});
+
+/* Unjoin a club */
+app.delete("/clubs/:id/joined", async (req, res) => {
+    const userId = req.session.user?.id;
+    const clubId = req.params.id;
+
+    if (!userId) {
+        return res.status(401).send("Not logged in");
+    }
+
+    const { error } = await supabase
+        .from("club_members")
+        .delete()
+        .eq("user_id", userId)
+        .eq("club_id", clubId);
+
+    if (error) {
+        return res.status(500).json({ message: "Could not unjoin club" });
+    }
+
+    const { count, error: countError } = await supabase
+        .from("club_members")
+        .select("*", { count: "exact", head: true })
+        .eq("club_id", clubId);
+
+    if (countError) {
+        return res.status(500).json(countError);
+    }
+
+    res.json({ joined: count });
+});
+
+/* Check if user has joined a club */
+app.get("/clubs/:id/joined/me", async (req, res) => {
+    const userId = req.session.user?.id;
+    const clubId = req.params.id;
+
+    if (!userId) return res.json({ hasJoined: false });
+
+    const { count } = await supabase
+        .from("club_members")
+        .select("*", { count: "exact", head: true })
+        .eq("user_id", userId)
+        .eq("club_id", clubId);
+
+    res.json({ hasJoined: count > 0 });
+});
+
 /*Create a new club (student application) */
 app.post("/clubs", async (req, res) => {
     const { name, category, contactEmail, phone } = req.body;

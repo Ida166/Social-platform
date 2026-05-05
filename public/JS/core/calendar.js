@@ -1,4 +1,4 @@
-import { getEvents, getEventJoinCount, joinEvent } from "../pages/clubServices.js";
+import { getEvents, getEventJoinCount, joinEvent, unjoinEvent, hasJoinedEvent } from "../pages/clubServices.js";
 
 let events = [];
 
@@ -241,22 +241,36 @@ async function openEventPage(event) {
 
     const joinButton = container.querySelector("#join-event-btn");
 
-    // Load current join count from DB
-    const countData = await getEventJoinCount(event.id);
-    joinButton.textContent = `Join event (${countData.joined} joined)`;
+    // Load current join count and whether user has already joined
+    const [countData, alreadyJoined] = await Promise.all([
+        getEventJoinCount(event.id),
+        hasJoinedEvent(event.id)
+    ]);
+
+    function renderJoinButton(joined, hasJoined) {
+        if (hasJoined) {
+            joinButton.textContent = `Du er tilmeldt (${joined} tilmeldt) — Fortryd`;
+            joinButton.classList.add("joined");
+        } else {
+            joinButton.textContent = `Tilmeld (${joined} tilmeldt)`;
+            joinButton.classList.remove("joined");
+        }
+    }
+
+    renderJoinButton(countData.joined, alreadyJoined);
 
     joinButton.addEventListener("click", async () => {
-        const result = await joinEvent(event.id);
+        const isJoined = joinButton.classList.contains("joined");
 
-        if(!result){
-            return;
+        if (isJoined) {
+            const result = await unjoinEvent(event.id);
+            if (!result || result.error) return;
+            renderJoinButton(result.joined, false);
+        } else {
+            const result = await joinEvent(event.id);
+            if (!result || result.error) return;
+            renderJoinButton(result.joined, true);
         }
-
-        const others = (result.joined) - 1;
-        joinButton.textContent =
-            others <= 0
-                ? "You are the first to join"
-                : `You joined together with ${others} others`; //we use countData because that is the number before it was updated
     });
 }
 

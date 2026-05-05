@@ -138,6 +138,19 @@
     font-weight: bold;
     height: 50px; 
     border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+.join-btn:hover {
+    background-color: #1e2b3b;
+}
+
+.join-btn.joined {
+    background-color: #47ad5f;
+}
+
+.join-btn.joined:hover {
+    background-color: #c0392b;
 }
 
 * Event section */

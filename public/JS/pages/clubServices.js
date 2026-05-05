@@ -52,6 +52,42 @@ export async function joinClub(clubId) {
     return data;
 };
 
+/*Sends request to backend to unjoin an event */
+export async function unjoinEvent(eventId) {
+    const res = await fetch(`/events/${eventId}/joined`, {
+        method: "DELETE",
+        credentials: "include"
+    });
+    const data = await res.json();
+    if (!res.ok) return { error: data.message };
+    return data;
+}
+
+/*Checks if current user has joined an event */
+export async function hasJoinedEvent(eventId) {
+    const res = await fetch(`/events/${eventId}/joined/me`, { credentials: "include" });
+    const data = await res.json();
+    return data.hasJoined;
+}
+
+/*Sends request to backend to unjoin a club */
+export async function unjoinClub(clubId) {
+    const res = await fetch(`/clubs/${clubId}/joined`, {
+        method: "DELETE",
+        credentials: "include"
+    });
+    const data = await res.json();
+    if (!res.ok) return { error: data.message };
+    return data;
+}
+
+/*Checks if current user has joined a club */
+export async function hasJoinedClub(clubId) {
+    const res = await fetch(`/clubs/${clubId}/joined/me`, { credentials: "include" });
+    const data = await res.json();
+    return data.hasJoined;
+}
+
 /*Sends request to backend to create a new event */
 export async function createEvent(eventData) {
     const res = await fetch("/events", {

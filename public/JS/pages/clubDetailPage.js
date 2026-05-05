@@ -1,4 +1,4 @@
-import { getClubs, getEvents, getJoinCount, joinClub } from "./clubServices.js";
+import { getClubs, getEvents, getJoinCount, joinClub, unjoinClub, hasJoinedClub } from "./clubServices.js";
 
 const PRESET_COLORS = [
     "#e74c3c", "#e67e22", "#f1c40f", "#2ecc71", "#1abc9c",
@@ -34,10 +34,11 @@ async function init() {
         return;
     }
 
-    const [clubs, events, members] = await Promise.all([
+    const [clubs, events, members, alreadyJoined] = await Promise.all([
         getClubs(),
         getEvents(),
-        getJoinCount(clubId)
+        getJoinCount(clubId),
+        hasJoinedClub(clubId)
     ]);
 
     const club = clubs.find(c => String(c.id) === String(clubId));
@@ -97,7 +98,7 @@ async function init() {
                         <p>${club.contactEmail || "No email provided"}</p>
                         <p>${club.phone || "No phone provided"}</p>
                     </div>
-                    <button class="join-btn" id="join-btn">Join us</button>
+                    <button class="join-btn" id="join-btn">${alreadyJoined ? `Forlad klub (${members.joined} medlemmer) — Fortryd` : `Tilmeld (${members.joined} medlemmer)`}</button>
                 </div>
 
                 <div class="event-section">
@@ -157,11 +158,31 @@ async function init() {
         window.history.length > 1 ? window.history.back() : window.location.href = "/clubs.html";
     });
 
-    // Join button
-    document.getElementById("join-btn").addEventListener("click", async () => {
-        const result = await joinClub(clubId);
-        if (!result) return;
-        document.getElementById("join-btn").textContent = "You joined the club!";
+    // Join / unjoin button
+    const joinBtn = document.getElementById("join-btn");
+    if (alreadyJoined) joinBtn.classList.add("joined");
+
+    function renderClubJoinButton(joined, hasJoined) {
+        if (hasJoined) {
+            joinBtn.textContent = `Forlad klub (${joined} medlemmer) — Fortryd`;
+            joinBtn.classList.add("joined");
+        } else {
+            joinBtn.textContent = `Tilmeld (${joined} medlemmer)`;
+            joinBtn.classList.remove("joined");
+        }
+    }
+
+    joinBtn.addEventListener("click", async () => {
+        const isJoined = joinBtn.classList.contains("joined");
+        if (isJoined) {
+            const result = await unjoinClub(clubId);
+            if (!result || result.error) return;
+            renderClubJoinButton(result.joined, false);
+        } else {
+            const result = await joinClub(clubId);
+            if (!result || result.error) return;
+            renderClubJoinButton(result.joined, true);
+        }
     });
 
     if (!isOwner) return;
