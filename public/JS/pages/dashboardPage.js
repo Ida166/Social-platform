@@ -524,3 +524,4 @@ function initDashboard() {
 
 document.addEventListener("DOMContentLoaded", initDashboard); //DOMContentLoaded betyder: “Kør først, når hele HTML’en er indlæst.”
 
+
