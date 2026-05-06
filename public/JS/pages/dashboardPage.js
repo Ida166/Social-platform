@@ -332,7 +332,6 @@ function initDashboard() {
     }
     
     /* Full eventlist */
-    // Her indsætter du den nye version af funktionen
     async function loadFullEventList() {
         const events = await getEvents();
         const now = new Date();
@@ -410,7 +409,7 @@ function initDashboard() {
         }
     }
 
-    // Hjælpefunktion (openEditModal kan ligge herinde eller udenfor initDashboard)
+    // Hjælpefunktion (openEditModal)
     function openEditModal(event, template) {
         const existing = document.getElementById("edit-event-modal");
         if (existing) existing.remove();
