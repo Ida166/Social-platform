@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en"> <!-- Angiver at sproget på siden er engelsk-->
+<head> <!--head indeholder metadata som er data der ikke bliver vist på siden-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!--fortæller browseren, hvordan siden skal skaleres på forskellige skærme-->
+    <title>Min Hjemmeside</title> <!--vises i browserens faneblad-->
+    <link rel="stylesheet" href="css/style.css"> <!--forbinder html siden med css-filen-->
+</head>
+<body class="login-page"> <!--styling af log ind pagen (login-page)-->
+    <div class="login-box"> <!--styling af login-box'en-->
+        <img class="AAU-image" src="assets/images/AAU-Logo.png" alt="Aalborg University Logo">
+        <p class="text">Choose a user type</p>
+
+        <!-- Knap der går til dashboard -->
+        <div class="button-container button-container-vertical">
+            <button class="role-button" id="goDashboardStudent">Student</button>
+            <button class="role-button" id="goDashboardClubOwner">Club Owner</button>
+        </div>
+    </div>
+    <script src="js/pages/loginPage.js"></script>
+    <script type="module" src="js/pages/dashboardPage.js"></script>
+</body>
+</html>

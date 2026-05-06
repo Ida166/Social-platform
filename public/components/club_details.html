@@ -1,0 +1,56 @@
+<!-- Skabelon til selve event-kortet i listen -->
+<template id="event-card-template">
+    <div class="event-card">
+        <div class="event-info">
+            <h3 class="event-title"></h3>
+            <p><strong>Date:</strong> <span class="event-date"></span></p>
+            <p><strong>Time:</strong> <span class="event-time"></span></p>
+            <p><strong>Location:</strong> <span class="event-location"></span></p>
+            <p class="event-description"></p>
+        </div>
+        <div class="event-actions">
+            <button id="join-event-eventlist" class="button  hidden join-event-button">Join event</button>
+            <!-- Edit knap bliver indsat her af JS hvis man er owner -->
+        </div>
+    </div>
+</template>
+
+<!-- Skabelon til Edit Modalen -->
+<template id="edit-modal-template">
+    <div class="edit-modal">
+        <div class="edit-modal-header">
+            <h3>Edit Event</h3>
+            <button class="edit-modal-close" id="close-edit-event">✕</button>
+        </div>
+        <div class="edit-form-content">
+            <label>Title</label>
+            <input type="text" id="edit-event-title" />
+            
+            <label>Date</label>
+            <input type="date" id="edit-event-date" />
+            
+            <div class="edit-time-row">
+                <div>
+                    <label>Start</label>
+                    <input type="time" id="edit-event-timeStart" />
+                </div>
+                <div>
+                    <label>End</label>
+                    <input type="time" id="edit-event-timeEnd" />
+                </div>
+            </div>
+            
+            <label>Location</label>
+            <input type="text" id="edit-event-location" />
+            
+            <label>Description</label>
+            <textarea id="edit-event-description"></textarea>
+
+            <label>Practical Info</label>
+            <input type="text" id="edit-event-practicalInfo" />
+            
+            <button class="edit-save-btn" id="save-edit-event">Save changes</button>
+            <div id="edit-event-status"></div>
+        </div>
+    </div>
+</template>
