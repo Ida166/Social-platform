@@ -97,7 +97,7 @@ async function init() {
                         <p>${club.contactEmail || "No email provided"}</p>
                         <p>${club.phone || "No phone provided"}</p>
                     </div>
-                    <button class="join-btn" id="join-btn">Join us</button>
+                    <button class="join-btn hidden" id="join-btn">Join us</button>
                 </div>
 
                 <div class="event-section">
@@ -157,12 +157,21 @@ async function init() {
         window.history.length > 1 ? window.history.back() : window.location.href = "/components/clubs.html";
     });
 
-    // Join button
-    document.getElementById("join-btn").addEventListener("click", async () => {
-        const result = await joinClub(clubId);
-        if (!result) return;
-        document.getElementById("join-btn").textContent = "You joined the club!";
-    });
+
+    const role = await getUserRole();
+    if(role === "student"){
+
+        const joinbtn = document.getElementById("join-btn");
+        joinbtn.classList.remove("hidden");
+
+        // Join button
+        joinbtn.addEventListener("click", async () => {
+            const result = await joinClub(clubId);
+            if (!result) return;
+            document.getElementById("join-btn").textContent = "You joined the club!";
+        });
+
+    }
 
     if (!isOwner) return;
 

@@ -30,6 +30,14 @@ app.use(session({
     cookie: { secure: false }
 }));
 
+app.get("/api/me", (req, res) => {
+    if (!req.session.user) {
+        return res.json({ role: null });
+    }
+
+    res.json({ role: req.session.user.role });
+});
+
 /*This sets login page as our default homepage */
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "..", "public", "login.html"));

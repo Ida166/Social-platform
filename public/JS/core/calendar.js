@@ -1,4 +1,4 @@
-import { getEvents, getEventJoinCount, joinEvent } from "../pages/clubServices.js";
+import { getEvents, getEventJoinCount, joinEvent, getUserRole } from "../pages/clubServices.js";
 
 let events = [];
 
@@ -239,25 +239,35 @@ async function openEventPage(event) {
         practicalList.appendChild(li);
     }
 
-    const joinButton = container.querySelector("#join-event-btn");
+    //If user is a student load in the 
+    const role = await getUserRole();
 
-    // Load current join count from DB
-    const countData = await getEventJoinCount(event.id);
-    joinButton.textContent = `Join event (${countData.joined} joined)`;
+    if(role === "student"){
 
-    joinButton.addEventListener("click", async () => {
-        const result = await joinEvent(event.id);
+        const joinButton = container.querySelector("#join-event-btn");
+        joinButton.classList.remove("hidden");
 
-        if(!result){
-            return;
-        }
+         // Load current join count from DB
+        const countData = await getEventJoinCount(event.id);
+        joinButton.textContent = `Join event (${countData.joined} joined)`;
 
-        const others = (result.joined) - 1;
-        joinButton.textContent =
-            others <= 0
-                ? "You are the first to join"
-                : `You joined together with ${others} others`; //we use countData because that is the number before it was updated
-    });
+        joinButton.addEventListener("click", async () => {
+            const result = await joinEvent(event.id);
+
+            if(!result){
+                return;
+            }
+
+            const others = (result.joined) - 1;
+            joinButton.textContent =
+                others <= 0
+                    ? "You are the first to join"
+                    : `You joined together with ${others} others`; //we use countData because that is the number before it was updated
+        });
+
+    }
+
+   
 }
 
 document.addEventListener("click", (e) => {

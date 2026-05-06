@@ -367,11 +367,18 @@ function initDashboard() {
                 <p>${event.description || ""}</p>
 
                 <div class="event-actions">
-                    <button class="button join-event-button">Join event</button>
+                    <button class="button hidden join-event-button" id="join-event-eventlist">Join event</button>
                     ${isOwner ? `<button class="button edit-event-button blue-btn">Edit</button>` : ""}
                 </div>
             </div>
         `).join("");
+
+        
+        const role = await getUserRole();
+        if(role === "student"){
+            const joinbtn = document.getElementById("join-event-eventlist");
+            joinbtn.classList.remove("hidden");
+        }
 
         const joinButtons = container.querySelectorAll(".join-event-button");
             joinButtons.forEach(async (button) => {
