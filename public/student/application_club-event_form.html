@@ -1,0 +1,87 @@
+<div class="modal-content">
+  <button class="back-btn blue-btn" type="button" id="close-page">Go Back</button>
+  <h2>Application to create a Club or Event</h2>
+
+  <form id="application_for_club_or_event_form">
+    <p>Your Project</p>
+    <div class="checkbox-group">
+      <label>
+        <input type="radio" name="projectType" id="checkBoxClub" value="club" />
+        Create Club
+      </label>
+      <label>
+        <input type="radio" name="projectType" id="checkBoxEvent" value="event" />
+        Create Event
+      </label>
+    </div>
+
+    <!-- Club fields -->
+    <div id="club-fields" style="display: none;">
+      <p>Your Details</p>
+      <input type="text" name="fullName" placeholder="Your Name" />
+      <input type="email" name="email" placeholder="Email" />
+      <input type="text" name="education" placeholder="Education" />
+      <input type="text" name="phone" placeholder="Phone Number" />
+
+      <div class="form-row">
+        <input type="text" name="clubName" placeholder="Club Name" />
+        <select name="category">
+          <option value="" disabled selected>Category</option>
+          <option value="Sports">Sports</option>
+          <option value="Social">Social</option>
+          <option value="Creative">Creative</option>
+          <option value="Professional">Professional</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <textarea name="clubIdea" placeholder="Tell us about your idea"></textarea>
+        <textarea name="motivation" placeholder="What motivates you?"></textarea>
+      </div>
+
+      <p>Club Image</p>
+      <input type="file" id="apply-club-image" accept="image/*" />
+
+      <p>Club Colour</p>
+      <div class="color-swatches" id="apply-color-swatches"></div>
+      <div class="color-warning hidden" id="apply-color-warning">This colour is already taken.</div>
+    </div>
+
+    <!-- Event fields -->
+    <div id="event-fields" style="display: none;">
+      <p>Event Details</p>
+      <input type="text" name="name" placeholder="Event Name" />
+
+      <div class="form-row">
+        <div>
+          <label>Date</label>
+          <input type="date" name="date" />
+        </div>
+        <div>
+          <label>Club</label>
+          <select name="clubId" id="apply-club-select">
+            <option value="" disabled selected>Select a club</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div>
+          <label>Time Start</label>
+          <input type="time" name="timeStart" />
+        </div>
+        <div>
+          <label>Time End</label>
+          <input type="time" name="timeEnd" />
+        </div>
+      </div>
+
+      <input type="text" name="location" placeholder="Location" />
+      <textarea name="description" placeholder="Description"></textarea>
+      <input type="text" name="practicalInformation" placeholder="Practical Information" />
+    </div>
+
+    <div class="button-container button-container-horizontal">
+      <button class="role-button blue-btn" type="submit">Send application</button>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,291 @@
+import { getEvents, getEventJoinCount, joinEvent, unjoinEvent, hasJoinedEvent, getMe } from "../pages/clubServices.js";
+
+let events = [];
+
+/*Function that loads the events into the array events  */
+async function loadEventsFromDB() {
+    try {
+        events = await getEvents();
+        renderWeek(); //this rerenders calender after loading
+    } catch (err){
+        console.error("Failed to load events:", err);
+    }
+}
+
+/*Function that takes the time fx 16:00-18:00 and split it into start and end */
+function splitTimeRange(timeRange = "") {
+    const [start = "00:00", end = "00:00"] = timeRange.split("-");
+    return { start, end };
+}
+
+/* Default timeslots */
+let calendarStartHour = 8;
+let calendarEndHour = 18;
+
+function updateCalendarTimeRange(monday){
+
+    let earliestHour = 8;
+    let latestHour = 18;
+
+    events.forEach(event=> {
+        const eventDate = new Date(event.date)
+        
+        const diffFromMonday = Math.floor((eventDate - monday)/ (1000*60*60*24));
+
+        if (diffFromMonday >=0 && diffFromMonday<7){
+
+            const { start, end } = splitTimeRange(event.time);
+
+            const [startHour] = start.split(":").map(Number);
+            let [endHour] = end.split(":").map(Number); 
+            if (end === "00:00") { //Changes end to 24:00 if it ends at 00:00 because gets translated to 0 so the beginning of the day
+                endHour = 24;
+            }
+
+            if (startHour < earliestHour){
+                earliestHour = startHour;
+            }
+            
+            if (endHour > latestHour){
+                latestHour = endHour;
+            }
+        }
+    });
+    calendarStartHour = Math.max(0, earliestHour - 1)
+    calendarEndHour = Math.min(24, latestHour + 1)
+    }
+
+/* Tider i kalender */
+ 
+function renderTimeslots(){
+    const timeslots = document.querySelector(".timeslots");
+    timeslots.innerHTML = "";
+    for (let hour = calendarStartHour; hour<=calendarEndHour; hour++){
+        const timeList = document.createElement("li");
+        timeList.textContent = hour + ":00";
+        timeslots.appendChild(timeList);
+    }
+
+    const rowCount = (calendarEndHour - calendarStartHour) * 4;
+
+    document.querySelector(".eventcontainer").style.gridTemplateRows = "repeat("+ rowCount +", 10px)";
+    
+}
+
+/* Event placering i kalenderen*/
+
+    function timeToRow(timeString) {
+        const [hour, minute] = timeString.split(":").map(Number); // vi splitter timer fra minutter
+        return (hour - calendarStartHour) * 4 + Math.floor(minute / 15) + 1; // der går 4 kvarter pr. time, og så er der de løse minutter der løses med math.floor.
+                                //så fordeler vi det hele på kvarter, fordi vores row grid er inddelt efter det.
+    }
+
+    function getRandomColor(seed){
+        let hash = 0;
+        const str = String(seed);
+
+        for ( let i = 0; i < str.length; i++){
+            hash = str.charCodeAt(i) + ((hash << 5) - hash);
+        }
+
+        const hue = Math.abs(hash) % 360;
+        const saturation = 60; //softer colors
+        const lightness = 55; //Avoids too dark or light
+
+         return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+    }
+
+    function renderEvents(monday){
+
+        const container = document.querySelector(".eventcontainer"); //finder .eventContainer i html
+        container.innerHTML = ""; //tømmer indholdet fx hvis brugeren skifter til ny uge, så gamle events ikke fremgår
+
+        events.forEach(event => { //alle events brugeren har angivet køres igennem og får dato ift. kalenderen
+            const eventDate = new Date(event.date + "T00:00:00"); //det to local timezone
+
+            const diffFromMonday = Math.floor((eventDate - monday)/(1000*60*60*24)); //vi finder differencen fra mandag, fordi Date også tager tiden med, tager vi Math.floor,
+            //så vi får en hel og ikke halve dage. Ikke brugbart til at finde dag i kolonnerne
+            //da der med Date objekter regnes i millisekunder, tager vi og dividerer differencen med antal milisekunder der er på et døgn, for at få dage
+
+            if (diffFromMonday>= 0 && diffFromMonday < 7){ //vi opretter kun indenfor den uge der er displayet
+                const element = document.createElement("div");  //vi laver et element "div"
+                element.classList.add("slot");   //tilføjer class "slot"
+                element.style.background = event.clubs?.color || getRandomColor(event.id);
+                element.textContent = event.title;              //som får titlen bruger har angivet
+
+                element.addEventListener("click", () => {
+                    openEventPage(event);
+                });
+
+                element.style.gridColumn = diffFromMonday + 1;   //diffFromMonday starter fra 0, imen mandag i kolonner starter på 1, så derfor +1
+                let {start, end } = splitTimeRange(event.time);
+                //Treat midnigt as 24:00
+                if (end === "00:00") {
+                    end = "24:00";
+                }
+                element.style.gridRow = timeToRow(start) + " / " + timeToRow(end); //starter fra mængde kvarter vi er inde i døgnet, og strækker sig til slut - igen antal kvarter inde i døgnet.
+                //i css er syntaks gridrow = start /end.
+                container.appendChild(element); //og så tilføjer vi til sidst 
+            }
+        });
+}
+
+// dato som objekt - 
+
+        /*  DATO METHODS:
+
+        new Date() -> dagsdato og tid
+        new Date(monday) -> kopier mandag
+        setDate(15) -> sæt dag til 15
+
+        getFullYear -> 2026
+        getMonth() -> 0-11; jan, feb osv.
+        getDate() -> dage i måneden 1-31; 
+        getDay() -> dag i ugen 0-7; man, tir, osv.
+
+        */
+
+
+
+/* Dags dato over kalenderen*/ 
+
+    function updateDate(){
+
+        const date = new Date();
+
+        const today = {
+            year: date.getFullYear(), // Indeværende år 
+            month: date.getMonth()+1, // Indeværende måned 0 = januar, 11 = december 
+            day: date.getDate() // indeværende dag; 14., 15. 
+        }
+
+    document.getElementById("currentDate").textContent = today.day + "." + today.month + "." + today.year;
+    }
+
+    setInterval(updateDate, 100);
+
+/* Dynamiske datoer i selve kalenderen */
+
+    let weekOffset = 0;
+
+    function renderWeek(){
+        const today = new Date(); //
+
+
+        let currentDay = today.getDay(); //Finder ud af hvilken dag nuværende dag er
+            if (currentDay === 0){ 
+                currentDay = 7 //hvis dagen er søndag, sættes søndag til 7
+            }
+
+        const monday = new Date(today); //vi laver mandag ud fra dagsdato
+        monday.setHours(0, 0, 0, 0); //normalize monday to midnight not the current time when loadning
+        monday.setDate(today.getDate() - (currentDay - 1) + weekOffset * 7);
+        //tager dagsdato og trækker differencen fra dagsdato til mandag fra
+        //hvis bruger vil frem i kalenderen, tælles weekOffset op, og der lægges 7 dage til alt efter hvor mange uger frem, user vil
+
+        for(let i=0; i < 7; i++){
+            const dayInWeek = new Date (monday); //kopierer mandag, og tagerudgangspunkt i den til at genere resten af ugens dage.
+            dayInWeek.setDate(monday.getDate() + i); //henter mandags dato, og lægger dage til, som vi er fra mandag, for at få den specifikke ugedags dato
+            //så hvis mandag er d. 14. og vi laver tirsdag, så lægges 1 til datoen, som vi tog udgangspunkt i.
+
+            document.getElementById("day" + (i+1)).textContent = dayInWeek.getDate() + "/" + (dayInWeek.getMonth() + 1);
+            //Her lægges værdierne/datoeren over til tilsvarende id'er; day1, day2, osv.
+        }
+
+    updateCalendarTimeRange(monday);
+    renderTimeslots();
+    renderEvents(monday);
+
+    }
+
+function nextWeek() {
+    weekOffset++;
+    renderWeek();
+}
+
+function previousWeek() {
+    weekOffset--;
+    renderWeek();
+}
+
+loadEventsFromDB();
+
+document.getElementById("previousWeek").addEventListener("click", previousWeek);
+document.getElementById("nextWeek").addEventListener("click", nextWeek);
+
+async function openEventPage(event) {
+
+    const response = await fetch("/components/event_details.html");
+    const html = await response.text();
+
+    const container = document.getElementById("event-details-popup");
+    container.innerHTML = `<div id="event-modal">${html}</div>`;
+
+    container.style.display = "flex";
+    
+    const modal = container.querySelector("#event-modal");
+
+    container.querySelector("#event-title").textContent = event.title;
+    container.querySelector("#event-date-time").textContent = `${event.date} at ${event.time}`;
+    container.querySelector("#event-location").textContent = event.location;
+    container.querySelector("#event-description").textContent = event.description;
+
+    const practicalList = container.querySelector("#event-practical");
+    practicalList.innerHTML = "";
+
+    if (event.practicalInfo) {
+        const li = document.createElement("li");
+        li.textContent = event.practicalInfo;
+        practicalList.appendChild(li);
+    }
+
+    const joinButton = container.querySelector("#join-event-btn");
+
+    // Load current join count, membership status, and role from DB
+    const [countData, alreadyJoined, { role }] = await Promise.all([
+        getEventJoinCount(event.id),
+        hasJoinedEvent(event.id),
+        getMe()
+    ]);
+
+    const isOwner = role === "club_owner";
+
+    if (isOwner) {
+        // Owners see the count but cannot join/unjoin
+        joinButton.textContent = `${countData.joined} joined`;
+        joinButton.disabled = true;
+        joinButton.style.opacity = "0.6";
+        joinButton.style.cursor = "default";
+    } else {
+        let isJoined = alreadyJoined;
+
+        if (isJoined) {
+            joinButton.textContent = `Undo join (${countData.joined} joined)`;
+            joinButton.classList.add("is-joined");
+        } else {
+            joinButton.textContent = `Join event (${countData.joined} joined)`;
+        }
+
+        joinButton.addEventListener("click", async () => {
+            if (isJoined) {
+                const result = await unjoinEvent(event.id);
+                if (!result || result.error) return;
+                isJoined = false;
+                joinButton.textContent = `Join event (${result.joined} joined)`;
+                joinButton.classList.remove("is-joined");
+            } else {
+                const result = await joinEvent(event.id);
+                if (!result || result.error) return;
+                isJoined = true;
+                joinButton.textContent = `Undo join (${result.joined} joined)`;
+                joinButton.classList.add("is-joined");
+            }
+        });
+    }
+}
+
+document.addEventListener("click", (e) => {
+    if (e.target.id === "close-event-details") {
+        document.getElementById("event-details-popup").style.display = "none";
+    }
+});
