@@ -517,7 +517,7 @@ function initDashboard() {
     const clubListLink = document.getElementById("clubListLink");
     if (clubListLink) {
         clubListLink.addEventListener("click", () => {
-            window.location.href = "/clubs.html";
+            window.location.href = "/components/clubs.html";
         });
     }
 }

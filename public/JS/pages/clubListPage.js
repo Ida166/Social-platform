@@ -64,7 +64,7 @@ document.getElementById("club-list")?.addEventListener("click", (e) => {
     const card = e.target.closest(".club-card");
     if (!card) return;
 
-    window.location.href = `/club.html?id=${card.dataset.id}`;
+    window.location.href = `/components/club.html?id=${card.dataset.id}`;
 });
 
 /* FILTER */

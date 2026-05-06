@@ -154,7 +154,7 @@ async function init() {
 
     // Back button
     document.getElementById("back-btn").addEventListener("click", () => {
-        window.history.length > 1 ? window.history.back() : window.location.href = "/clubs.html";
+        window.history.length > 1 ? window.history.back() : window.location.href = "/components/clubs.html";
     });
 
     // Join button
