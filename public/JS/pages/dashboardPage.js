@@ -481,10 +481,11 @@ function initDashboard() {
                 const now = new Date();
                 const filter = btn.dataset.filter;
 
+                const todayStr = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
                 const filtered = allEvents.filter(event => {
                     const eventDate = new Date(event.date);
                     if (filter === "today") {
-                        return event.date === now.toISOString().slice(0, 10);
+                        return event.date === todayStr;
                     }
                     if (filter === "week") {
                         const weekAhead = new Date(now);
