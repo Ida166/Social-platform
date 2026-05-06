@@ -1,4 +1,4 @@
-import { getClubs, getEvents, getJoinCount, joinClub } from "./clubServices.js";
+import { getClubs, getEvents, getJoinCount, joinClub, getUserRole } from "./clubServices.js";
 
 const PRESET_COLORS = [
     "#e74c3c", "#e67e22", "#f1c40f", "#2ecc71", "#1abc9c",
