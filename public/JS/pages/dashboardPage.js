@@ -4,6 +4,9 @@
     import { createEvent } from "./clubServices.js";
     import { getEventJoinCount } from "./clubServices.js";
     import { joinEvent } from "./clubServices.js";
+    import { getUserRole } from "./clubServices.js";
+    
+    
 
 const PRESET_COLORS = [
     "#e74c3c", "#e67e22", "#f1c40f", "#2ecc71", "#1abc9c",
@@ -327,208 +330,168 @@ function initDashboard() {
             }
         });
     }
+    
+    /* Full eventlist */
+    // Her indsætter du den nye version af funktionen
+    async function loadFullEventList() {
+        const events = await getEvents();
+        const now = new Date();
 
-    /*Club list now lives on /clubs.html - just navigate there */
-
-    /* Full eventlist*/
-        async function loadFullEventList() {    //kører når data er hentet
-        const events = await getEvents();       //sikrer al data hentet før vi går videre 
-
-            const now = new Date();             //laver ny dato
-
-            const filteredAndSorted = events
-            .filter(event => {                  //fjerner gamle datoer
-                const eventDateTime = new Date(`${event.date} ${event.time.split("-")[0]}`); //splitter 10:00-12:00 til array
-                return eventDateTime >= now;    //hvis det er efter i dag, så beholder vi det
-             })
-            .sort((a, b) => {                   //laver nye datoer igen
+        const filteredAndSorted = events
+            .filter(event => {
+                const eventDateTime = new Date(`${event.date} ${event.time.split("-")[0]}`);
+                return eventDateTime >= now;
+            })
+            .sort((a, b) => {
                 const dateA = new Date(`${a.date} ${a.time.split("-")[0]}`);
                 const dateB = new Date(`${b.date} ${b.time.split("-")[0]}`);
-                return dateA - dateB;           //med sort, returnes a ved negative værdier først, og ved positive værdier returnes b først.
-                                                // mindre tal - større tal = negativt
+                return dateA - dateB;
             });
 
-        const container = document.querySelector(".full-eventlist-container"); // element hvor data skal ind
-
-        if (!container) {
-            console.error("full-eventlist-container not found in DOM"); //fejlkode i konsol, hvis container ikke findes i html
-            return;
-        }
+        const container = document.querySelector(".full-eventlist-container");
+        if (!container) return;
 
         const isOwner = sessionStorage.getItem("role") === "club_owner";
 
-        container.innerHTML = filteredAndSorted.map(event => `
-            <div class="event-card" data-event-id="${event.id}"
-                 style="${event.clubs?.color ? `border-left: 5px solid ${event.clubs.color};` : ""}">
-                <h3>${event.title || "Event"}</h3>
-                <p><strong>Date:</strong> ${event.date}</p>
-                <p><strong>Time:</strong> ${event.time}</p>
-                <p><strong>Place:</strong> ${event.location}</p>
-                <p>${event.description || ""}</p>
-
-                <div class="event-actions">
-                    <button class="button hidden join-event-button" id="join-event-eventlist">Join event</button>
-                    ${isOwner ? `<button class="button edit-event-button blue-btn">Edit</button>` : ""}
-                </div>
-            </div>
-        `).join("");
-
+        const response = await fetch("/components/club_details.html");
+        const text = await response.text();
+        const tempDiv = document.createElement("div");
+        tempDiv.innerHTML = text;
         
-        const role = await getUserRole();
-        if(role === "student"){
-            const joinbtn = document.getElementById("join-event-eventlist");
-            joinbtn.classList.remove("hidden");
+        const cardTemplate = tempDiv.querySelector("#event-card-template");
+        const modalTemplate = tempDiv.querySelector("#edit-modal-template");
+
+        container.innerHTML = ""; 
+
+        for (const event of filteredAndSorted) {
+            const clone = cardTemplate.content.cloneNode(true);
+            const cardDiv = clone.querySelector(".event-card");
+
+            cardDiv.dataset.eventId = event.id;
+            if (event.clubs?.color) cardDiv.style.borderLeft = `5px solid ${event.clubs.color}`;
+            
+            clone.querySelector(".event-title").textContent = event.title || "Event";
+            clone.querySelector(".event-date").textContent = event.date;
+            clone.querySelector(".event-time").textContent = event.time;
+            clone.querySelector(".event-location").textContent = event.location;
+            clone.querySelector(".event-description").textContent = event.description || "";
+
+            const joinBtn = clone.querySelector(".join-event-button");
+
+            const countData = await getEventJoinCount(event.id);
+            joinBtn.textContent = `Join event (${countData.joined} joined)`;
+            
+            joinBtn.onclick = async () => {
+                const result = await joinEvent(event.id);
+                if (result) joinBtn.textContent = `Joined (${result.joined})`;
+            };  
+
+            const role = await getUserRole();
+            if(role === "student"){
+                joinBtn.classList.remove("hidden");
+
+            }
+
+            if (isOwner) {
+                const editBtn = document.createElement("button");
+                editBtn.className = "button edit-event-button blue-btn";
+                editBtn.textContent = "Edit";
+                editBtn.onclick = () => openEditModal(event, modalTemplate);
+                clone.querySelector(".event-actions").appendChild(editBtn);
+            }
+
+            container.appendChild(clone);
         }
 
-        const joinButtons = container.querySelectorAll(".join-event-button");
-            joinButtons.forEach(async (button) => {
-                const card = button.closest(".event-card");
-                const eventId = card.dataset.eventId;
-
-                const countData = await getEventJoinCount(eventId);
-                button.textContent = `Join event (${countData.joined} joined)`;
-
-                button.addEventListener("click", async () => {
-                    const result = await joinEvent(eventId);
-                    if (!result) return;
-                    button.textContent = `Joined (${result.joined})`;
-                });
-            });
-
-        if (isOwner) {
-            container.querySelectorAll(".edit-event-button").forEach(button => {
-                button.addEventListener("click", (e) => {
-                    e.stopPropagation();
-                    const card = button.closest(".event-card");
-                    const eventId = card.dataset.eventId;
-                    const event = filteredAndSorted.find(ev => String(ev.id) === String(eventId));
-                    if (!event) return;
-
-                    const [timeStart, timeEnd] = (event.time || "").split(" - ");
-
-                    const existing = document.getElementById("edit-event-modal");
-                    if (existing) existing.remove();
-
-                    const modal = document.createElement("div");
-                    modal.id = "edit-event-modal";
-                    modal.className = "edit-modal-overlay";
-                    modal.innerHTML = `
-                        <div class="edit-modal">
-                            <div class="edit-modal-header">
-                                <h3>Edit Event</h3>
-                                <button class="edit-modal-close" id="close-edit-event">✕</button>
-                            </div>
-                            <label>Title</label>
-                            <input type="text" id="edit-event-title" value="${event.title || ""}" />
-                            <label>Date</label>
-                            <input type="date" id="edit-event-date" value="${event.date || ""}" />
-                            <label>Time</label>
-                            <div class="edit-time-row">
-                                <input type="time" id="edit-event-timeStart" value="${timeStart?.trim() || ""}" />
-                                <input type="time" id="edit-event-timeEnd" value="${timeEnd?.trim() || ""}" />
-                            </div>
-                            <label>Location</label>
-                            <input type="text" id="edit-event-location" value="${event.location || ""}" />
-                            <label>Description</label>
-                            <textarea id="edit-event-description">${event.description || ""}</textarea>
-                            <label>Practical Information</label>
-                            <input type="text" id="edit-event-practicalInfo" value="${event.practicalInfo || ""}" />
-                            <button class="edit-save-btn" id="save-edit-event">Save changes</button>
-                            <div id="edit-event-status"></div>
-                        </div>
-                    `;
-
-                    document.body.appendChild(modal);
-                    modal.classList.add("open");
-
-                    document.getElementById("close-edit-event").addEventListener("click", () => modal.remove());
-                    modal.addEventListener("click", (ev) => { if (ev.target === modal) modal.remove(); });
-
-                    document.getElementById("save-edit-event").addEventListener("click", async () => {
-                        const saveBtn = document.getElementById("save-edit-event");
-                        const statusEl = document.getElementById("edit-event-status");
-                        saveBtn.disabled = true;
-                        statusEl.textContent = "Saving...";
-
-                        try {
-                            const res = await fetch(`/events/${eventId}`, {
-                                method: "PATCH",
-                                headers: { "Content-Type": "application/json" },
-                                body: JSON.stringify({
-                                    title: document.getElementById("edit-event-title").value,
-                                    date: document.getElementById("edit-event-date").value,
-                                    timeStart: document.getElementById("edit-event-timeStart").value,
-                                    timeEnd: document.getElementById("edit-event-timeEnd").value,
-                                    location: document.getElementById("edit-event-location").value,
-                                    description: document.getElementById("edit-event-description").value,
-                                    practicalInfo: document.getElementById("edit-event-practicalInfo").value
-                                })
-                            });
-
-                            if (!res.ok) {
-                                const err = await res.json();
-                                throw new Error(err.error || "Failed to save.");
-                            }
-
-                            modal.remove();
-                            await loadFullEventList();
-                        } catch (err) {
-                            statusEl.textContent = err.message;
-                        } finally {
-                            saveBtn.disabled = false;
-                        }
-                    });
-                });
-            });
-        }
-
+        // To-top knap funktionalitet
         const toTop = document.getElementById("goToTheTopEventList");
         if (toTop) {
-            toTop.addEventListener("click", (e) => {
-                window.scrollTo({
-                    top: 0,
-                    behavior: "smooth"
-                });
-            });
+            toTop.onclick = () => window.scrollTo({ top: 0, behavior: "smooth" });
         }
     }
 
-        async function openFullEventList() {
-            const box = document.getElementById("eventlist-page-box");
+    // Hjælpefunktion (openEditModal kan ligge herinde eller udenfor initDashboard)
+    function openEditModal(event, template) {
+        const existing = document.getElementById("edit-event-modal");
+        if (existing) existing.remove();
 
-            const response = await fetch("/components/event_list.html");
-            const html = await response.text();
+        const modalOverlay = document.createElement("div");
+        modalOverlay.id = "edit-event-modal";
+        modalOverlay.className = "edit-modal-overlay";
+        modalOverlay.appendChild(template.content.cloneNode(true));
+        document.body.appendChild(modalOverlay);
 
-            box.innerHTML = html;
-            box.classList.remove("hidden");
+        const [start, end] = (event.time || "").split("-");
+        document.getElementById("edit-event-title").value = event.title || "";
+        document.getElementById("edit-event-date").value = event.date || "";
+        document.getElementById("edit-event-timeStart").value = start?.trim() || "";
+        document.getElementById("edit-event-timeEnd").value = end?.trim() || "";
+        document.getElementById("edit-event-location").value = event.location || "";
+        document.getElementById("edit-event-description").value = event.description || "";
+        document.getElementById("edit-event-practicalInfo").value = event.practicalInfo || "";
 
-            await loadFullEventList();
-        }
+        modalOverlay.classList.add("open");
 
-        const eventListLink = document.getElementById("eventListLink");
+        document.getElementById("close-edit-event").onclick = () => modalOverlay.remove();
+        document.getElementById("save-edit-event").onclick = async () => {
+            const statusEl = document.getElementById("edit-event-status");
+            statusEl.textContent = "Saving...";
+            const payload = {
+                title: document.getElementById("edit-event-title").value,
+                date: document.getElementById("edit-event-date").value,
+                timeStart: document.getElementById("edit-event-timeStart").value,
+                timeEnd: document.getElementById("edit-event-timeEnd").value,
+                location: document.getElementById("edit-event-location").value,
+                description: document.getElementById("edit-event-description").value,
+                practicalInfo: document.getElementById("edit-event-practicalInfo").value
+            };
+            try {
+                const res = await fetch(`/events/${event.id}`, {
+                    method: "PATCH",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(payload)
+                });
+                if (!res.ok) throw new Error("Kunne ikke gemme");
+                modalOverlay.remove();
+                loadFullEventList(); 
+            } catch (err) {
+                statusEl.textContent = err.message;
+            }
+        };
+    }
 
-        if (eventListLink) {
-            eventListLink.addEventListener("click", openFullEventList);
-        }
+    // Funktion til at åbne selve siden/vinduet med listen
+    async function openFullEventList() {
+        const box = document.getElementById("eventlist-page-box");
+        const response = await fetch("/components/event_list.html");
+        const html = await response.text();
+        box.innerHTML = html;
+        box.classList.remove("hidden");
+        await loadFullEventList();
+    }
 
-        document.addEventListener("click", (e) => {
-            if (e.target.closest("#close-event-list")) {
+    // Event listener til sidebar-linket
+    const eventListLink = document.getElementById("eventListLink");
+    if (eventListLink) {
+        eventListLink.addEventListener("click", openFullEventList);
+    }
+
+    // Lukning af eventlisten
+    document.addEventListener("click", (e) => {
+        if (e.target.closest("#close-event-list")) {
             const box = document.getElementById("eventlist-page-box");
             box.classList.add("hidden");
-            box.innerHTML = ""; // ryd (valgfri men god)
-            }
-        });
+            box.innerHTML = "";
+        }
+    });
 
-
-    /*Club list link navigates to the full clubs page */
+    // Club list link
     const clubListLink = document.getElementById("clubListLink");
     if (clubListLink) {
         clubListLink.addEventListener("click", () => {
             window.location.href = "/components/clubs.html";
         });
     }
-}
+} // Her slutter initDashboard
 
-document.addEventListener("DOMContentLoaded", initDashboard); //DOMContentLoaded betyder: “Kør først, når hele HTML’en er indlæst.”
-
-
+document.addEventListener("DOMContentLoaded", initDashboard);
