@@ -34,12 +34,13 @@ function initDashboard() {
         });
     }
 
-    const dashboardLink = document.getElementById("dashboardLink");
-    if (dashboardLink) {
-        dashboardLink.addEventListener("click", () => {
+    const eventsAndClubsLink = document.getElementById("eventsAndClubsLink");
+    if (eventsAndClubsLink) {
+        eventsAndClubsLink.addEventListener("click", () => {
             window.location.reload();
         });
     }
+
 
     //Redirect to log in page
     const logOut = document.getElementById("logOut");
@@ -332,6 +333,9 @@ function initDashboard() {
     }
     
     /* Full eventlist */
+    let _eventCardTemplate = null;
+    let _editModalTemplate = null;
+
     async function loadFullEventList() {
         const events = await getEvents();
         const now = new Date();
@@ -347,28 +351,37 @@ function initDashboard() {
                 return dateA - dateB;
             });
 
-        const container = document.querySelector(".full-eventlist-container");
-        if (!container) return;
-
-        const isOwner = sessionStorage.getItem("role") === "club_owner";
-
         const response = await fetch("/components/club_details.html");
         const text = await response.text();
         const tempDiv = document.createElement("div");
         tempDiv.innerHTML = text;
-        
-        const cardTemplate = tempDiv.querySelector("#event-card-template");
-        const modalTemplate = tempDiv.querySelector("#edit-modal-template");
+        _eventCardTemplate = tempDiv.querySelector("#event-card-template");
+        _editModalTemplate = tempDiv.querySelector("#edit-modal-template");
 
-        container.innerHTML = ""; 
+        await renderEventCards(filteredAndSorted);
 
-        for (const event of filteredAndSorted) {
-            const clone = cardTemplate.content.cloneNode(true);
+        const toTop = document.getElementById("goToTheTopEventList");
+        if (toTop) {
+            toTop.onclick = () => window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+
+        return filteredAndSorted;
+    }
+
+    async function renderEventCards(eventsToRender) {
+        const container = document.querySelector(".full-eventlist-container");
+        if (!container) return;
+
+        const isOwner = sessionStorage.getItem("role") === "club_owner";
+        container.innerHTML = "";
+
+        for (const event of eventsToRender) {
+            const clone = _eventCardTemplate.content.cloneNode(true);
             const cardDiv = clone.querySelector(".event-card");
 
             cardDiv.dataset.eventId = event.id;
             if (event.clubs?.color) cardDiv.style.borderLeft = `5px solid ${event.clubs.color}`;
-            
+
             clone.querySelector(".event-title").textContent = event.title || "Event";
             clone.querySelector(".event-date").textContent = event.date;
             clone.querySelector(".event-time").textContent = event.time;
@@ -376,36 +389,27 @@ function initDashboard() {
             clone.querySelector(".event-description").textContent = event.description || "";
 
             const joinBtn = clone.querySelector(".join-event-button");
-
             const countData = await getEventJoinCount(event.id);
             joinBtn.textContent = `Join event (${countData.joined} joined)`;
-            
             joinBtn.onclick = async () => {
                 const result = await joinEvent(event.id);
                 if (result) joinBtn.textContent = `Joined (${result.joined})`;
-            };  
+            };
 
             const role = await getUserRole();
-            if(role === "student"){
+            if (role === "student") {
                 joinBtn.classList.remove("hidden");
-
             }
 
             if (isOwner) {
                 const editBtn = document.createElement("button");
                 editBtn.className = "button edit-event-button blue-btn";
                 editBtn.textContent = "Edit";
-                editBtn.onclick = () => openEditModal(event, modalTemplate);
+                editBtn.onclick = () => openEditModal(event, _editModalTemplate);
                 clone.querySelector(".event-actions").appendChild(editBtn);
             }
 
             container.appendChild(clone);
-        }
-
-        // To-top knap funktionalitet
-        const toTop = document.getElementById("goToTheTopEventList");
-        if (toTop) {
-            toTop.onclick = () => window.scrollTo({ top: 0, behavior: "smooth" });
         }
     }
 
@@ -466,7 +470,37 @@ function initDashboard() {
         const html = await response.text();
         box.innerHTML = html;
         box.classList.remove("hidden");
-        await loadFullEventList();
+
+        const allEvents = await loadFullEventList();
+
+        box.querySelectorAll(".filter-btn").forEach(btn => {
+            btn.addEventListener("click", () => {
+                box.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+                btn.classList.add("active");
+
+                const now = new Date();
+                const filter = btn.dataset.filter;
+
+                const filtered = allEvents.filter(event => {
+                    const eventDate = new Date(event.date);
+                    if (filter === "today") {
+                        return event.date === now.toISOString().slice(0, 10);
+                    }
+                    if (filter === "week") {
+                        const weekAhead = new Date(now);
+                        weekAhead.setDate(now.getDate() + 7);
+                        return eventDate >= now && eventDate <= weekAhead;
+                    }
+                    if (filter === "month") {
+                        return eventDate.getMonth() === now.getMonth() &&
+                               eventDate.getFullYear() === now.getFullYear();
+                    }
+                    return true;
+                });
+
+                renderEventCards(filtered);
+            });
+        });
     }
 
     // Event listener til sidebar-linket

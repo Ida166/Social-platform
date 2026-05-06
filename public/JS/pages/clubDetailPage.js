@@ -11,9 +11,10 @@ const role = sessionStorage.getItem("role");
 const isOwner = role === "club_owner";
 const dashboardUrl = isOwner ? "/owner/index" : "/student/index";
 
-document.getElementById("dashboardLink").addEventListener("click", () => {
+document.getElementById("eventsAndClubsLink")?.addEventListener("click", () => {
     window.location.href = dashboardUrl;
 });
+
 
 function buildSwatchesHTML(selectedColor, takenColors = []) {
     return PRESET_COLORS.map(c => {

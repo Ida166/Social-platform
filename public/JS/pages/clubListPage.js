@@ -6,9 +6,10 @@ let allClubs = [];
 const role = sessionStorage.getItem("role");
 const dashboardUrl = role === "club_owner" ? "/owner/index" : "/student/index";
 
-document.getElementById("dashboardLink")?.addEventListener("click", () => {
+document.getElementById("eventsAndClubsLink")?.addEventListener("click", () => {
     window.location.href = dashboardUrl;
 });
+
 
 document.getElementById("backBtn")?.addEventListener("click", () => {
     window.history.length > 1
