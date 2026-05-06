@@ -33,40 +33,30 @@ async function loadClubs() {
 function renderClubs(clubs) {
     const container = document.getElementById("club-list");
     const myClubId = sessionStorage.getItem("myClubId");
-    const template = document.getElementById("club-card-template");
 
-    if (!container || !template) return;
-
-    container.innerHTML = ""; // Tømmer listen
+    if (!container) return;
 
     if (!clubs || clubs.length === 0) {
         container.innerHTML = "<p>No clubs found</p>";
         return;
     }
 
-    clubs.forEach(club => {
-        const clone = template.content.cloneNode(true);
-        const card = clone.querySelector(".club-card");
-        
-        card.dataset.id = club.id;
-        if (club.color) card.style.borderLeft = `5px solid ${club.color}`;
+    container.innerHTML = clubs.map(club => {
+        const isMine =
+            role === "club_owner" &&
+            myClubId &&
+            String(club.id) === myClubId;
 
-        clone.querySelector(".club-name-text").textContent = club.name;
-
-        const isMine = role === "club_owner" && myClubId && String(club.id) === myClubId;
-        if (!isMine) {
-            clone.querySelector(".my-club-badge")?.remove();
-        }
-
-        const img = clone.querySelector(".club-img");
-        if (club.image) {
-            img.src = club.image;
-        } else {
-            img.remove();
-        }
-
-        container.appendChild(clone);
-    });
+        return `
+        <div class="club-card" data-id="${club.id}"
+             style="${club.color ? `border-left: 5px solid ${club.color};` : ""}">
+            <h3>
+                ${club.name}
+                ${isMine ? '<span class="my-club-badge">My Club</span>' : ""}
+            </h3>
+            ${club.image ? `<img src="${club.image}" class="club-img" />` : ""}
+        </div>`;
+    }).join("");
 }
 
 /* CLICK EVENT (ONLY ONCE!) */
