@@ -67,7 +67,7 @@ async function init() {
     const img = document.createElement("img");
     img.src = club.image;
     img.alt = club.name;
-    heroContainer.innerHTML = ""; // Tøm containeren
+    heroContainer.innerHTML = ""; 
     heroContainer.appendChild(img);
 }
 
