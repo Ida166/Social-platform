@@ -12,20 +12,6 @@
 
 #close-event-list {
   margin-bottom: 20px;
-  padding: 10px 16px;
-
-  border: none;
-  border-radius: 6px;
-
-  background-color: #0f6cbf;
-  color: white;
-  font-weight: 500;
-
-  cursor: pointer;
-}
-
-#close-event-list:hover {
-  background-color: #0c5aa6;
 }
 
 .event-list-inner {
