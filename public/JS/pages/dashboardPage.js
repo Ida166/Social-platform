@@ -482,19 +482,19 @@ function initDashboard() {
                 const filter = btn.dataset.filter;
 
                 const todayStr = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
+                const weekAhead = new Date(now);
+                weekAhead.setDate(now.getDate() + 7);
+                const weekAheadStr = `${weekAhead.getFullYear()}-${String(weekAhead.getMonth()+1).padStart(2,'0')}-${String(weekAhead.getDate()).padStart(2,'0')}`;
+
                 const filtered = allEvents.filter(event => {
-                    const eventDate = new Date(event.date);
                     if (filter === "today") {
                         return event.date === todayStr;
                     }
                     if (filter === "week") {
-                        const weekAhead = new Date(now);
-                        weekAhead.setDate(now.getDate() + 7);
-                        return eventDate >= now && eventDate <= weekAhead;
+                        return event.date >= todayStr && event.date <= weekAheadStr;
                     }
                     if (filter === "month") {
-                        return eventDate.getMonth() === now.getMonth() &&
-                               eventDate.getFullYear() === now.getFullYear();
+                        return event.date.slice(0, 7) === todayStr.slice(0, 7);
                     }
                     return true;
                 });
