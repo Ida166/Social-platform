@@ -49,16 +49,16 @@ function renderClubs(clubs) {
         const clone = template.content.cloneNode(true);
         const card = clone.querySelector(".club-card");
         
-        // 1. Sæt ID og Farve
+        //Set ID and color 
         card.dataset.id = club.id;
         if (club.color) {
             card.style.borderLeft = `5px solid ${club.color}`;
         }
 
-        // 2. Indsæt Navn
+        //Fill out name 
         clone.querySelector(".club-name-placeholder").textContent = club.name;
 
-        // 3. Håndter "My Club" Badge
+        //"My Club" Badge
         const isMine = role === "club_owner" && myClubId && String(club.id) === myClubId;
         const badge = clone.querySelector(".my-club-badge");
         if (isMine) {
