@@ -1,0 +1,598 @@
+/*general styling*/
+@media (max-width: 600px) {
+  .text {
+    font-size: 16px;
+  }
+
+  .role-button {
+    padding: 8px 16px;
+  }
+  .login-box {
+    padding: 20px;
+    width: 70%;
+  }
+}
+
+/* Base button container*/
+.button-container {
+  display: flex;
+  gap: 15px;
+  margin-top: 20px;
+}
+/* for horizontal buttors*/
+.button-container-horizontal {
+  flex-direction: row;
+  justify-content: center;
+}
+/*for vertical buttors*/
+.button-container-vertical {
+  flex-direction: column;
+  align-items: center;
+}
+
+.role-button {
+  background-color: #ebeaea; /* blå*/
+  color: rgb(10, 10, 10); /* Tekstfarve */
+  border: none; /* 2px solid rgb(244, 217, 13); */
+  padding: 10px 20px;
+  border-radius: 5px; /* Dette runder hjørnerne */
+}
+.role-button:hover {
+  background-color: #cac8c8; /* Mørkere når man holder musen over */
+  color: rgb(0, 2, 108);
+}
+
+/* Kun Go Back knappen */
+#close-page {
+  background-color: #2f3d63;
+  color: white;
+}
+
+#close-page:hover {
+  background-color: #1366d6;
+}
+
+/*alle back-buttons*/
+.back-btn {
+  background-color: #2f3d63;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.back-btn:hover {
+  background-color: #15202f;
+}
+
+/*skjul som standard*/
+.club-btn-create-event,
+.admin-btn-delete-event {
+  display: none;
+  margin: 10px;
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 5px;
+  border: none;
+}
+
+/*AAlborg University image login page*/
+.AAU-image {
+  width: 50%;
+  max-width: 400px;
+  display: block; /*makes it behave like a block*/
+  margin: 40px auto; /*centers it horizontally, 20px adds space above and below*/
+}
+
+/*text, Styles the “Choose a user type” text*/
+.text {
+  text-align: center;
+  font-size: 20px;
+  font-family: Arial, sans-serif;
+  margin: 40px;
+  color: rgb(15, 15, 39);
+}
+/*Creates the white card/box*/
+.login-box {
+  background-color: white;
+  padding: 40px;
+  border-radius: 10px; /*Rounds corners*/
+  max-width: 450px;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(21, 7, 71, 0.2); /*gives the fade on the boarder of the box*/
+}
+
+/*Centers the .login-box vertically and horizontally on the page*/
+.login-page {
+  margin: 0;
+  height: 100vh;
+  display: flex;
+  justify-content: center; /* horizontal centering */
+  align-items: center; /* vertical centering */
+  padding: 40px;
+
+  background-image: url("../assets/images/YOUR-BACKGROUND.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* Dashboard kalender */
+/* .page-title {
+  display: flex;
+  align-items: center;      /* keeps them vertically aligned */
+  /*justify-content: space-between; /* pushes items apart */  
+/*} */
+
+.page-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.2rem 1.5rem;
+}
+
+.page-title h1 {
+  margin: 0;
+  font-size: 1.8rem;
+  font-weight: 600;
+  font-family: Arial, sans-serif;
+  color: #1d2125;
+}
+
+.button-group {
+  display: flex;
+  gap: 10px; 
+}
+
+.list-link {
+  cursor: pointer;
+}
+
+.list-link:hover {
+  color: rgb(13, 13, 53);
+}
+
+#eventListLink {
+  position: relative;
+}
+
+#eventlist-page-box {
+  position: absolute; /* Position relative to .topbar */
+  top: 0; /* Appear directly under the topbar */
+  left: 0;
+  right: 0; /* Fill the width of topbar */
+  height: 100%;
+  inset: 0;
+  z-index: 20;
+
+  background-color: #ffffff; /* Gray overlay feel (the background is white)*/
+  padding-left: 20px; /*space between the sidebar*/
+}
+
+#eventlist-inner {
+  background-color: #f3f3f3;
+  margin: 0 auto;
+
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 20px;
+
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+html, body {
+  height: 100%;
+}
+
+
+#club-list-box {
+  position: absolute; /* Position relative to .topbar */
+  top: 0; /* Appear directly under the topbar */
+  left: 0;
+  right: 0; /* Fill the width of topbar */
+  height: 100%;
+  inset: 0;
+  z-index: 20;
+
+  background-color: #ffffff; /* Gray overlay feel (the background is white)*/
+  padding-left: 20px; /*space between the sidebar*/
+}
+
+html, body {
+  height: 100%;
+}
+
+/* Create event overlay */
+#event-page-box {
+  position: fixed;
+  inset: 0;
+
+  display: none;
+  justify-content: center;
+  align-items: center;
+
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px);
+
+  z-index: 1000;
+  overflow-y: auto;
+  padding: 40px 16px;
+}
+
+#event-page-box .event-page-shell {
+  width: 100%;
+  max-width: 660px;
+  max-height: 85vh;
+  overflow-y: auto;
+  border-radius: 10px;
+  border: 2px solid black;
+  box-shadow: rgba(0, 0, 0, 0.3) 0px 10px 30px;
+}
+
+/* Form overlay */
+#create-club-or-event_box {
+   position: fixed;
+  inset: 0;
+
+  display: none; /* hidden by default */
+  justify-content: center;
+  align-items: center;
+
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px);
+
+  z-index: 1000;
+}
+
+#create-club-or-event_box .modal-content {
+    width: 600px;
+    max-width: 120vw;
+    box-shadow: rgba(0, 0, 0, 0.3) 0px 10px 30px;
+    background: white;
+    border-radius: 10px;
+    border-width: 2px;
+    border-style: solid;
+    border-color: black;
+    border-image: initial;
+    padding: 20px;
+    max-height: 80vh;   /* limits height to viewport */
+    overflow-y: auto;   /* enables scrolling inside */
+}
+
+li {
+  list-style: none; /*lister for normalt bullets, som vi her fjerner*/
+}
+
+ul {
+  margin: 0; /*fjerner afstand udenomlisten*/
+  padding: 0; /*fjerne indrykning inden i listen*/
+}
+
+.side {
+  position: relative;
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.sidebar {
+  padding: 16px;
+  display: flex;
+  background-color: #f3f3f3;
+  flex-direction: column;
+  gap: 50px; /*mellemrum mellem de to sidebarer*/
+  border-right: 1px solid;
+}
+/*AAlborg University image sidebar*/
+.AAU-image-sidebar {
+  width: 100%;
+  max-width: 400px;
+  display: block; /*makes it behave like a block*/
+  margin: 40px auto; /*centers it horizontally, 20px adds space above and below*/
+}
+
+.sidebartop,
+.sidebarbottom {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  padding: 12px 20px;
+  margin: 0;
+
+  background: #ffffff;
+  border-radius: 8px;
+
+  color: #333;
+  cursor: pointer;
+
+  transition: all 0.2s ease;
+}
+.menu-item:hover {
+  background-color: #6586e062;
+  color: #021323;
+}
+
+.main {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 20px;
+}
+
+.main h1 {
+   margin-top: 30px; 
+}
+
+.datofilter,
+.filter {
+  margin-top: 40px;
+  height: 40px;
+  background: rgb(255, 255, 255);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  padding-left: 16px; /*brug padding i boksen og ikke i teksten for at justere tekst i en boks*/
+  border: 1px solid #ccc; /*light grey border */
+}
+/*The text in filter*/
+.filter h3 {
+  font-size: 16px; /* smaller text */
+  font-weight: 400; /* normal weight (not bold) */
+}
+.datofilter {
+  margin-left: 200px;
+}
+
+
+.calendarcontainer {
+    display: grid;
+    grid-template-columns: 70px 1fr;
+    grid-template-areas:
+        ". header"
+        "timeslots calendar";
+    margin-top: 20px;
+}
+
+
+.header {
+  grid-area: header;
+  position: relative;
+}
+
+.header button{
+  width: 50px;
+  height: 40px;
+  border-radius: 20%;
+  border: 0;
+  background: #f0f0f0;
+  align-self: center;
+  justify-self: center;
+}
+
+.weekdays {
+    display:grid;
+    grid-template-columns:repeat(7,1fr);
+}
+
+#previousWeek{
+  position: absolute;
+  left: -60px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+#nextWeek {
+  position: absolute;
+  right: -60px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.weekdays li{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 10px;
+  background-color: white;
+}
+
+.weekdays li:last-child{
+  border-right: none;
+}
+
+
+.slot {
+  /*"indeni" eventcontainer - generelt om slot placering og sån*/
+  position: relative;
+  border-radius: 5px;
+  z-index: 5; /*lag*/
+  color: white;
+  font-size: 15px;
+}
+
+.timeslotscontainer {
+  background-color: white;
+  border-left: 1px solid #d9d9d9;
+  border-bottom: 1px solid #d9d9d9;
+  border-right: 1px solid #d9d9d9;
+  grid-area: timeslots;
+}
+
+.timeslots {
+  display: flex; /*flex er en måde at arrangere elementer på*/
+  flex-direction: column; /*lodret under hinanden*/
+  align-items: stretch;
+}
+
+.timeslots li {
+  height: 40px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  font-size: 14px;
+  color: #333;
+  border-top: 1px solid #ececec;
+  box-sizing: border-box;
+  padding: 0;
+}
+
+.eventcontainer {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  grid-template-rows: repeat(96, 10px);
+  grid-area: calendar;
+  position: relative;
+  border-right: 1px solid #d9d9d9;
+  border-bottom: 1px solid #d9d9d9;
+  background-color: white;
+  box-sizing: border-box;
+}
+
+.eventcontainer::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    to right,
+    transparent 0,
+    transparent calc(100% / 7 - 1px),
+    #e5e5e5 calc(100% / 7 - 1px),
+    #e5e5e5 calc(100% / 7)
+  );
+  pointer-events: none;
+}
+.eventcontainer::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent 39px,
+    #ececec 39px,
+    #ececec 40px
+  );
+  pointer-events: none;
+}
+
+
+
+
+#create-club-or-event_box_content {
+  max-width: 100%;
+  height: 100%;
+}
+
+/* Heading */
+#create-club-or-event_box h2 {
+  font-size: 20px;
+  margin-bottom: 20px;
+  font-weight: 600;
+}
+
+/* Form sections */
+#application_for_club_or_event_form p {
+  font-weight: 600;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 5px;
+}
+
+/* Inputs & Textareas */
+#application_for_club_or_event_form input,
+#application_for_club_or_event_form textarea,
+#application_for_club_or_event_form select {
+  width: 100%;
+  padding: 10px 12px;
+  margin: 8px 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+/*Makes the areas bigger*/
+#application_for_club_or_event_form textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+/* Form rows, so they are not on to of each other  */
+.form-row {
+  display: flex;
+  gap: 20px;
+  margin-top: 10px;
+}
+
+.checkbox-group {
+  margin: 10px 0;
+}
+
+/* they are beside each other and text under check box*/
+#application_for_club_or_event_form label {
+  display: inline-block;
+  margin-right: 20px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.hidden {
+  display: none;
+}
+
+.inline-link-btn {
+  display: inline-block;
+  background: #2f80ed;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 4px 12px;
+  font-size: 0.6em;
+  font-weight: 600;
+  cursor: pointer;
+  vertical-align: middle;
+  text-decoration: none;
+}
+
+.inline-link-btn:hover {
+  background: #1a5fb4;
+}
+
+.subtitle {
+  padding-left: 1.5rem;
+  color: #4b5563;
+}
+
+.list-link-btn {
+  background: none;
+  border: 1px solid transparent;
+  padding: 0.25rem 0.5rem;
+  font-size: 1rem;
+  font-weight: 400;
+  font-family: inherit;
+
+  background-color: #ebeaea;
+  color: #0c0c0c;
+  cursor: pointer;
+
+   border-radius: 4px;
+   transition: all 0.15s ease;
+}
+
+.list-link-btn:hover {
+  color: #ffffff;
+  background-color: rgb(27, 56, 78);
+}
+
+#clubListLink {
+    position: relative;
+}

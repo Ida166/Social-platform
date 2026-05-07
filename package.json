@@ -1,25 +1,6 @@
 {
-  "name": "social-platform",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.html",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Ida166/Social-platform.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/Ida166/Social-platform/issues"
-  },
-  "homepage": "https://github.com/Ida166/Social-platform#readme",
   "dependencies": {
-    "cors": "^2.8.6",
-    "express": "^5.2.1",
-    "mysql2": "^3.22.2"
+    "@supabase/supabase-js": "^2.105.1",
+    "dotenv": "^17.4.2"
   }
 }
