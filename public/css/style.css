@@ -4,9 +4,7 @@
     font-size: 16px;
   }
 
-  .role-button {
-    padding: 8px 16px;
-  }
+ 
   .login-box {
     padding: 20px;
     width: 70%;
@@ -36,25 +34,16 @@
   border: none; /* 2px solid rgb(244, 217, 13); */
   padding: 10px 20px;
   border-radius: 5px; /* Dette runder hjørnerne */
+  cursor: pointer;
 }
 .role-button:hover {
   background-color: #cac8c8; /* Mørkere når man holder musen over */
   color: rgb(0, 2, 108);
 }
 
-/* Kun Go Back knappen */
-#close-page {
-  background-color: #2f80ed;
-  color: white;
-}
-
-#close-page:hover {
-  background-color: #1366d6;
-}
-
 /*alle back-buttons*/
 .back-btn {
-  background-color: #2f80ed;
+  background-color: #2f3d63;
   color: white;
   border: none;
   padding: 10px 20px;
@@ -63,16 +52,7 @@
 }
 
 .back-btn:hover {
-  background-color: #1366d6;
-}
-/* Send Application knappen*/
-.primary-button {
-  background-color: #2f80ed;
-  color: white;
-}
-
-.primary-button:hover {
-  background-color: #1366d6;
+  background-color: #15202f;
 }
 
 /*skjul som standard*/
@@ -128,18 +108,25 @@
 }
 
 /* Dashboard kalender */
-.page-title {
+/* .page-title {
   display: flex;
   align-items: center;      /* keeps them vertically aligned */
-  justify-content: space-between; /* pushes items apart */  
+  /*justify-content: space-between; /* pushes items apart */  
+/*} */
+
+.page-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.2rem 1.5rem;
 }
 
 .page-title h1 {
   margin: 0;
-  font-size: 2rem;
+  font-size: 1.8rem;
   font-weight: 600;
   font-family: Arial, sans-serif;
-  line-height: 1;
+  color: #1d2125;
 }
 
 .button-group {
@@ -157,27 +144,6 @@
 
 #eventListLink {
   position: relative;
-}
-
-#eventListLink::after {
-  content: "See all events";
-  position: absolute;
-  bottom: -35px;
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: #333;
-  color: white;
-  padding: 5px 10px;
-  border-radius: 5px;
-  font-size: 12px;
-  white-space: nowrap;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.2s ease;
-}
-
-#eventListLink:hover::after {
-  opacity: 1;
 }
 
 #eventlist-page-box {
@@ -209,54 +175,71 @@ html, body {
 
 
 #club-list-box {
-  position: absolute; /* Position relative to .topbar */
-  top: 0; /* Appear directly under the topbar */
-  left: 0;
-  right: 0; /* Fill the width of topbar */
-  height: 100%;
-  inset: 0;
-  z-index: 20;
-
-  background-color: #ffffff; /* Gray overlay feel (the background is white)*/
-  padding-left: 20px; /*space between the sidebar*/
+  position: relative;  
+  width: 100%;
+  background-color: #ffffff;
+  padding-left: 20px;
 }
 
-#club-list-inner {
-  background-color: #f3f3f3;
-  margin: 0 auto;
-
-  border: 1px solid #333;
-  border-radius: 8px;
-  padding: 20px;
-
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-}
 html, body {
   height: 100%;
 }
 
-/* Form overlay */
-#create-club-or-event_box {
-  position: absolute; /* Position relative to .topbar */
-  top: 100px; /* Appear directly under the topbar */
-  right: 0; /* Fill the width of topbar */
-  bottom: 0;
-  z-index: 20;
-  background-color: #ffffff; /* Gray overlay feel (the background is white)*/
-  left: 0px; 
-  font-family: Arial, sans-serif;
+/* Create event overlay */
+#event-page-box {
+  position: fixed;
+  inset: 0;
+
+  display: none;
+  justify-content: center;
+  align-items: center;
+
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px);
+
+  z-index: 1000;
+  overflow-y: auto;
+  padding: 40px 16px;
 }
 
-#create-club-or-event-inner {
-  background-color: #f3f3f3;
-  margin: 0 auto;
+#event-page-box .event-page-shell {
+  width: 100%;
+  max-width: 660px;
+  max-height: 85vh;
+  overflow-y: auto;
+  border-radius: 10px;
+  border: 2px solid black;
+  box-shadow: rgba(0, 0, 0, 0.3) 0px 10px 30px;
+}
 
-  border: 1px solid #333;
-  border-radius: 8px;
-  padding: 40px;
-  width: 60%; /*controls how wide it is */
+/* Form overlay */
+#create-club-or-event_box {
+   position: fixed;
+  inset: 0;
 
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  display: none; /* hidden by default */
+  justify-content: center;
+  align-items: center;
+
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px);
+
+  z-index: 1000;
+}
+
+#create-club-or-event_box .modal-content {
+    width: 600px;
+    max-width: 120vw;
+    box-shadow: rgba(0, 0, 0, 0.3) 0px 10px 30px;
+    background: white;
+    border-radius: 10px;
+    border-width: 2px;
+    border-style: solid;
+    border-color: black;
+    border-image: initial;
+    padding: 20px;
+    max-height: 80vh;   /* limits height to viewport */
+    overflow-y: auto;   /* enables scrolling inside */
 }
 
 li {
@@ -323,8 +306,12 @@ ul {
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  padding: 20px;
+  padding: 30px;
+}
+
+#club-list {
+  margin-top: 20px;
+
 }
 
 .main h1 {
@@ -409,15 +396,22 @@ ul {
   border-right: none;
 }
 
+.weekdays li.today {
+  background-color: #2f3d63;
+  color: white;
+  border-radius: 6px;
+}
+
+
 
 .slot {
   /*"indeni" eventcontainer - generelt om slot placering og sån*/
   position: relative;
-  background: green;
   border-radius: 5px;
   z-index: 5; /*lag*/
   color: white;
   font-size: 15px;
+  cursor: pointer;
 }
 
 .timeslotscontainer {
@@ -511,7 +505,8 @@ ul {
 
 /* Inputs & Textareas */
 #application_for_club_or_event_form input,
-#application_for_club_or_event_form textarea {
+#application_for_club_or_event_form textarea,
+#application_for_club_or_event_form select {
   width: 100%;
   padding: 10px 12px;
   margin: 8px 0;
@@ -549,27 +544,50 @@ ul {
   display: none;
 }
 
+.inline-link-btn {
+  display: inline-block;
+  background: #2f80ed;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 4px 12px;
+  font-size: 0.6em;
+  font-weight: 600;
+  cursor: pointer;
+  vertical-align: middle;
+  text-decoration: none;
+}
+
+.inline-link-btn:hover {
+  background: #1a5fb4;
+}
+
+.subtitle {
+  padding-left: 1.5rem;
+  color: #4b5563;
+}
+
+.list-link-btn {
+  background: none;
+  border: 1px solid transparent;
+  padding: 0.25rem 0.5rem;
+  font-size: 1rem;
+  font-weight: 400;
+  font-family: inherit;
+
+  background-color: #ebeaea;
+  color: #0c0c0c;
+  cursor: pointer;
+
+   border-radius: 4px;
+   transition: all 0.15s ease;
+}
+
+.list-link-btn:hover {
+  color: #ffffff;
+  background-color: rgb(27, 56, 78);
+}
+
 #clubListLink {
     position: relative;
-}
-
-#clubListLink::after {
-    content: "See clubs and join";
-    position: absolute;
-    bottom: -35px;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: #333;
-    color: white;
-    padding: 5px 10px;
-    border-radius: 5px;
-    font-size: 12px;
-    white-space: nowrap;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.2s ease;
-}
-
-#clubListLink:hover::after {
-    opacity: 1;
 }

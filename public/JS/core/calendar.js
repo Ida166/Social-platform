@@ -1,4 +1,4 @@
-import { getEvents, getEventJoinCount, joinEvent } from "../pages/clubServices.js";
+import { getEvents, getEventJoinCount, joinEvent, getUserRole } from "../pages/clubServices.js";
 
 let events = [];
 
@@ -80,20 +80,37 @@ function renderTimeslots(){
                                 //så fordeler vi det hele på kvarter, fordi vores row grid er inddelt efter det.
     }
 
+    function getRandomColor(seed){
+        let hash = 0;
+        const str = String(seed);
+
+        for ( let i = 0; i < str.length; i++){
+            hash = str.charCodeAt(i) + ((hash << 5) - hash);
+        }
+
+        const hue = Math.abs(hash) % 360;
+        const saturation = 60; //softer colors
+        const lightness = 55; //Avoids too dark or light
+
+         return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+    }
+
     function renderEvents(monday){
+
         const container = document.querySelector(".eventcontainer"); //finder .eventContainer i html
         container.innerHTML = ""; //tømmer indholdet fx hvis brugeren skifter til ny uge, så gamle events ikke fremgår
 
         events.forEach(event => { //alle events brugeren har angivet køres igennem og får dato ift. kalenderen
             const eventDate = new Date(event.date + "T00:00:00"); //det to local timezone
 
-            const diffFromMonday = Math.floor((eventDate - monday)/(1000*60*60*24)); //vi finder differencen fra mandag, fordi Date også tager tiden med, tager vi Math.floor, 
+            const diffFromMonday = Math.floor((eventDate - monday)/(1000*60*60*24)); //vi finder differencen fra mandag, fordi Date også tager tiden med, tager vi Math.floor,
             //så vi får en hel og ikke halve dage. Ikke brugbart til at finde dag i kolonnerne
             //da der med Date objekter regnes i millisekunder, tager vi og dividerer differencen med antal milisekunder der er på et døgn, for at få dage
 
             if (diffFromMonday>= 0 && diffFromMonday < 7){ //vi opretter kun indenfor den uge der er displayet
                 const element = document.createElement("div");  //vi laver et element "div"
-                element.classList.add("slot");                  //tilføjer class "slot"
+                element.classList.add("slot");   //tilføjer class "slot"
+                element.style.background = event.clubs?.color || getRandomColor(event.id);
                 element.textContent = event.title;              //som får titlen bruger har angivet
 
                 element.addEventListener("click", () => {
@@ -166,13 +183,22 @@ function renderTimeslots(){
         //tager dagsdato og trækker differencen fra dagsdato til mandag fra
         //hvis bruger vil frem i kalenderen, tælles weekOffset op, og der lægges 7 dage til alt efter hvor mange uger frem, user vil
 
+        const todayDate = today.getDate();
+        const todayMonth = today.getMonth();
+        const todayYear = today.getFullYear();
+
         for(let i=0; i < 7; i++){
             const dayInWeek = new Date (monday); //kopierer mandag, og tagerudgangspunkt i den til at genere resten af ugens dage.
             dayInWeek.setDate(monday.getDate() + i); //henter mandags dato, og lægger dage til, som vi er fra mandag, for at få den specifikke ugedags dato
             //så hvis mandag er d. 14. og vi laver tirsdag, så lægges 1 til datoen, som vi tog udgangspunkt i.
 
-            document.getElementById("day" + (i+1)).textContent = dayInWeek.getDate() + "/" + (dayInWeek.getMonth() + 1);
-            //Her lægges værdierne/datoeren over til tilsvarende id'er; day1, day2, osv.
+            const span = document.getElementById("day" + (i+1));
+            span.textContent = dayInWeek.getDate() + "/" + (dayInWeek.getMonth() + 1);
+
+            const isToday = dayInWeek.getDate() === todayDate &&
+                            dayInWeek.getMonth() === todayMonth &&
+                            dayInWeek.getFullYear() === todayYear;
+            span.closest("li").classList.toggle("today", isToday);
         }
 
     updateCalendarTimeRange(monday);
@@ -201,10 +227,15 @@ async function openEventPage(event) {
     const response = await fetch("/components/event_details.html");
     const html = await response.text();
 
-    const container = document.getElementById("create-club-or-event_box");
-    container.innerHTML = html;
+    const container = document.getElementById("event-details-popup");
+    container.innerHTML = `<div id="event-modal">${html}</div>`;
+
+    container.style.display = "flex";
+    
+    const modal = container.querySelector("#event-modal");
 
     container.querySelector("#event-title").textContent = event.title;
+    container.querySelector("#event-date-time").textContent = `${event.date} at ${event.time}`;
     container.querySelector("#event-location").textContent = event.location;
     container.querySelector("#event-description").textContent = event.description;
 
@@ -217,31 +248,39 @@ async function openEventPage(event) {
         practicalList.appendChild(li);
     }
 
-    container.style.display = "block";
+    //If user is a student load in the 
+    const role = await getUserRole();
 
-    const joinButton = container.querySelector("#join-event-btn");
+    if(role === "student"){
 
-    // Load current join count from DB
-    const countData = await getEventJoinCount(event.id);
-    joinButton.textContent = `Join event (${countData.joined} joined)`;
+        const joinButton = container.querySelector("#join-event-btn");
+        joinButton.classList.remove("hidden");
 
-    joinButton.addEventListener("click", async () => {
-        const result = await joinEvent(event.id);
+         // Load current join count from DB
+        const countData = await getEventJoinCount(event.id);
+        joinButton.textContent = `Join event (${countData.joined} joined)`;
 
-        if(!result){
-            return;
-        }
+        joinButton.addEventListener("click", async () => {
+            const result = await joinEvent(event.id);
 
-        const others = (result.joined) - 1;
-        joinButton.textContent =
-            others <= 0
-                ? "You are the first to join"
-                : `You joined together with ${others} others`; //we use countData because that is the number before it was updated
-    });
+            if(!result){
+                return;
+            }
+
+            const others = (result.joined) - 1;
+            joinButton.textContent =
+                others <= 0
+                    ? "You are the first to join"
+                    : `You joined together with ${others} others`; //we use countData because that is the number before it was updated
+        });
+
+    }
+
+   
 }
 
 document.addEventListener("click", (e) => {
     if (e.target.id === "close-event-details") {
-        document.getElementById("create-club-or-event_box").style.display = "none";
+        document.getElementById("event-details-popup").style.display = "none";
     }
 });

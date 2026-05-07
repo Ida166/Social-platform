@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MapOut - Clubs</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/roles/user.css" />
+    <link rel="stylesheet" href="/css/roles/admin.css" />
+    <link rel="stylesheet" href="/css/roles/club_owner.css" />
+    <link rel="stylesheet" href="/css/commponents/club_card.css" />
+    <link rel="stylesheet" href="/css/commponents/event_card.css" />
+    <link rel="stylesheet" href="/css/commponents/myclub.css" />
+  </head>
+  <body>
+    <div class="side">
+      <aside class="sidebar">
+        <div class="sidebartop">
+          <img class="AAU-image-sidebar" src="https://sjtapuesjqubmdawxwzm.supabase.co/storage/v1/object/public/ui-assets/AAU-Logo-sidebar.png" alt="Aalborg University Logo">
+          <div class="menu-item">Dashboard</div>
+          <div class="menu-item">Calendar</div>
+          <div class="menu-item">CalMoodle</div>
+          <div class="menu-item" id="eventsAndClubsLink">Events & clubs</div>
+        </div>
+        <div class="sidebarbottom">
+          <div class="menu-item">Courses shortcut</div>
+          <div class="menu-item">Search</div>
+          <div class="menu-item">Courses xx</div>
+        </div>
+      </aside>
+
+      <div class="main">
+        <div class="club-list-inner">
+           <button class="back-btn blue-btn" id="backBtn">Go Back</button>
+
+          <h1>All Clubs</h1>
+          <div class="filter-bar">
+          <button class="filter-btn active" data-category="all">All</button>
+          <button class="filter-btn" data-category="Sports">Sports</button>
+          <button class="filter-btn" data-category="Social">Social</button>
+          <button class="filter-btn" data-category="Games">Games</button>
+          <button class="filter-btn" data-category="Arts">Arts</button>
+          <button class="filter-btn" data-category="Creative">Creative</button>
+          <button class="filter-btn" data-category="Professional">Professional</button>
+        </div>
+      </div>
+        <div id="club-list"></div>
+
+        <div class="club-list-inner"></div>
+          <div>
+            <button class="back-btn blue-btn" id="goToTheTop">Go to top  ↑</button>
+        </div>
+     </div> </div> <template id="club-card-template">
+        <div class="club-card">
+            <h3>
+                <span class="club-name-placeholder"></span>
+                <span class="my-club-badge" style="display:none;">My Club</span>
+            </h3>
+            <img src="" class="club-img" style="display:none;" alt="Club Logo" />
+        </div>
+    </template>
+
+    <script type="module" src="/JS/pages/clubListPage.js"></script>
+</body>
+</html>
+   
+
+    

@@ -14,6 +14,8 @@
     <link rel="stylesheet" href="/css/commponents/event_card.css" />
     <link rel="stylesheet" href="/css/commponents/event_template.css" />
      <link rel="stylesheet" href="/css/commponents/event_details.css">
+    <link rel="stylesheet" href="/css/commponents/myclub.css" />
+    <link rel="stylesheet" href="/css/commponents/event_list.css" />
   </head>
   <body>
     <div class="side">
@@ -24,7 +26,7 @@
           <div class="menu-item">Dashboard</div>
           <div class="menu-item">Calendar</div>
           <div class="menu-item">CalMoodle</div>
-          <div class="menu-item">Events & clubs</div>
+          <div class="menu-item" id="eventsAndClubsLink">Events & clubs</div>
         </div>
         <div class="sidebarbottom">
           <div class="menu-item">Courses shortcut</div>
@@ -44,25 +46,22 @@
         <!--Event page container-->
         <div id="event-page-box" class="hidden"></div>
 
-                  <!--Full eventlist-->
-        <div id="eventlist-page-box" class="hidden">
-        <div class="full-eventlist-container"></div>
-          </div>
-
         <div class="page-title">
           <h1>
-            Events & clubs |
-           <span class="list-link" id="clubListLink">Show Full Club List</span> |
-          <span class="list-link" id="eventListLink">Show Full Event List</span>
+            Clubs & Events
           </h1>
           <div class="button-group">
             <!-- Apply to create club or event box -->
-            <button class="role-button" id="createClubOrEvent">
-            Apply to create Club or Event
-            </button>
+            <button class="role-button blue-btn" id="createClubOrEvent">Apply to create Club or Event</button>
             <div id="create-club-or-event_box" class="hidden"></div>
             <button class="role-button" id="logOut">Log Out</button>
           </div>
+        </div>
+        <div id="event-details-popup"></div>
+        <div class="subtitle">
+            <h3><button class="list-link-btn" id="clubListLink">Show Full Club List</button> |
+              <button class="list-link-btn" id="eventListLink">Show Full Event List</button>
+            </h3>
         </div>
           <div class="filter">
             <h3>Filters</h3>

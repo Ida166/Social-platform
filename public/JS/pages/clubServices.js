@@ -1,10 +1,16 @@
+export async function getUserRole() {
+    const res = await fetch("/api/me");
+    const data = await res.json();
+    return data.role;
+}
+
 export async function getClubs() {
-    const res = await fetch("/clubs");
+    const res = await fetch("/clubs", { cache: "no-store" });
     return await res.json();
 }
 
 export async function getEvents() {
-    const res = await fetch("/events");
+    const res = await fetch("/events", { cache: "no-store" });
     return await res.json();
 }
 

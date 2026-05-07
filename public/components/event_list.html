@@ -1,10 +1,18 @@
 
   <div id="eventlist-inner">
-    <button id="close-event-list" class="back-btn">Go Back</button>
-    <h2>All Events</h2>
+    <button id="close-event-list" class="back-btn blue-btn">Go Back</button>
+
+    <h1>All Events</h1>
+    <div class="filter-bar">
+      <button class="filter-btn active" data-filter="all">All</button>
+      <button class="filter-btn" data-filter="today">Today</button>
+      <button class="filter-btn" data-filter="week">This Week</button>
+      <button class="filter-btn" data-filter="month">This Month</button>
+    </div>
+
     <div class="full-eventlist-container"></div>
+
+    <div class="event-list-inner">
+      <button class="back-btn blue-btn" id="goToTheTopEventList">Go to top  ↑</button>
+    </div>
   </div>
-</div>
-
-
- 

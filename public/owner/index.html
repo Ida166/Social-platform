@@ -10,8 +10,10 @@
     <link rel="stylesheet" href="/css/commponents/club_card.css" /> 
     <link rel="stylesheet" href="/css/roles/club_owner.css" />
     <link rel="stylesheet" href="/css/commponents/event_card.css" />
-    <link rel="stylesheet" href="/css/commponents/event_template.css" />  
-     <link rel="stylesheet" href="/css/commponents/event_details.css">
+    <link rel="stylesheet" href="/css/commponents/event_template.css" />
+    <link rel="stylesheet" href="/css/commponents/event_details.css">
+    <link rel="stylesheet" href="/css/commponents/myclub.css" />
+    <link rel="stylesheet" href="/css/commponents/event_list.css" />
   </head>
   <body>
     <div class="side">
@@ -22,7 +24,7 @@
           <div class="menu-item">Dashboard</div>
           <div class="menu-item">Calendar</div>
           <div class="menu-item">CalMoodle</div>
-          <div class="menu-item">Events & clubs</div>
+          <div class="menu-item" id="eventsAndClubsLink">Events & clubs</div>
         </div>
         <div class="sidebarbottom">
           <div class="menu-item">Courses shortcut</div>
@@ -46,20 +48,23 @@
         <div class="full-eventlist-container"></div>
           </div>
 
-        <div class="page-title">
-          <h1>
-            Events & clubs |  
-            <span class="list-link" id="clubListLink">Show Full Club List</span> |
-            <span class="list-link" id="eventListLink">Show Full Event List</span>
-          </h1>
-          <div class="button-group">
-            <button class="role-button dashboard-create-event-button club-btn-create-event" id="createEventButton">
-              Create Event
-            </button>
-            <div id="create-club-or-event_box" class="hidden"></div>
-            <button class="role-button" id="logOut">Log Out</button>
+        <div id="dashboard-home">
+          <div class="page-title">
+            <h1>
+              Clubs & Events
+            </h1>
+            <div class="button-group">
+              <button class="role-button blue-btn" id="createEventButton">Create Event</button>
+              <div id="create-club-or-event_box" class="hidden"></div>
+              <button class="role-button" id="logOut">Log Out</button>
+            </div>
           </div>
-        </div>
+          <div class="subtitle">
+            <h3><button class="list-link-btn" id="clubListLink">Show Full Club List</button> |
+              <button class="list-link-btn" id="eventListLink">Show Full Event List</button>
+            </h3>
+          </div>
+          <div id="event-details-popup"></div>
           <div class="filter">
             <h3>Filters</h3>
           </div>
@@ -73,7 +78,7 @@
             <div class="header">
             <button id="previousWeek">←</button>
               <ul class="weekdays">
-                <li>Mon <span id="day1"></span></li> 
+                <li>Mon <span id="day1"></span></li>
                 <li>Tue <span id="day2"></span></li>
                 <li>Wed <span id="day3"></span></li>
                 <li>Thu <span id="day4"></span></li>
@@ -89,6 +94,7 @@
                 <div class="eventcontainer"></div>
              </div>
            <script type="module" src="/JS/core/calendar.js"></script>
+        </div>
         </div>
       </div>
     </div>
