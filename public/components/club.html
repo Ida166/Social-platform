@@ -31,9 +31,131 @@
       </aside>
 
       <div class="main">
-        <div id="club-page-content">Loading...</div>
+        <div id="club-page-content">
+            <div class="content-area">
+                <div class="club-page-topbar">
+                    <button id="back-btn" class="back-btn">Go Back</button>
+                    <button id="edit-club-btn" class="edit-club-btn" style="display: none;">Edit Club</button>
+                </div>
+
+                <h1 id="club-name-header"></h1>
+
+                <div class="white-box">
+                    <div class="hero" id="club-hero-image"></div>
+
+                    <div class="description">
+                        <p><strong>Join us!</strong><br /><span id="club-description-text"></span></p>
+                    </div>
+
+                    <div class="info-section">
+                        <div class="info-card">
+                            <h3>Meeting day:</h3>
+                            <p id="club-date"></p>
+                            <h3>Time:</h3>
+                            <p id="club-time"></p>
+                            <h3>Place:</h3>
+                            <p id="club-place"></p>
+                        </div>
+                        <div class="info-card">
+                            <h3>Current members:</h3>
+                            <p id="club-members-count"></p>
+                            <h3>Contact info:</h3>
+                            <p id="club-email"></p>
+                            <p id="club-phone"></p>
+                        </div>
+                        <button class="join-btn hidden" id="join-btn">Join us</button>
+                    </div>
+
+                    <div class="event-section">
+                        <h2>Events</h2>
+                        <div id="event-list"></div> 
+                    </div>
+                </div>
+            </div>
+        </div>
       </div>   
     </div>
+
+    <div id="edit-modal-overlay" class="edit-modal-overlay">
+        <div class="edit-modal">
+            <div class="edit-modal-header">
+                <h3>Edit Club Information</h3>
+                <button class="edit-modal-close" id="edit-modal-close">✕</button>
+            </div>
+            
+            <label>Meeting Day</label>
+            <input type="text" id="edit-regularDate" />
+
+            <label>Time</label>
+            <div class="edit-time-row">
+                <input type="time" id="edit-timeStart" />
+                <span>to</span>
+                <input type="time" id="edit-timeEnd" />
+            </div>
+
+            <label>Place</label>
+            <input type="text" id="edit-regularPlace" />
+
+            <label>Description</label>
+            <textarea id="edit-description"></textarea>
+
+            <label>Contact Email</label>
+            <input type="email" id="edit-contactEmail" />
+
+            <label>Phone</label>
+            <input type="text" id="edit-phone" />
+
+            <label>Club Image</label>
+            <input type="file" id="edit-image" accept="image/*" />
+
+            <label>Club Color Theme</label>
+            <div id="color-swatches" class="color-swatches">
+                </div>
+            <p id="color-warning" class="hidden">This color is already taken!</p>
+
+            <button class="edit-save-btn" id="edit-save-btn">Save changes</button>
+            <div class="edit-status" id="edit-status"></div>
+        </div>
+    </div>
+
+    <template id="event-card-template">
+        <div class="event-card">
+            <h3 class="event-title"></h3>
+            <p><strong>Date:</strong> <span class="event-date"></span></p>
+            <p><strong>Time:</strong> <span class="event-time"></span></p>
+            <p><strong>Place:</strong> <span class="event-location"></span></p>
+            <div class="event-actions"></div>
+        </div>
+    </template>
+
+    <template id="edit-event-modal-template">
+        <div class="edit-modal-overlay" id="edit-event-modal">
+            <div class="edit-modal">
+                <div class="edit-modal-header">
+                    <h3>Edit Event</h3>
+                    <button class="edit-modal-close" id="close-edit-event">✕</button>
+                </div>
+                <label>Title</label>
+                <input type="text" id="edit-event-title" />
+                <label>Date</label>
+                <input type="date" id="edit-event-date" />
+                <label>Time</label>
+                <div class="edit-time-row">
+                    <input type="time" id="edit-event-timeStart" />
+                    <input type="time" id="edit-event-timeEnd" />
+                </div>
+                <label>Location</label>
+                <input type="text" id="edit-event-location" />
+                <label>Description</label>
+                <textarea id="edit-event-description"></textarea>
+                <label>Practical Information</label>
+                <input type="text" id="edit-event-practicalInfo" />
+                <button class="edit-save-btn" id="save-edit-event">Save changes</button>
+                <div class="edit-status" id="edit-event-status"></div>
+            </div>
+        </div>
+    </template>
+
     <script type="module" src="/JS/pages/clubDetailPage.js"></script>
   </body>
 </html>
