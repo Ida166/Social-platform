@@ -1,0 +1,12 @@
+Viktor:Monday|Tuesday|Friday
+Frederik:Monday|Wednesday|Saturday
+Hamsa:Sunday|Friday|Thursday
+Nico:Friday|Tuesday|Thursday
+Lanja:Wednesday|Thursday|Friday
+Per:Monday|Tuesday|Saturday
+Ole:Wednesday|Friday|Sunday
+Rikke:Friday|Thursday|Saturday
+Klaus:Friday|Saturday|Sunday
+William:Monday|Tuesday|Wednesday
+Hans:Tuesday|Wednesday|Saturday
+Ditte:|Sunday|Monday|Friday
