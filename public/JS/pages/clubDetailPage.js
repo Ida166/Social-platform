@@ -83,7 +83,7 @@ async function init() {
             const clone = eventTemplate.content.cloneNode(true);
             const card = clone.querySelector(".event-card");
             
-            // Event ID på kortet så vi kan finde det igen ved Edit
+            // Event ID on card so it can be found on edit
             card.setAttribute("data-event-id", event.id);
             
             if (club.color) card.style.borderLeft = `4px solid ${club.color}`;
@@ -130,7 +130,7 @@ async function init() {
     document.getElementById("edit-contactEmail").value = club.contactEmail || "";
     document.getElementById("edit-phone").value = club.phone || "";
 
-    // Farve swatches
+    // Color swatches
     const takenColors = clubs.map(c => c.color).filter(c => c && c !== club.color);
     setupColorSwatches(club.color, takenColors);
 
@@ -145,12 +145,12 @@ async function init() {
 
         const [eStart, eEnd] = (event.time || "").split(" - ");
 
-        // Brug template til Edit Event Modal
+        // Template for dit 
         const temp = document.getElementById("edit-event-modal-template");
         const clone = temp.content.cloneNode(true);
         const modalOverlay = clone.querySelector(".edit-modal-overlay");
 
-        // Fyld felterne i templaten
+        // Fill out template
         clone.getElementById("edit-event-title").value = event.title || "";
         clone.getElementById("edit-event-date").value = event.date || "";
         clone.getElementById("edit-event-timeStart").value = eStart?.trim() || "";
@@ -161,14 +161,14 @@ async function init() {
 
         document.body.appendChild(clone);
         
-        // Find den aktive modal 
+        // Find active modal 
         const activeModal = document.getElementById("edit-event-modal");
         activeModal.classList.add("open");
 
-        // Luk modal
+        // Close modal
         activeModal.querySelector("#close-edit-event").addEventListener("click", () => activeModal.remove());
 
-        // Gem event ændringer
+        // Save event changes 
         activeModal.querySelector("#save-edit-event").addEventListener("click", async () => {
             const saveBtn = activeModal.querySelector("#save-edit-event");
             saveBtn.disabled = true;
