@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="/css/commponents/event_template.css" />
      <link rel="stylesheet" href="/css/commponents/event_details.css">
     <link rel="stylesheet" href="/css/commponents/myclub.css" />
+    <link rel="stylesheet" href="/css/commponents/event_list.css" />
   </head>
   <body>
     <div class="side">
@@ -22,10 +23,10 @@
       <aside class="sidebar">
         <div class="sidebartop">
           <img class="AAU-image-sidebar" src="/assets/images/AAU-Logo-sidebar.png" alt="Aalborg University Logo">
-          <div class="menu-item" id="dashboardLink">Dashboard</div>
+          <div class="menu-item">Dashboard</div>
           <div class="menu-item">Calendar</div>
           <div class="menu-item">CalMoodle</div>
-          <div class="menu-item">Events & clubs</div>
+          <div class="menu-item" id="eventsAndClubsLink">Events & clubs</div>
         </div>
         <div class="sidebarbottom">
           <div class="menu-item">Courses shortcut</div>
@@ -44,11 +45,6 @@
           <div id="eventlist-page-box" class="hidden"></div> <!--Find the content in the file components/even_list.html-->
         <!--Event page container-->
         <div id="event-page-box" class="hidden"></div>
-
-                  <!--Full eventlist-->
-        <div id="eventlist-page-box" class="hidden">
-          <div class="full-eventlist-container"></div>
-        </div>
 
         <div class="page-title">
           <h1>

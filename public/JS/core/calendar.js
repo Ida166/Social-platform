@@ -183,13 +183,22 @@ function renderTimeslots(){
         //tager dagsdato og trækker differencen fra dagsdato til mandag fra
         //hvis bruger vil frem i kalenderen, tælles weekOffset op, og der lægges 7 dage til alt efter hvor mange uger frem, user vil
 
+        const todayDate = today.getDate();
+        const todayMonth = today.getMonth();
+        const todayYear = today.getFullYear();
+
         for(let i=0; i < 7; i++){
             const dayInWeek = new Date (monday); //kopierer mandag, og tagerudgangspunkt i den til at genere resten af ugens dage.
             dayInWeek.setDate(monday.getDate() + i); //henter mandags dato, og lægger dage til, som vi er fra mandag, for at få den specifikke ugedags dato
             //så hvis mandag er d. 14. og vi laver tirsdag, så lægges 1 til datoen, som vi tog udgangspunkt i.
 
-            document.getElementById("day" + (i+1)).textContent = dayInWeek.getDate() + "/" + (dayInWeek.getMonth() + 1);
-            //Her lægges værdierne/datoeren over til tilsvarende id'er; day1, day2, osv.
+            const span = document.getElementById("day" + (i+1));
+            span.textContent = dayInWeek.getDate() + "/" + (dayInWeek.getMonth() + 1);
+
+            const isToday = dayInWeek.getDate() === todayDate &&
+                            dayInWeek.getMonth() === todayMonth &&
+                            dayInWeek.getFullYear() === todayYear;
+            span.closest("li").classList.toggle("today", isToday);
         }
 
     updateCalendarTimeRange(monday);

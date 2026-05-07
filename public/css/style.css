@@ -303,7 +303,7 @@ ul {
 }
 
 .main {
-  
+  position: relative;
   display: flex;
   flex-direction: column;
   padding: 30px;
@@ -395,6 +395,13 @@ ul {
 .weekdays li:last-child{
   border-right: none;
 }
+
+.weekdays li.today {
+  background-color: #2f3d63;
+  color: white;
+  border-radius: 6px;
+}
+
 
 
 .slot {

@@ -197,26 +197,28 @@
   display: flex;
   gap: 10px;
   margin: 20px 0;
+  flex-wrap: wrap;
 }
 
 .filter-btn {
   padding: 8px 16px;
-  border-radius: 20px;
-  border: 1px solid #ddd;
-  background: white;
+  border-radius: 5px;
+  border: none;
+  background: #2f3d63;
+  color: white;
+  font-weight: 500;
   cursor: pointer;
-  transition: 0.2s;
+  transition: all 0.2s;
+  opacity: 0.6;
 }
 
 .filter-btn:hover {
-  background: #2f3d63;
-  color: white;
+  opacity: 1;
+  background: #15202f;
 }
 
-/* active button */
 .filter-btn.active {
+  opacity: 1;
   background: #2f3d63;
-  color: white;
-  border-color: #2f80ed;
 }
 
