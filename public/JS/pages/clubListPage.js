@@ -38,7 +38,7 @@ function renderClubs(clubs) {
 
     if (!container || !template) return;
 
-    container.innerHTML = ""; // Tøm containeren
+    container.innerHTML = ""; // 
 
     if (!clubs || clubs.length === 0) {
         container.innerHTML = "<p>No clubs found</p>";
@@ -49,7 +49,7 @@ function renderClubs(clubs) {
         const clone = template.content.cloneNode(true);
         const card = clone.querySelector(".club-card");
         
-        // 1. Sæt ID og Farve (Præcis som før)
+        // 1. Sæt ID og Farve
         card.dataset.id = club.id;
         if (club.color) {
             card.style.borderLeft = `5px solid ${club.color}`;
@@ -62,9 +62,9 @@ function renderClubs(clubs) {
         const isMine = role === "club_owner" && myClubId && String(club.id) === myClubId;
         const badge = clone.querySelector(".my-club-badge");
         if (isMine) {
-            badge.style.display = "inline"; // Vis kun hvis det er min
+            badge.style.display = "inline"; 
         } else {
-            badge.remove(); // Fjern den helt hvis ikke, så den ikke fylder
+            badge.remove(); 
         }
 
         // 4. Håndter Billede
@@ -73,7 +73,7 @@ function renderClubs(clubs) {
             img.src = club.image;
             img.style.display = "block"; // Vis billedet
         } else {
-            img.remove(); // Fjern hvis intet billede findes
+            img.remove(); 
         }
 
         container.appendChild(clone);
