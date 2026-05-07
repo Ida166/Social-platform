@@ -33,30 +33,50 @@ async function loadClubs() {
 function renderClubs(clubs) {
     const container = document.getElementById("club-list");
     const myClubId = sessionStorage.getItem("myClubId");
+    const template = document.getElementById("club-card-template");
 
-    if (!container) return;
+    if (!container || !template) return;
+
+    container.innerHTML = ""; // Tøm containeren
 
     if (!clubs || clubs.length === 0) {
         container.innerHTML = "<p>No clubs found</p>";
         return;
     }
 
-    container.innerHTML = clubs.map(club => {
-        const isMine =
-            role === "club_owner" &&
-            myClubId &&
-            String(club.id) === myClubId;
+    clubs.forEach(club => {
+        const clone = template.content.cloneNode(true);
+        const card = clone.querySelector(".club-card");
+        
+        // 1. Sæt ID og Farve (Præcis som før)
+        card.dataset.id = club.id;
+        if (club.color) {
+            card.style.borderLeft = `5px solid ${club.color}`;
+        }
 
-        return `
-        <div class="club-card" data-id="${club.id}"
-             style="${club.color ? `border-left: 5px solid ${club.color};` : ""}">
-            <h3>
-                ${club.name}
-                ${isMine ? '<span class="my-club-badge">My Club</span>' : ""}
-            </h3>
-            ${club.image ? `<img src="${club.image}" class="club-img" />` : ""}
-        </div>`;
-    }).join("");
+        // 2. Indsæt Navn
+        clone.querySelector(".club-name-placeholder").textContent = club.name;
+
+        // 3. Håndter "My Club" Badge
+        const isMine = role === "club_owner" && myClubId && String(club.id) === myClubId;
+        const badge = clone.querySelector(".my-club-badge");
+        if (isMine) {
+            badge.style.display = "inline"; // Vis kun hvis det er min
+        } else {
+            badge.remove(); // Fjern den helt hvis ikke, så den ikke fylder
+        }
+
+        // 4. Håndter Billede
+        const img = clone.querySelector(".club-img");
+        if (club.image) {
+            img.src = club.image;
+            img.style.display = "block"; // Vis billedet
+        } else {
+            img.remove(); // Fjern hvis intet billede findes
+        }
+
+        container.appendChild(clone);
+    });
 }
 
 /* CLICK EVENT (ONLY ONCE!) */
