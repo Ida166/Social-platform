@@ -64,16 +64,16 @@ function initDashboard() {
     if (apply_create_club_or_event) {
         apply_create_club_or_event.addEventListener("click", async () => {
 
-            // Hent HTML fra separat fil
+            //HTML from separate file
             const response = await fetch("/student/application_club-event_form.html");
             const html = await response.text();
 
-            // Indsæt HTML i container
+            // Set HTML in container
             apply_create_club_or_event_box.innerHTML = html;
 
             apply_create_club_or_event_box.style.display = "flex";
 
-            // Vis popup
+            // Show popup
             apply_create_club_or_event_box.classList.remove("hidden");
             // Toggle fields based on radio selection
             const clubCheckbox = document.getElementById('checkBoxClub');
@@ -128,7 +128,7 @@ function initDashboard() {
                 });
             }
 
-            // Luk-knap (skal bindes EFTER HTML er indsat)
+            // Close-button 
             const closeBtn = document.getElementById("close-page");
             if (closeBtn) {
                 closeBtn.addEventListener("click", () => {
@@ -413,7 +413,7 @@ function initDashboard() {
         }
     }
 
-    // Hjælpefunktion (openEditModal)
+    // Helpfunction (openEditModal)
     function openEditModal(event, template) {
         const existing = document.getElementById("edit-event-modal");
         if (existing) existing.remove();
@@ -463,7 +463,7 @@ function initDashboard() {
         };
     }
 
-    // Funktion til at åbne selve siden/vinduet med listen
+    // Function for opening the site with the list 
     async function openFullEventList() {
         const box = document.getElementById("eventlist-page-box");
         const response = await fetch("/components/event_list.html");
@@ -504,13 +504,13 @@ function initDashboard() {
         });
     }
 
-    // Event listener til sidebar-linket
+    // Event listener to sidebar-link
     const eventListLink = document.getElementById("eventListLink");
     if (eventListLink) {
         eventListLink.addEventListener("click", openFullEventList);
     }
 
-    // Lukning af eventlisten
+    // Closing of eventlist
     document.addEventListener("click", (e) => {
         if (e.target.closest("#close-event-list")) {
             const box = document.getElementById("eventlist-page-box");
@@ -526,6 +526,6 @@ function initDashboard() {
             window.location.href = "/components/clubs.html";
         });
     }
-} // Her slutter initDashboard
+} // End of initDashboard
 
 document.addEventListener("DOMContentLoaded", initDashboard);
