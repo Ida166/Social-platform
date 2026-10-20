@@ -4,6 +4,8 @@ A web-based platform developed as a Moodle extension prototype where stu-
 dents can explore and join clubs and events, while club owners can create and
 manage club activities.
 
+For an in-depth overview of the application, its design, and development process, please refer to the project repport.
+
 The project is built using a multi-page architecture with a Node.js and Ex-
 press.js backend connected to a Supabase PostgreSQL database.
 Features
